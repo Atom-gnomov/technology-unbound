@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "unboundtech",
+    "name": "Unbound Technology",
+    "description": "Magic meets industry: a bridge between Thaumcraft 4 Unbound and IndustrialCraft 2. Aspects for IC2 items, honest Vis/EU conversion, shared production chains and hybrid gear.",
+    "version": "${version}",
+    "mcversion": "1.12.2",
+    "url": "https://github.com/Atom-gnomov/technology-unbound",
+    "authorList": ["Atom-gnomov", "Claude"],
+    "credits": "Azanor for Thaumcraft; IC2 team; TC4 Unbound port.",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": ["thaumcraft", "ic2"]
+  }
+]

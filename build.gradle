@@ -1,0 +1,99 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "https://maven.minecraftforge.net/"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+    }
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+version = "0.1.0"
+group = "unboundtech"
+archivesBaseName = "UnboundTechnology"
+
+sourceCompatibility = targetCompatibility = '1.8'
+
+// Sources are UTF-8 (русские строки в комментариях и lang).
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+minecraft {
+    version = "1.12.2-14.23.5.2847"
+    runDir = "run"
+    mappings = "stable_39"
+}
+
+repositories {
+    maven {
+        name = "curse"
+        url = "https://www.cursemaven.com"
+    }
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    // TC4 Unbound: положи dev-jar порта в libs/ (см. libs/README.md).
+    // Собирается командой `gradlew devJar` в репозитории порта.
+    compile name: 'Thaumcraft-1.2.8.0-dev'
+
+    // Baubles — транзитивная зависимость TC4U (тот же пин, что у порта).
+    compile 'curse.maven:baubles-227083:2518667'
+
+    // IC2 Experimental 1.12.2: положи jar в libs/ (см. libs/README.md).
+    // ВНИМАНИЕ: flatDir-jar подключён как plain compile — этого достаточно
+    // для `gradlew build`, но НЕ для `gradlew runClient`: релизный jar IC2
+    // собран под SRG-имена и в deobf-окружении разработки упадёт при загрузке.
+    // Для runClient замени строку ниже на deobfCompile через CurseMaven
+    // (flatDir-jar-ы FG 2.3 деобфусцировать не умеет):
+    //   deobfCompile 'curse.maven:industrial-craft-242638:<fileId>'
+    compile name: 'industrialcraft-2-2.8.222-ex112'
+
+    testCompile 'junit:junit:4.12'
+}
+
+processResources {
+    inputs.property 'version', project.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+        expand version: project.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+jar {
+    classifier = 'universal'
+    from sourceSets.main.output
+}
+
+task devJar(type: Jar) {
+    classifier = 'dev'
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+}
+
+artifacts {
+    archives devJar
+}
+
+reobf {
+    jar { }
+}
+
+idea { module { inheritOutputDirs = true } }

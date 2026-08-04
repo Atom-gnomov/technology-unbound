@@ -1,0 +1,25 @@
+# Unbound Technology — English localization
+
+tc.research_category.UNBOUNDTECH=Industrial Magic
+
+tc.research_name.THAUM_IC2_INTRO=Industrial Magic
+tc.research_text.THAUM_IC2_INTRO=Two languages of one energy
+unboundtech.research_page.THAUM_IC2_INTRO.1=Scanning the machine, you expected emptiness — crude iron, a dead mechanism. Instead the thaumometer trembled: power flows within. Not Vis — something else, steady and indifferent, like a river without a source. The engineers call it "EU".<BR><BR>The discovery is unsettling and alluring at once. Two forces drive this world, and until now you commanded only one.
+unboundtech.research_page.THAUM_IC2_INTRO.2=A direct connection is impossible: Vis is alive and capricious, EU is deathly stable. A wire soldered to a crystal yields nothing but sparks and a burnt smell.<BR><BR>But where two languages meet, a translator can always be found. Master both forces — and the bridge will be built.
+
+tc.research_name.LORE_EU_AND_VIS=EU and Vis
+tc.research_text.LORE_EU_AND_VIS=Why they cannot connect directly
+unboundtech.research_page.LORE_EU_AND_VIS.1=EU is discrete, countable, obedient. Vis is continuous, aspected, wilful. One flows through wires, the other through meanings.<BR><BR>Every translator takes a fee. Experiments show that any conversion cycle scatters at least three quarters of the power. A perpetual engine on the border of magic and machinery is impossible — and that is probably for the best.
+
+tc.research_name.LORE_ELAN_VITAL=Elan Vital
+tc.research_text.LORE_ELAN_VITAL=Why magic destabilizes circuitry
+unboundtech.research_page.LORE_ELAN_VITAL.1=A saturated aura meddles with delicate circuits: signals drift, contacts spark, machines grow "moody". Engineers blame the humidity. You know the truth.<BR><BR>The aura is a living medium, and electricity is foreign to it. Until you find a way to insulate one from the other, keep fine electronics away from nodes of power.
+
+tc.research_name.THAUM_ORE_MACERATION=Macerating Magical Ores
+tc.research_text.THAUM_ORE_MACERATION=The macerator versus cinnabar
+unboundtech.research_page.THAUM_ORE_MACERATION.1=The macerator holds no reverence for magic: to it, cinnabar is merely soft stone. But the result speaks for itself — one ore yields twice the quicksilver of smelting.<BR><BR>Amber-bearing and silver ores submit just as readily. Even the infused stone of the six elements is ground into pure shards — two from every block.
+unboundtech.research_page.THAUM_ORE_MACERATION.2=The taint deserves a special note: the extractor squeezes a springy polymer mass out of taint slime and tendrils, indistinguishable from rubber. Corruption made useful — there is something deeply wrong about that. And profitable.
+
+tc.research_name.ALUMENTUM_FUEL=Alumentum: Machine Fuel
+tc.research_text.ALUMENTUM_FUEL=Magical coal in an iron firebox
+unboundtech.research_page.ALUMENTUM_FUEL.1=The generator is omnivorous: it cares little whether coal burns in its firebox or a clot of pure flame. Alumentum burns long and steady — one piece lasts a good while, and the EU meter climbs noticeably faster.<BR><BR>Just do not let the buffer overflow: alumentum resents having nowhere to put its strength.
