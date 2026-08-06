@@ -32,7 +32,7 @@ public class UnboundTech {
 
     public static final String MODID = "unboundtech";
     public static final String NAME = "Unbound Technology";
-    public static final String VERSION = "0.1.1";
+    public static final String VERSION = "0.1.2";
 
     @Mod.Instance(MODID)
     public static UnboundTech instance;

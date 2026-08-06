@@ -4,7 +4,7 @@
 
 | Файл | Откуда |
 |---|---|
-| `Thaumcraft-1.2.8.0-dev.jar` | репо порта TC4U: `gradlew devJar` → `mod/build/libs/` |
+| `Thaumcraft-1.2.8.1-dev.jar` | репо порта TC4U: `gradlew devJar` → `mod/build/libs/` (1.2.8.1 пока только на ветке `claude/ic2-thaumcraft-integration-agwnn4`) |
 
 IC2 больше НЕ нужен в libs/ — он подключён через CurseMaven
 (`deobfCompile 'curse.maven:industrial-craft-242638:3838713'` в build.gradle,

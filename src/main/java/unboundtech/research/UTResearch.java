@@ -44,6 +44,8 @@ public final class UTResearch {
     public static final String LORE_ELAN_VITAL = "LORE_ELAN_VITAL";
     public static final String ORE_MACERATION = "THAUM_ORE_MACERATION";
     public static final String ALUMENTUM_FUEL = "ALUMENTUM_FUEL";
+    /** Нитор-тепло: порт ≥1.2.8.1 отдаёт 20 HU/t машинам IC2 (rt_1: NITOR_HEAT). */
+    public static final String NITOR_HEAT = "NITOR_HEAT";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -138,7 +140,21 @@ public final class UTResearch {
                 .setPages(new ResearchPage("unboundtech.research_page.ALUMENTUM_FUEL.1"))
                 .registerResearchItem();
 
-        UTLog.info("Research tab {} registered ({} entries)", CATEGORY, 5);
+        // Поведение живёт в порте ≥1.2.8.1 (TileNitor = IHeatSource, 20 HU/t);
+        // запись документирует его игроку. Ветка продолжится нитор-термальным
+        // генератором в фазе 3+ (rt_1_ic2.md).
+        new ResearchItem(
+                NITOR_HEAT, CATEGORY,
+                new AspectList().add(Aspect.FIRE, 4).add(Aspect.LIGHT, 4)
+                        .add(Aspect.ENERGY, 4),
+                4, 0, 1,
+                new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1,
+                        thaumcraft.common.items.ItemResource.META_NITOR))
+                .setParents(INTRO)
+                .setPages(new ResearchPage("unboundtech.research_page.NITOR_HEAT.1"))
+                .registerResearchItem();
+
+        UTLog.info("Research tab {} registered ({} entries)", CATEGORY, 6);
     }
 
     /**

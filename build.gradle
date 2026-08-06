@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "0.1.1"
+version = "0.1.2"
 group = "unboundtech"
 archivesBaseName = "UnboundTechnology"
 
@@ -47,7 +47,7 @@ repositories {
 dependencies {
     // TC4 Unbound: положи dev-jar порта в libs/ (см. libs/README.md).
     // Собирается командой `gradlew devJar` в репозитории порта.
-    compile name: 'Thaumcraft-1.2.8.0-dev'
+    compile name: 'Thaumcraft-1.2.8.1-dev'
 
     // Baubles — транзитивная зависимость TC4U (тот же пин, что у порта).
     compile 'curse.maven:baubles-227083:2518667'

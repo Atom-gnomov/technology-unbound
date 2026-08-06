@@ -24,6 +24,10 @@ tc.research_name.ALUMENTUM_FUEL=Alumentum: Machine Fuel
 tc.research_text.ALUMENTUM_FUEL=Magical coal in an iron firebox
 unboundtech.research_page.ALUMENTUM_FUEL.1=The generator is omnivorous: it cares little whether coal burns in its firebox or a clot of pure flame. Alumentum burns long and steady — one piece lasts a good while, and the EU meter climbs noticeably faster.<BR><BR>Just do not let the buffer overflow: alumentum resents having nowhere to put its strength.
 
+tc.research_name.NITOR_HEAT=Nitor: Eternal Warmth
+tc.research_text.NITOR_HEAT=A flame that needs no fuel
+unboundtech.research_page.NITOR_HEAT.1=The Stirling engine wants heat, and nitor has nothing else to offer. Set a captured flame flush against the engine's intake and it yields a steady trickle of warmth — a modest twenty heat units a tick, but it has never once asked for fuel.<BR><BR>The engineers' boilers roar and gulp coal; the nitor simply burns, patient as a candle in a shrine. Weak, eternal, and quietly smug about both.
+
 # Module asp — Advanced Solar Panels detected
 tc.research_name.SOLAR_SUNNARIUM=Sunnarium: The Captured Sun
 tc.research_text.SOLAR_SUNNARIUM=Solar alchemy of the engineers
