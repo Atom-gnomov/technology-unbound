@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,active=false": { "model": "unboundtech:aetheric_engine" },
+    "facing=east,active=false":  { "model": "unboundtech:aetheric_engine", "y": 90 },
+    "facing=south,active=false": { "model": "unboundtech:aetheric_engine", "y": 180 },
+    "facing=west,active=false":  { "model": "unboundtech:aetheric_engine", "y": 270 },
+    "facing=north,active=true":  { "model": "unboundtech:aetheric_engine_active" },
+    "facing=east,active=true":   { "model": "unboundtech:aetheric_engine_active", "y": 90 },
+    "facing=south,active=true":  { "model": "unboundtech:aetheric_engine_active", "y": 180 },
+    "facing=west,active=true":   { "model": "unboundtech:aetheric_engine_active", "y": 270 }
+  }
+}

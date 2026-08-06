@@ -46,6 +46,10 @@ public final class UTResearch {
     public static final String ALUMENTUM_FUEL = "ALUMENTUM_FUEL";
     /** Нитор-тепло: порт ≥1.2.8.1 отдаёт 20 HU/t машинам IC2 (rt_1: NITOR_HEAT). */
     public static final String NITOR_HEAT = "NITOR_HEAT";
+    /** Фаза 3а: конвертеры (спека phase3_converters_spec.md §3). */
+    public static final String VIS_TO_EU_GENERATOR = "VIS_TO_EU_GENERATOR";
+    public static final String EU_TO_VIS_ENGINE = "EU_TO_VIS_ENGINE";
+    public static final String LORE_RESONANCE_LIMITS = "LORE_RESONANCE_LIMITS";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -155,6 +159,70 @@ public final class UTResearch {
                 .registerResearchItem();
 
         UTLog.info("Research tab {} registered ({} entries)", CATEGORY, 6);
+    }
+
+    /**
+     * Исследования фазы 3а (конвертеры). Вызывается ПОСЛЕ {@link #register()}
+     * и после регистрации рецептов: страницы показывают объекты рецептов
+     * напрямую, поэтому карта ConfigResearch.recipes не нужна.
+     *
+     * Родитель двигателя — сам генератор, а не INTRO: генератор и так растёт
+     * из INTRO, а прямая линия через пол-вкладки только запутывала бы схему
+     * (спека §3 требует лишь «требует VIS_TO_EU_GENERATOR»).
+     */
+    public static void registerConverters() {
+        ResearchItem generator = new ResearchItem(
+                VIS_TO_EU_GENERATOR, CATEGORY,
+                new AspectList().add(Aspect.ENERGY, 8).add(Aspect.MECHANISM, 6)
+                        .add(Aspect.MAGIC, 6).add(Aspect.FIRE, 4),
+                4, -2, 2,
+                new ItemStack(unboundtech.common.UTBlocks.thaumGenerator))
+                .setParents(ORE_MACERATION)
+                .setPages(pagesWithRecipe(
+                        new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.1"),
+                        new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.2"),
+                        unboundtech.common.UTRecipes.thaumGenerator));
+        generator.registerResearchItem();
+
+        new ResearchItem(
+                LORE_RESONANCE_LIMITS, CATEGORY,
+                new AspectList().add(Aspect.AURA, 6).add(Aspect.MECHANISM, 4),
+                6, -3, 1,
+                new ItemStack(net.minecraft.init.Items.BOOK))
+                .setRound()
+                .setSecondary()
+                .setParents(VIS_TO_EU_GENERATOR)
+                .setPages(new ResearchPage(
+                        "unboundtech.research_page.LORE_RESONANCE_LIMITS.1"))
+                .registerResearchItem();
+
+        new ResearchItem(
+                EU_TO_VIS_ENGINE, CATEGORY,
+                new AspectList().add(Aspect.ENERGY, 10).add(Aspect.AURA, 8)
+                        .add(Aspect.EXCHANGE, 6).add(Aspect.ORDER, 4),
+                6, -1, 2,
+                new ItemStack(unboundtech.common.UTBlocks.aethericEngine))
+                .setParents(VIS_TO_EU_GENERATOR)
+                .setPages(pagesWithRecipe(
+                        new ResearchPage("unboundtech.research_page.EU_TO_VIS_ENGINE.1"),
+                        new ResearchPage("unboundtech.research_page.EU_TO_VIS_ENGINE.2"),
+                        unboundtech.common.UTRecipes.aethericEngine))
+                .registerResearchItem();
+
+        UTLog.info("Converter research registered (phase 3a)");
+    }
+
+    /**
+     * Собирает страницы записи, добавляя страницу рецепта только если он
+     * зарегистрирован (без IC2-предмета рецепта нет — пустую страницу
+     * показывать нельзя).
+     */
+    private static ResearchPage[] pagesWithRecipe(ResearchPage first, ResearchPage second,
+            thaumcraft.api.crafting.ShapedArcaneRecipe recipe) {
+        if (recipe == null) {
+            return new ResearchPage[]{first, second};
+        }
+        return new ResearchPage[]{first, second, new ResearchPage(recipe)};
     }
 
     /**

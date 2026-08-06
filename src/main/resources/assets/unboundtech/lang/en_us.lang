@@ -1,5 +1,10 @@
 # Unbound Technology — English localization
 
+itemGroup.unboundtech=Unbound Technology
+
+tile.unboundtech.thaum_generator.name=Thaumic Alternator
+tile.unboundtech.aetheric_engine.name=Aetheric Engine
+
 tc.research_category.UNBOUNDTECH=Industrial Magic
 
 tc.research_name.THAUM_IC2_INTRO=Industrial Magic
@@ -23,6 +28,19 @@ unboundtech.research_page.THAUM_ORE_MACERATION.2=The taint deserves a special no
 tc.research_name.ALUMENTUM_FUEL=Alumentum: Machine Fuel
 tc.research_text.ALUMENTUM_FUEL=Magical coal in an iron firebox
 unboundtech.research_page.ALUMENTUM_FUEL.1=The generator is omnivorous: it cares little whether coal burns in its firebox or a clot of pure flame. Alumentum burns long and steady — one piece lasts a good while, and the EU meter climbs noticeably faster.<BR><BR>Just do not let the buffer overflow: alumentum resents having nowhere to put its strength.
+
+# Phase 3a — converters
+tc.research_name.VIS_TO_EU_GENERATOR=Thaumic Alternator
+tc.research_text.VIS_TO_EU_GENERATOR=Vis into current
+unboundtech.research_page.VIS_TO_EU_GENERATOR.1=The trick is not to convert Vis, but to let it fall. Set the alternator beside a node and it siphons a thread of Ignis or Potentia, lets the aura drop through a thaumic coil, and catches what escapes as honest current.<BR><BR>The node barely notices. A fifth of every aspect is left untouched — drain past that and the node begins to wither, and a withered node feeds no one. The machine simply refuses.
+unboundtech.research_page.VIS_TO_EU_GENERATOR.2=Do not expect a power plant. A fat node yields its surplus quickly, then settles into the pace of its own regeneration — a trickle, forever. That trickle is the honest yield; everything before it was you spending savings.<BR><BR>And do not crowd them. Two alternators within sixteen blocks fight over the same resonance and both fall silent.
+tc.research_name.EU_TO_VIS_ENGINE=Aetheric Engine
+tc.research_text.EU_TO_VIS_ENGINE=Current back into vis
+unboundtech.research_page.EU_TO_VIS_ENGINE.1=Pushing power back uphill costs dearly: four units of current for every one the alternator ever paid out. The engine floods a depleted node with raw force and lets the aura reshape it into whichever aspect the node is missing.<BR><BR>Wasteful — and worth it. A node that would take an hour to mend itself refills in a minute.
+unboundtech.research_page.EU_TO_VIS_ENGINE.2=Do not dream of a closed loop. Alternator into engine and back returns a quarter of what it took; the rest is gone as heat and noise. Nature will not be argued with here.<BR><BR>The engine refills a node only to that node's own capacity. Restoring lost capacity — reviving a truly fading node — is another study entirely.
+tc.research_name.LORE_RESONANCE_LIMITS=Resonance Limits
+tc.research_text.LORE_RESONANCE_LIMITS=Why machines will not stand together
+unboundtech.research_page.LORE_RESONANCE_LIMITS.1=Two alternators near one node do not share it — they beat against each other. Each coil twists the aura the other is trying to read, and the pair produce nothing but a faint whine and a headache.<BR><BR>Sixteen blocks is the measured distance at which the interference dies away. Not a law of nature so much as an engineering scar: every thaumaturge who ignored it has rebuilt their workshop wider.
 
 tc.research_name.NITOR_HEAT=Nitor: Eternal Warmth
 tc.research_text.NITOR_HEAT=A flame that needs no fuel

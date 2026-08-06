@@ -5,6 +5,7 @@ import unboundtech.UTLog;
 import unboundtech.compat.asp.ASPAspects;
 import unboundtech.compat.ic2.IC2Aspects;
 import unboundtech.compat.ic2.IC2Recipes;
+import unboundtech.common.UTRecipes;
 import unboundtech.compat.mets.METSAspects;
 import unboundtech.research.UTResearch;
 
@@ -42,6 +43,11 @@ public final class ModuleManager {
         IC2Aspects.register();
         UTResearch.register();
         IC2Recipes.register();
+
+        // Фаза 3а: сначала рецепты, потом исследования — страницы записей
+        // держат сами объекты рецептов.
+        UTRecipes.register();
+        UTResearch.registerConverters();
 
         // Аддон-модули: двойной гейт конфиг × наличие мода уже внутри
         // isEnabled(); вкладка исследований принадлежит CORE, поэтому

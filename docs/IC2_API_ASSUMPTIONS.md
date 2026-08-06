@@ -62,6 +62,23 @@ enum-ам вариантов `ic2.core.item.type.*`:
 корректен. Плюс рантайм-страховка `IC2Handles.item()`: WARN и пустой стек
 вместо краша, зависимый контент пропускается.
 
+## Энергетические префабы (фаза 3а) — ✅ сверено 2026-08-06
+
+- `ic2.api.energy.prefab.BasicSource(TileEntity, double capacity, int tier)`
+  и `BasicSink(...)` — конструкторы есть; TileEntity-версия резолвит
+  мир/позицию ЛЕНИВО (`initLocation()` при первом обращении), поэтому
+  префаб можно создавать полем тайла.
+- Жизненный цикл: `update()` (зовётся каждый тик, сам регистрирует тайл
+  в энергосети при первом вызове), `onLoad()`, `invalidate()`,
+  `onChunkUnload()`, `readFromNBT(tag)` / `writeToNBT(tag)`.
+- Энергия: `addEnergy(double)`, `useEnergy(double)`, `canUseEnergy(double)`,
+  `getEnergyStored()`, `getCapacity()`. Все no-op на клиенте
+  (`getWorldObj().isRemote` внутри).
+- `ic2.api.energy.tile.IHeatSource`: `maxrequestHeatTick(EnumFacing)` +
+  `requestHeat(EnumFacing, int)` (оба @Deprecated, но именно они — точка
+  расширения; `drawHeat` по умолчанию делегирует в них). Реализован
+  портом в `TileNitor` за `@Optional` (TC4U 1.2.8.1).
+
 ## modid аддонов (CompatIds) — ✅ сверено 2026-08-06
 
 - `MoreElectricTools.v1.662.jar` → modid **`mets`**;
