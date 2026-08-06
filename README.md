@@ -45,8 +45,9 @@ IC2 качается автоматически через CurseMaven (пин ф
 2. `./gradlew build` (Windows: `gradlew.bat build`) с JDK 8.
 3. Готовый мод: `build/libs/UnboundTechnology-<version>-universal.jar`.
 
-Первая сборка — момент сверки `docs/IC2_API_ASSUMPTIONS.md`: все обращения
-к IC2 API писались без доступа к jar-у и проверяются компилятором.
+Допущения по IC2 API (`docs/IC2_API_ASSUMPTIONS.md`) подтверждены первой
+сборкой 2026-08-06 против IC2 2.8.222-ex112; при смене пина IC2 — сверить
+заново по методу из того же файла.
 
 ## Зависимости в игре
 

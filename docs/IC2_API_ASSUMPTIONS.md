@@ -1,60 +1,75 @@
-# Допущения по IC2 API — проверить при первой сборке
+# Допущения по IC2 API — ПРОВЕРЕНЫ первой сборкой (2026-08-06)
 
-Среда, в которой писалась фаза 1, не имела доступа к jar IC2, поэтому все
-обращения к IC2 записаны по знанию API IC2 Experimental 2.8.x (1.12.2) и
-СВЕРЯЮТСЯ при первой компиляции с реальным jar-ом. Ошибки здесь = ошибки
-компиляции, не рантайма — ловятся сразу.
+Фаза 1 писалась без доступа к jar IC2: все обращения записаны по знанию API
+IC2 Experimental 2.8.x (1.12.2). Первая сборка состоялась 2026-08-06 против
+**IC2 2.8.222-ex112** (CurseMaven файл 3838713, деобфусцирован FG 2.3) и
+dev-jar порта **TC4U 1.2.8.0** (ветка `claude/ic2-thaumcraft-integration-agwnn4`).
 
-## Классы и сигнатуры
+Итог: **компиляция прошла с первого раза, все допущения подтверждены** —
+и сигнатуры (компилятором), и строки name/variant (по enum-ам реального jar),
+и семантика входов (декомпиляцией CFR). Ниже — таблицы со статусами; при
+смене версии IC2 сверять заново по этому же методу.
 
-| Использование | Ожидаемая сигнатура |
-|---|---|
-| `ic2.api.item.IC2Items.getItem(String name, String variant)` | `static ItemStack` |
-| `ic2.api.recipe.Recipes.macerator` | `static IMachineRecipeManager` |
-| `ic2.api.recipe.Recipes.extractor` | `static IMachineRecipeManager` |
-| `ic2.api.recipe.Recipes.compressor` | `static IMachineRecipeManager` |
-| `IMachineRecipeManager.addRecipe(IRecipeInput, NBTTagCompound, boolean replace, ItemStack... outputs)` | `boolean` |
-| `ic2.api.recipe.Recipes.inputFactory` | `static IRecipeInputFactory` |
-| `IRecipeInputFactory.forOreDict(String)` / `.forStack(ItemStack)` | `IRecipeInput` |
+## Классы и сигнатуры — ✅ подтверждено компиляцией
 
-## Пары name/variant (IC2Handles / IC2Aspects / IC2Recipes)
+| Использование | Сигнатура | Статус |
+|---|---|---|
+| `ic2.api.item.IC2Items.getItem(String name, String variant)` | `static ItemStack` | ✅ |
+| `ic2.api.recipe.Recipes.macerator` | `static IMachineRecipeManager` | ✅ |
+| `ic2.api.recipe.Recipes.extractor` | `static IMachineRecipeManager` | ✅ |
+| `ic2.api.recipe.Recipes.compressor` | `static IMachineRecipeManager` | ✅ |
+| `IMachineRecipeManager.addRecipe(IRecipeInput, NBTTagCompound, boolean replace, ItemStack... outputs)` | `boolean` | ✅ |
+| `ic2.api.recipe.Recipes.inputFactory` | `static IRecipeInputFactory` | ✅ |
+| `IRecipeInputFactory.forOreDict(String)` / `.forStack(ItemStack)` | `IRecipeInput` | ✅ |
 
-Проверить существование каждой в `ic2.core.ref.ItemName`/`BlockName`:
-`cable`/`type:copper,insulation:0`; `crafting`/`rubber`, `circuit`,
-`advanced_circuit`, `carbon_fibre`, `scrap`, `iridium`; `ingot`/`refined_iron`;
-`misc_resource`/`matter`; `re_battery`; `energy_crystal`; `lapotron_crystal`;
-`nuclear`/`uranium_238`; `dust`/`silver`; `misc_resource`/`resin`;
-`te`/`generator`, `solar_generator`, `macerator`, `iron_furnace`,
-`electric_furnace`, `nuclear_reactor`, `teleporter`;
-`jetpack`; `drill`; `chainsaw`; `nano_saber`;
-`hazmat_helmet`, `hazmat_chestplate`, `hazmat_leggings`, `rubber_boots`;
-`nano_helmet`, `nano_chestplate`, `nano_leggings`, `nano_boots`;
-`quantum_helmet`, `quantum_chestplate`, `quantum_leggings`, `quantum_boots`.
+## Пары name/variant — ✅ все найдены в enum-ах 2.8.222
 
-## Семантика входов рецептов
+Сверено javap-ом по `ic2.core.ref.ItemName`, `ic2.core.ref.BlockName`,
+`ic2.core.ref.TeBlock` (NB: TeBlock живёт в `ref`, не в `block`) и
+enum-ам вариантов `ic2.core.item.type.*`:
 
-Допущение: `IRecipeInputFactory.forStack(ItemStack)` использует РАЗМЕР стека
-как требуемое количество входа (рецепты «6 осколков → кластер»,
-«4 янтаря → блок» передают стеки размера 6/4). Если в реальном API размер
-игнорируется — заменить на перегрузку с явным amount (`forStack(stack, n)`
-или эквивалент) при первой сборке.
+- `cable` / `type:copper,insulation:0` — синтаксис варианта подтверждён
+  дословно рецепт-конфигами самого IC2 (`assets/ic2/config/*.ini`:
+  `ic2:cable#type:copper,insulation:0`);
+- `crafting` / `rubber`, `circuit`, `advanced_circuit`, `carbon_fibre`,
+  `scrap`, `iridium` — все в `CraftingItemType`;
+- `ingot` / `refined_iron` — **существует** в `IngotResourceType`
+  (опасение «refined iron = steel» не подтвердилось: в 2.8.x есть оба);
+- `misc_resource` / `matter`, `resin`, `iridium_ore` — в `MiscResourceType`;
+- `nuclear` / `uranium_238` — в `NuclearResourceType`;
+- `dust` / `silver` — в `DustResourceType`;
+- `re_battery`, `energy_crystal`, `lapotron_crystal`, `jetpack`, `drill`,
+  `chainsaw`, `nano_saber` — плоские ItemName без вариантов (variant=null OK,
+  см. семантику ниже);
+- `hazmat_helmet`, `hazmat_chestplate`, `hazmat_leggings`, `rubber_boots`,
+  `nano_helmet/chestplate/leggings/boots`,
+  `quantum_helmet/chestplate/leggings/boots` — все в ItemName;
+- `te` / `generator`, `solar_generator`, `macerator`, `iron_furnace`,
+  `electric_furnace`, `nuclear_reactor`, `teleporter` — BlockName `te`
+  + все семь констант в `TeBlock`.
 
-## Dev-запуск (runClient)
+## Семантика входов рецептов — ✅ подтверждено декомпиляцией
 
-Решено: IC2 подключён `deobfCompile 'curse.maven:industrial-craft-242638:3838713'`
-(файл выбран владельцем) — FG 2.3 деобфусцирует jar, работает и build,
-и runClient. Пары name/variant из этого файла — эталон для сверки таблицы выше.
+`RecipeInputFactory.forStack(stack)` → `new RecipeInputItemStack(stack)` →
+`this(input, StackUtil.getSize(input))`: **размер стека = требуемое
+количество входа**. Рецепты «6 осколков → кластер» и «4 янтаря → блок»
+корректны как написаны. Перегрузка с явным amount тоже существует
+(`forStack(stack, n)`) — запасной вариант не понадобился.
 
-Рантайм-страховка уже встроена: `IC2Handles.item()` на отсутствующий предмет
-даёт WARN и пустой стек, зависимый контент пропускается без краша.
+`IC2Items.getItem(name, null)`: `ItemAPI.getItemStack` при variant=null
+дополнительно понимает слитную запись `name#variant`, затем зовёт
+`ItemName.getItemStack(variant)` — для предметов без вариантов null
+корректен. Плюс рантайм-страховка `IC2Handles.item()`: WARN и пустой стек
+вместо краша, зависимый контент пропускается.
 
-## modid аддонов (CompatIds)
+## modid аддонов (CompatIds) — ⏳ отложено до фазы 10
 
 - METS (`mets`) и Advanced Solar Panels (`advanced_solar_panels`) — сверить
   по `mcmod.info` реальных jar-ов перед фазой 10.
 
-## Формула генератора
+## Формула генератора — ⏳ замерить в игре
 
 Генератор IC2 принимает предметы с furnace burn time. Ожидание: алюментум
-(6400 тиков, задаётся портом TC4U ≥1.2.8.0) → ~16,000 EU. Замерить в игре —
-приёмочный пункт 5 из `phase1_core_spec.md` §8.
+(6400 тиков, задаётся портом TC4U ≥1.2.8.0) → ~16,000 EU. Приёмка: пункт 5
+чек-листа `phase1_core_spec.md` §8 (16,000 ± 5%). Требует запуска игры с
+TC4U 1.2.8.0+ (ветка ещё не влита в main порта) + IC2 + сабмодом.
