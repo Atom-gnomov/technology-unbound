@@ -62,10 +62,19 @@ enum-ам вариантов `ic2.core.item.type.*`:
 корректен. Плюс рантайм-страховка `IC2Handles.item()`: WARN и пустой стек
 вместо краша, зависимый контент пропускается.
 
-## modid аддонов (CompatIds) — ⏳ отложено до фазы 10
+## modid аддонов (CompatIds) — ✅ сверено 2026-08-06
 
-- METS (`mets`) и Advanced Solar Panels (`advanced_solar_panels`) — сверить
-  по `mcmod.info` реальных jar-ов перед фазой 10.
+- `MoreElectricTools.v1.662.jar` → modid **`mets`**;
+  `Advanced Solar Panels-4.3.0.jar` (Chocohead) → modid
+  **`advanced_solar_panels`** — оба совпали с константами `CompatIds`.
+- Реестровые имена предметов (сверены декомпиляцией CFR + модели/ланг):
+  ASP: `advanced_solar_panels:machines` (ItemBlock, меты = `TEs.getId()`
+  0–5), `:crafting` (ItemMulti, меты = `CraftingTypes` 0–13), шлемы
+  `advanced_solar_helmet`/`hybrid_solar_helmet`/`ultimate_solar_helmet`.
+  METS: обычные предметы, registry name = имя файла модели
+  (`mets:titanium_ingot` и т.д.), мета 0; блоки — через их ItemBlock.
+- Доступ — `ModItems.item(modid, path, meta)` через ForgeRegistries
+  (WARN + пустой стек на промах, контент пропускается без краша).
 
 ## Формула генератора — ⏳ замерить в игре
 

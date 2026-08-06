@@ -44,6 +44,10 @@ public final class UTResearch {
     public static final String LORE_ELAN_VITAL = "LORE_ELAN_VITAL";
     public static final String ORE_MACERATION = "THAUM_ORE_MACERATION";
     public static final String ALUMENTUM_FUEL = "ALUMENTUM_FUEL";
+    /** Модуль asp: солнечная алхимия (саннариум в тигле). */
+    public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
+    /** Модуль mets: техно-материалы под таумометром. */
+    public static final String TECHNO_MATERIALS = "TECHNO_MATERIALS";
 
     private UTResearch() {
     }
@@ -135,5 +139,52 @@ public final class UTResearch {
                 .registerResearchItem();
 
         UTLog.info("Research tab {} registered ({} entries)", CATEGORY, 5);
+    }
+
+    /**
+     * Запись модуля asp. Вызывается ПОСЛЕ {@link #register()} (категория уже
+     * существует) и только при активном модуле — у игрока без ASP записи нет.
+     */
+    public static void registerAspLore() {
+        ItemStack sunnarium = unboundtech.compat.ModItems.item(
+                unboundtech.CompatIds.ASP, "crafting", 0);
+        new ResearchItem(
+                SOLAR_SUNNARIUM, CATEGORY,
+                new AspectList().add(Aspect.LIGHT, 4).add(Aspect.ENERGY, 4)
+                        .add(Aspect.FIRE, 2),
+                0, -2, 1,
+                sunnarium.isEmpty()
+                        ? new ItemStack(net.minecraft.init.Items.GLOWSTONE_DUST)
+                        : sunnarium)
+                .setRound()
+                .setSecondary()
+                .setParents(INTRO)
+                .setPages(
+                        new ResearchPage("unboundtech.research_page.SOLAR_SUNNARIUM.1"),
+                        new ResearchPage("unboundtech.research_page.SOLAR_SUNNARIUM.2"))
+                .registerResearchItem();
+        UTLog.info("Research {} registered (asp module)", SOLAR_SUNNARIUM);
+    }
+
+    /** Запись модуля mets. Контракт тот же, что у {@link #registerAspLore()}. */
+    public static void registerMetsLore() {
+        ItemStack circuit = unboundtech.compat.ModItems.item(
+                unboundtech.CompatIds.METS, "super_circuit", 0);
+        new ResearchItem(
+                TECHNO_MATERIALS, CATEGORY,
+                new AspectList().add(Aspect.METAL, 4).add(Aspect.MECHANISM, 4)
+                        .add(Aspect.ORDER, 2),
+                0, 2, 1,
+                circuit.isEmpty()
+                        ? new ItemStack(net.minecraft.init.Items.IRON_INGOT)
+                        : circuit)
+                .setRound()
+                .setSecondary()
+                .setParents(INTRO)
+                .setPages(
+                        new ResearchPage("unboundtech.research_page.TECHNO_MATERIALS.1"),
+                        new ResearchPage("unboundtech.research_page.TECHNO_MATERIALS.2"))
+                .registerResearchItem();
+        UTLog.info("Research {} registered (mets module)", TECHNO_MATERIALS);
     }
 }

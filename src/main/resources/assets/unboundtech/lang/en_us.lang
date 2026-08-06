@@ -23,3 +23,15 @@ unboundtech.research_page.THAUM_ORE_MACERATION.2=The taint deserves a special no
 tc.research_name.ALUMENTUM_FUEL=Alumentum: Machine Fuel
 tc.research_text.ALUMENTUM_FUEL=Magical coal in an iron firebox
 unboundtech.research_page.ALUMENTUM_FUEL.1=The generator is omnivorous: it cares little whether coal burns in its firebox or a clot of pure flame. Alumentum burns long and steady — one piece lasts a good while, and the EU meter climbs noticeably faster.<BR><BR>Just do not let the buffer overflow: alumentum resents having nowhere to put its strength.
+
+# Module asp — Advanced Solar Panels detected
+tc.research_name.SOLAR_SUNNARIUM=Sunnarium: The Captured Sun
+tc.research_text.SOLAR_SUNNARIUM=Solar alchemy of the engineers
+unboundtech.research_page.SOLAR_SUNNARIUM.1=The engineers have done what alchemists only dreamed of: locked sunlight inside metal. Sunnarium warms the palm and refuses to dim even in a windowless cellar. The thaumometer is unambiguous — pure Lux bound with Potentia.<BR><BR>Which means the crucible will take it. Drop sunnarium into the melt when a recipe hungers for light or power: a costly source, but the sun never runs dry.
+unboundtech.research_page.SOLAR_SUNNARIUM.2=Their solar panels deserve study as well — each tier hums with more trapped daylight than the last, and the quantum ones read almost like something not of this world.<BR><BR>A note for the future: once the converters are built, sunnarium promises a gentler path to iridium wand components. The workshop journal has a page reserved.
+
+# Module mets — More Electric Tools detected
+tc.research_name.TECHNO_MATERIALS=Titanium, Niobium and Living Metal
+tc.research_text.TECHNO_MATERIALS=New metals under the thaumometer
+unboundtech.research_page.TECHNO_MATERIALS.1=The toolmakers' workshop has delivered a whole shelf of new materials: stubborn titanium, cold-drinking niobium, superconducting weaves, circuits dense as honeycomb. The thaumometer reads them eagerly — Metallum in abundance, Potentia in the alloys, strict Ordo in the lattices.<BR><BR>Study them all: an aspect gathered from a scan is an aspect you need not hunt elsewhere.
+unboundtech.research_page.TECHNO_MATERIALS.2=One find stands apart: nano living metal. The instrument shows Victus — life — inside a factory-made alloy. Either the engineers have crossed a line, or the border between golem craft and machinery was never as solid as the books claim.<BR><BR>Their laser weapons, meanwhile, hint at what a Tesla focus might one day become.
