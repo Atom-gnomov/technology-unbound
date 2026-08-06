@@ -26,16 +26,7 @@ DEVJAR=$(ls "$PORT_DIR"/mod/build/libs/Thaumcraft-*-dev.jar | head -1)
 cp -f "$DEVJAR" libs/
 echo "[ok] $DEVJAR -> libs/ (сверь имя с build.gradle)"
 
-if ! ls libs/industrialcraft-2-*.jar >/dev/null 2>&1; then
-    cat >&2 <<'EOM'
-[!] В libs/ нет jar-а IC2. Скачай IndustrialCraft 2 Experimental (1.12.2):
-      https://www.curseforge.com/minecraft/mc-mods/industrial-craft
-    положи jar в libs/, сверь имя с build.gradle, затем:
-      ./gradlew build -Dorg.gradle.java.home="$JDK8_HOME"
-EOM
-    exit 0
-fi
-echo "[ok] IC2 jar найден"
+# IC2 качается автоматически через CurseMaven (см. build.gradle)
 
 echo "[..] Собираю Unbound Technology..."
 ./gradlew build -Dorg.gradle.java.home="$JDK8_HOME" --console=plain

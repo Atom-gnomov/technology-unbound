@@ -52,16 +52,7 @@ echo [ok] !DEVJAR! -^> libs\
 echo     Проверь, что имя в build.gradle ^(compile name: 'Thaumcraft-...-dev'^)
 echo     совпадает с версией скопированного jar.
 
-REM --- 4. IC2 jar ---
-if not exist "libs\industrialcraft-2-*.jar" (
-    echo [!] В libs\ нет jar-а IC2.
-    echo     Скачай IndustrialCraft 2 Experimental для 1.12.2 с CurseForge:
-    echo       https://www.curseforge.com/minecraft/mc-mods/industrial-craft
-    echo     положи jar в libs\ и сверь имя с build.gradle.
-    echo     После этого запусти: gradlew.bat build -Dorg.gradle.java.home="%JDK8_HOME%"
-    exit /b 0
-)
-echo [ok] IC2 jar найден в libs\
+REM --- 4. IC2 качается автоматически (CurseMaven, см. build.gradle) ---
 
 REM --- 5. Сборка сабмода ---
 echo [..] Собираю Unbound Technology...

@@ -35,14 +35,13 @@ export JDK8_HOME=/путь/к/jdk8
 ./setup-local.sh
 ```
 
-Jar IC2 скрипт не качает (CurseForge требует ручной загрузки) — скачай
-[IndustrialCraft 2 Experimental для 1.12.2](https://www.curseforge.com/minecraft/mc-mods/industrial-craft)
-и положи в `libs/`.
+IC2 качается автоматически через CurseMaven (пин файла
+[3838713](https://www.curseforge.com/minecraft/mc-mods/industrial-craft/download/3838713)
+в `build.gradle`) — руками ничего скачивать не нужно.
 
 **Вручную:**
-1. Положи в `libs/` два jar-а (см. `libs/README.md`):
-   - `Thaumcraft-<version>-dev.jar` — собирается в репо порта: `gradlew devJar`;
-   - `industrialcraft-2-2.8.x-ex112.jar` — jar IC2 с CurseForge.
+1. Положи в `libs/` dev-jar порта (см. `libs/README.md`):
+   `Thaumcraft-<version>-dev.jar` — собирается в репо порта: `gradlew devJar`.
 2. `./gradlew build` (Windows: `gradlew.bat build`) с JDK 8.
 3. Готовый мод: `build/libs/UnboundTechnology-<version>-universal.jar`.
 

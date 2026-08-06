@@ -5,7 +5,10 @@
 | Файл | Откуда |
 |---|---|
 | `Thaumcraft-1.2.8.0-dev.jar` | репо порта TC4U: `gradlew devJar` → `mod/build/libs/` |
-| `industrialcraft-2-2.8.222-ex112.jar` | CurseForge, страница Industrial Craft (файл для 1.12.2) |
+
+IC2 больше НЕ нужен в libs/ — он подключён через CurseMaven
+(`deobfCompile 'curse.maven:industrial-craft-242638:3838713'` в build.gradle,
+файл выбран владельцем мода) и скачивается Gradle-ом автоматически.
 
 Имена файлов должны совпадать со строками `compile name: '...'` в `build.gradle`
 (без расширения `.jar`). Версии можно поднять — синхронно в обоих местах.

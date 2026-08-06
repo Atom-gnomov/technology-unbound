@@ -41,10 +41,9 @@
 
 ## Dev-запуск (runClient)
 
-Релизный jar IC2 собран под SRG — в deobf-окружении ForgeGradle он не
-загрузится. Для `runClient` подключать IC2 через
-`deobfCompile 'curse.maven:industrial-craft-242638:<fileId>'`
-(см. комментарий в build.gradle). Для обычного `build` достаточно jar в libs/.
+Решено: IC2 подключён `deobfCompile 'curse.maven:industrial-craft-242638:3838713'`
+(файл выбран владельцем) — FG 2.3 деобфусцирует jar, работает и build,
+и runClient. Пары name/variant из этого файла — эталон для сверки таблицы выше.
 
 Рантайм-страховка уже встроена: `IC2Handles.item()` на отсутствующий предмет
 даёт WARN и пустой стек, зависимый контент пропускается без краша.

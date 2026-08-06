@@ -52,14 +52,10 @@ dependencies {
     // Baubles — транзитивная зависимость TC4U (тот же пин, что у порта).
     compile 'curse.maven:baubles-227083:2518667'
 
-    // IC2 Experimental 1.12.2: положи jar в libs/ (см. libs/README.md).
-    // ВНИМАНИЕ: flatDir-jar подключён как plain compile — этого достаточно
-    // для `gradlew build`, но НЕ для `gradlew runClient`: релизный jar IC2
-    // собран под SRG-имена и в deobf-окружении разработки упадёт при загрузке.
-    // Для runClient замени строку ниже на deobfCompile через CurseMaven
-    // (flatDir-jar-ы FG 2.3 деобфусцировать не умеет):
-    //   deobfCompile 'curse.maven:industrial-craft-242638:<fileId>'
-    compile name: 'industrialcraft-2-2.8.222-ex112'
+    // IC2 Experimental 1.12.2 через CurseMaven (файл выбран владельцем:
+    // curseforge.com/minecraft/mc-mods/industrial-craft/download/3838713).
+    // deobfCompile: FG 2.3 деобфусцирует jar → работает и build, и runClient.
+    deobfCompile 'curse.maven:industrial-craft-242638:3838713'
 
     testCompile 'junit:junit:4.12'
 }
