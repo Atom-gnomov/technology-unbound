@@ -39,6 +39,23 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable {
     private int counter;
     private boolean active;
 
+    /**
+     * КРИТИЧНО: у модовых тайлов Forge по умолчанию пересоздаёт TileEntity при
+     * ЛЮБОЙ смене состояния блока — {@code TileEntity.shouldRefresh} возвращает
+     * {@code !isVanilla || блок изменился}, а {@code isVanilla} проверяется по
+     * имени пакета ({@code net.minecraft.*}). Без этого переопределения каждое
+     * переключение ACTIVE обнуляло бы буфер EU и выкидывало машину из
+     * энергосети IC2. Порт по той же причине переопределяет метод в восьми
+     * своих тайлах (TileJar, TilePedestal, TileCamo…).
+     */
+    @Override
+    public boolean shouldRefresh(net.minecraft.world.World world,
+            net.minecraft.util.math.BlockPos pos,
+            net.minecraft.block.state.IBlockState oldState,
+            net.minecraft.block.state.IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
+    }
+
     @Override
     public void update() {
         this.sink.update();

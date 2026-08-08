@@ -52,6 +52,23 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
     private boolean active;
     private boolean interfered;
 
+    /**
+     * КРИТИЧНО: у модовых тайлов Forge по умолчанию пересоздаёт TileEntity при
+     * ЛЮБОЙ смене состояния блока — {@code TileEntity.shouldRefresh} возвращает
+     * {@code !isVanilla || блок изменился}, а {@code isVanilla} проверяется по
+     * имени пакета ({@code net.minecraft.*}). Без этого переопределения каждое
+     * переключение ACTIVE обнуляло бы буфер EU и выкидывало машину из
+     * энергосети IC2. Порт по той же причине переопределяет метод в восьми
+     * своих тайлах (TileJar, TilePedestal, TileCamo…).
+     */
+    @Override
+    public boolean shouldRefresh(net.minecraft.world.World world,
+            net.minecraft.util.math.BlockPos pos,
+            net.minecraft.block.state.IBlockState oldState,
+            net.minecraft.block.state.IBlockState newState) {
+        return oldState.getBlock() != newState.getBlock();
+    }
+
     @Override
     public void update() {
         this.source.update();
@@ -96,7 +113,11 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
             }
             for (Aspect aspect : FUEL_ASPECTS) {
                 int available = aspects.getAmount(aspect);
-                int floor = (int) Math.ceil(node.getNodeVisBase(aspect) * NODE_FLOOR);
+                // Минимум 1: у стороннего узла ёмкость аспекта может быть 0,
+                // и тогда пол выродился бы в ноль, а аспект исчез бы навсегда
+                // (реген узла обходит только aspectsBase).
+                int floor = Math.max(1,
+                        (int) Math.ceil(node.getNodeVisBase(aspect) * NODE_FLOOR));
                 if (available - 1 < floor) {
                     continue;
                 }

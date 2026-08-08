@@ -68,6 +68,12 @@ public final class NodeCache {
 
     /** @return узел в этой позиции или null (банки-узлы не считаются). */
     public static INode nodeAt(World world, BlockPos pos) {
+        // Позиции живут в кэше до 100 тиков: без этой проверки getTileEntity
+        // синхронно подгрузил бы (а то и сгенерировал) выгруженный чанк
+        // прямо из тика машины.
+        if (!world.isBlockLoaded(pos)) {
+            return null;
+        }
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof INode && !(te instanceof TileJarNode)) {
             return (INode) te;
