@@ -23,3 +23,31 @@ unboundtech.research_page.THAUM_ORE_MACERATION.2=The taint deserves a special no
 tc.research_name.ALUMENTUM_FUEL=Alumentum: Machine Fuel
 tc.research_text.ALUMENTUM_FUEL=Magical coal in an iron firebox
 unboundtech.research_page.ALUMENTUM_FUEL.1=The generator is omnivorous: it cares little whether coal burns in its firebox or a clot of pure flame. Alumentum burns long and steady — one piece lasts a good while, and the EU meter climbs noticeably faster.<BR><BR>Just do not let the buffer overflow: alumentum resents having nowhere to put its strength.
+
+# --- Phase 3a: converters and thaum steel ---
+itemGroup.unboundtech=Unbound Technology
+
+tile.unboundtech.thaum_generator.name=Thaumic Alternator
+tile.unboundtech.aetheric_engine.name=Aetheric Engine
+item.unboundtech.thaum_steel_ingot.name=Thaum-Steel Ingot
+
+tc.research_name.THAUM_STEEL=Thaum-Steel
+tc.research_text.THAUM_STEEL=A metal that obeys both forces
+unboundtech.research_page.THAUM_STEEL.1=The engineers' refined iron is strong but deaf to magic: vis runs off it like water off stone. Melt an ingot in the crucible, let the metal drink Praecantatio — and it will stop resisting.<BR><BR>Thaum-Steel does not spark near an aura, nor crumble under current. It will make machine casings, wand caps and frames for delicate instruments.
+
+tc.research_name.VIS_TO_EU_GENERATOR=Thaumic Alternator
+tc.research_text.VIS_TO_EU_GENERATOR=A node as a source of current
+unboundtech.research_page.VIS_TO_EU_GENERATOR.1=Quicksilver veins in a thaum-steel frame draw Ignis and Potentia from the nearest node and drop them into a coil. Magic dies, electricity is born — a crude exchange, but an honest one.<BR><BR>The alternator searches for nodes within eight blocks and never takes them below a fifth of their capacity: a drained node never recovers, and a dry node feeds no one.
+unboundtech.research_page.VIS_TO_EU_GENERATOR.2=At first the machine will choke on power — the node is giving up what it stored. Then the pace drops to the speed at which the node replenishes itself: a drop every half-minute.<BR><BR>And remember: two such machines within sixteen blocks silence each other. A separate note explains why.
+
+tc.research_name.EU_TO_VIS_ENGINE=Aetheric Engine
+tc.research_text.EU_TO_VIS_ENGINE=Current as fertiliser for a node
+unboundtech.research_page.EU_TO_VIS_ENGINE.1=The reverse path is harder than the forward one: to return a single unit of aspect to a node, the machine burns four times the energy the alternator got out of it.<BR><BR>This is not waste, it is law. Wiring the two devices into a loop will not yield a perpetual engine: the loop always loses three quarters.
+unboundtech.research_page.EU_TO_VIS_ENGINE.2=In exchange, a depleted node that would have needed a day fills up in minutes. The engine restores only what the node lacks of its own capacity — current cannot grow a node beyond what it was.
+
+tc.research_name.LORE_RESONANCE_LIMITS=Limits of Resonance
+tc.research_text.LORE_RESONANCE_LIMITS=Why alternators tolerate no neighbours
+unboundtech.research_page.LORE_RESONANCE_LIMITS.1=Every alternator imposes its own rhythm on the aura. Two rhythms side by side are no longer music but a beat: the waves cancel, the coils fall silent, the node stands untouched.<BR><BR>Sixteen blocks is the distance at which the rhythms stop arguing. There will be no alternator farms; build wide, not dense.
+
+unboundtech.status.buffer=Buffer: %s / %s EU
+unboundtech.status.interference=Resonance interference: another Thaumic Alternator is too close

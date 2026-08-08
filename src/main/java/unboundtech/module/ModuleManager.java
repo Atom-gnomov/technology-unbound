@@ -4,6 +4,9 @@ import java.util.StringJoiner;
 import unboundtech.UTLog;
 import unboundtech.compat.ic2.IC2Aspects;
 import unboundtech.compat.ic2.IC2Recipes;
+import unboundtech.init.UTAspects;
+import unboundtech.init.UTItems;
+import unboundtech.recipe.UTRecipes;
 import unboundtech.research.UTResearch;
 
 /**
@@ -25,7 +28,7 @@ public final class ModuleManager {
     }
 
     public static void init() {
-        // Фаза 1: нечего регистрировать на init.
+        UTItems.registerOreDictionary();
     }
 
     /**
@@ -36,8 +39,12 @@ public final class ModuleManager {
     public static void postInit() {
         if (UTModule.CORE.isEnabled()) {
             IC2Aspects.register();
+            UTAspects.register();
             UTResearch.register();
             IC2Recipes.register();
+            // Рецепты ТК раньше исследований: страницы показывают объекты рецептов.
+            UTRecipes.register();
+            UTResearch.registerConverters();
         }
     }
 

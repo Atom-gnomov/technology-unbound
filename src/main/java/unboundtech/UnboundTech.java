@@ -6,6 +6,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import unboundtech.config.UTConfig;
+import unboundtech.init.UTBlocks;
 import unboundtech.module.ModuleManager;
 
 /**
@@ -42,6 +43,7 @@ public class UnboundTech {
         UTLog.info("{} {} pre-init", NAME, VERSION);
         UTConfig.load(event.getSuggestedConfigurationFile());
         ModuleManager.preInit();
+        UTBlocks.registerTileEntities();
         MinecraftForge.EVENT_BUS.register(this);
     }
 

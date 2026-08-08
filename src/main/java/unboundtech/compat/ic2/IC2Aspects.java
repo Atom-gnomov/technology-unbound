@@ -41,14 +41,23 @@ public final class IC2Aspects {
                 list().add(Aspect.MECHANISM, 4).add(Aspect.MIND, 2).add(Aspect.ENERGY, 2));
         tag("crafting", "advanced_circuit",
                 list().add(Aspect.MECHANISM, 6).add(Aspect.MIND, 4).add(Aspect.LIGHT, 2));
-        tag("ingot", "refined_iron",
+        // В IC2 Experimental «закалённое железо» называется steel
+        // (ingot/refined_iron есть только в IC2 Classic — проверено).
+        tag("ingot", "steel",
                 list().add(Aspect.METAL, 4).add(Aspect.ORDER, 2));
         tag("crafting", "carbon_fibre",
                 list().add(Aspect.CLOTH, 2).add(Aspect.ORDER, 2).add(Aspect.FIRE, 1));
+        tag("crafting", "alloy",
+                list().add(Aspect.METAL, 4).add(Aspect.ORDER, 2).add(Aspect.ARMOR, 2));
         tag("crafting", "scrap",
                 list().add(Aspect.ENTROPY, 2).add(Aspect.EXCHANGE, 1));
+        // crafting/iridium — это Иридиевая усиленная пластина, а не сырой иридий.
         tag("crafting", "iridium",
+                list().add(Aspect.METAL, 12).add(Aspect.ELDRITCH, 4).add(Aspect.ARMOR, 4));
+        tag("misc_resource", "iridium_ore",
                 list().add(Aspect.METAL, 8).add(Aspect.ELDRITCH, 4));
+        tag("misc_resource", "iridium_shard",
+                list().add(Aspect.METAL, 4).add(Aspect.ELDRITCH, 2));
         tag("misc_resource", "matter",
                 list().add(Aspect.ELDRITCH, 8).add(Aspect.EXCHANGE, 8).add(Aspect.VOID, 4));
 

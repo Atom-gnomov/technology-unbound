@@ -41,10 +41,10 @@ public final class UTConfig {
                 "Energy exchange rates (v5 canon). Round-trip Vis->EU->Vis must stay <= 25% "
                 + "('second law of thaumodynamics'); a WARN is logged if this config breaks it.");
         EnergyCanon.EU_PER_AURA_SELL = config.get(CAT_ENERGY, "eu_per_aura_unit_generated", 2000,
-                "EU produced by the Thaumic Alternator per 1 unit of node aura (Ignis/Potentia).")
+                "EU produced by the Thaumic Alternator per 1 unit of node aspect (Ignis/Potentia).")
                 .getInt(2000);
         EnergyCanon.EU_PER_AURA_BUY = config.get(CAT_ENERGY, "eu_per_aura_unit_restored", 8000,
-                "EU consumed by the Aetheric Engine to restore 1 unit of chunk aura.")
+                "EU consumed by the Aetheric Engine to restore 1 unit of a node's aspect.")
                 .getInt(8000);
         EnergyCanon.EU_PER_VIS = config.get(CAT_ENERGY, "eu_per_wand_vis", 20000,
                 "EU consumed to charge 1 vis directly into a wand (Singulator, iridium rod).")

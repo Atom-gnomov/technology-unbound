@@ -10,6 +10,9 @@ import thaumcraft.api.research.ResearchPage;
 import unboundtech.UTLog;
 import unboundtech.UnboundTech;
 import unboundtech.compat.ic2.IC2Handles;
+import unboundtech.init.UTBlocks;
+import unboundtech.init.UTItems;
+import unboundtech.recipe.UTRecipes;
 
 /**
  * Вкладка «Индустриальная Магия» (категория UNBOUNDTECH) и исследования фазы 1.
@@ -44,6 +47,10 @@ public final class UTResearch {
     public static final String LORE_ELAN_VITAL = "LORE_ELAN_VITAL";
     public static final String ORE_MACERATION = "THAUM_ORE_MACERATION";
     public static final String ALUMENTUM_FUEL = "ALUMENTUM_FUEL";
+    public static final String THAUM_STEEL = "THAUM_STEEL";
+    public static final String VIS_TO_EU_GENERATOR = "VIS_TO_EU_GENERATOR";
+    public static final String EU_TO_VIS_ENGINE = "EU_TO_VIS_ENGINE";
+    public static final String LORE_RESONANCE_LIMITS = "LORE_RESONANCE_LIMITS";
 
     private UTResearch() {
     }
@@ -135,5 +142,74 @@ public final class UTResearch {
                 .registerResearchItem();
 
         UTLog.info("Research tab {} registered ({} entries)", CATEGORY, 5);
+    }
+
+    /**
+     * Исследования фазы 3а. Регистрируются ПОСЛЕ рецептов ({@link unboundtech.recipe.UTRecipes}),
+     * потому что страницы показывают сами объекты рецептов.
+     */
+    public static void registerConverters() {
+        new ResearchItem(
+                THAUM_STEEL, CATEGORY,
+                new AspectList().add(Aspect.METAL, 8).add(Aspect.MAGIC, 5).add(Aspect.ORDER, 3),
+                4, 0, 2,
+                new ItemStack(UTItems.thaumSteelIngot))
+                .setParents(ORE_MACERATION)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.THAUM_STEEL.1"),
+                        UTRecipes.thaumSteel == null ? null : new ResearchPage(UTRecipes.thaumSteel)))
+                .registerResearchItem();
+
+        new ResearchItem(
+                VIS_TO_EU_GENERATOR, CATEGORY,
+                new AspectList().add(Aspect.ENERGY, 10).add(Aspect.MECHANISM, 8)
+                        .add(Aspect.AURA, 8).add(Aspect.FIRE, 5),
+                6, -1, 3,
+                new ItemStack(UTBlocks.thaumGenerator))
+                .setParents(THAUM_STEEL)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.1"),
+                        new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.2"),
+                        UTRecipes.thaumGenerator == null ? null
+                                : new ResearchPage(UTRecipes.thaumGenerator)))
+                .registerResearchItem();
+
+        new ResearchItem(
+                EU_TO_VIS_ENGINE, CATEGORY,
+                new AspectList().add(Aspect.ENERGY, 10).add(Aspect.MECHANISM, 8)
+                        .add(Aspect.AURA, 10).add(Aspect.ORDER, 5),
+                6, 1, 3,
+                new ItemStack(UTBlocks.aethericEngine))
+                .setParents(VIS_TO_EU_GENERATOR)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.EU_TO_VIS_ENGINE.1"),
+                        new ResearchPage("unboundtech.research_page.EU_TO_VIS_ENGINE.2"),
+                        UTRecipes.aethericEngine == null ? null
+                                : new ResearchPage(UTRecipes.aethericEngine)))
+                .registerResearchItem();
+
+        new ResearchItem(
+                LORE_RESONANCE_LIMITS, CATEGORY,
+                new AspectList().add(Aspect.AURA, 6).add(Aspect.ENERGY, 6),
+                8, 0, 1,
+                new ItemStack(net.minecraft.init.Items.BOOK))
+                .setRound()
+                .setSecondary()
+                .setParents(VIS_TO_EU_GENERATOR)
+                .setPages(new ResearchPage("unboundtech.research_page.LORE_RESONANCE_LIMITS.1"))
+                .registerResearchItem();
+
+        UTLog.info("Converter research registered (4 entries)");
+    }
+
+    /** Отбрасывает страницы, которых не получилось создать (нет рецепта — нет страницы). */
+    private static ResearchPage[] pages(ResearchPage... candidates) {
+        java.util.List<ResearchPage> list = new java.util.ArrayList<ResearchPage>();
+        for (ResearchPage page : candidates) {
+            if (page != null) {
+                list.add(page);
+            }
+        }
+        return list.toArray(new ResearchPage[0]);
     }
 }

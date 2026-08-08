@@ -11,10 +11,13 @@ import unboundtech.UTLog;
  */
 public final class EnergyCanon {
 
-    /** Аура → EU: Таум-Генератор, EU за 1 ед. ауры узла (Ignis/Potentia). */
+    /** Узел → EU: Таум-Генератор, EU за 1 ед. аспекта узла (Ignis/Potentia). */
     public static int EU_PER_AURA_SELL = 2_000;
 
-    /** EU → аура: Эфирный Двигатель, EU за 1 ед. ауры чанка. */
+    /**
+     * EU → узел: Эфирный Двигатель, EU за 1 ед. аспекта узла.
+     * (Ауры чанков в порте не существует — вся «аура» это узлы.)
+     */
     public static int EU_PER_AURA_BUY = 8_000;
 
     /** EU → вис в жезле: Сингулятор / иридиевый стержень. */

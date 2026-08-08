@@ -1,0 +1,8 @@
+{
+  "parent": "block/orientable",
+  "textures": {
+    "top": "unboundtech:blocks/thaum_generator_top",
+    "front": "unboundtech:blocks/thaum_generator_front",
+    "side": "unboundtech:blocks/thaum_generator_side"
+  }
+}

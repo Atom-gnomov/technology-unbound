@@ -1,0 +1,37 @@
+{
+  "variants": {
+    "active=false,facing=north": {
+      "model": "unboundtech:aetheric_engine"
+    },
+    "active=false,facing=east": {
+      "model": "unboundtech:aetheric_engine",
+      "y": 90
+    },
+    "active=false,facing=south": {
+      "model": "unboundtech:aetheric_engine",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "unboundtech:aetheric_engine",
+      "y": 270
+    },
+    "active=true,facing=north": {
+      "model": "unboundtech:aetheric_engine_on"
+    },
+    "active=true,facing=east": {
+      "model": "unboundtech:aetheric_engine_on",
+      "y": 90
+    },
+    "active=true,facing=south": {
+      "model": "unboundtech:aetheric_engine_on",
+      "y": 180
+    },
+    "active=true,facing=west": {
+      "model": "unboundtech:aetheric_engine_on",
+      "y": 270
+    },
+    "inventory": {
+      "model": "unboundtech:aetheric_engine"
+    }
+  }
+}
