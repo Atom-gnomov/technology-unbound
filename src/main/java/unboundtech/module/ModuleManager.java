@@ -2,6 +2,7 @@ package unboundtech.module;
 
 import java.util.StringJoiner;
 import unboundtech.UTLog;
+import unboundtech.aspects.UTAspects;
 import unboundtech.compat.asp.ASPAspects;
 import unboundtech.compat.ic2.IC2Aspects;
 import unboundtech.compat.ic2.IC2Recipes;
@@ -48,6 +49,10 @@ public final class ModuleManager {
         // держат сами объекты рецептов.
         UTRecipes.register();
         UTResearch.registerConverters();
+
+        // Аспекты наших объектов считаются по формуле из состава рецепта,
+        // поэтому строго после UTRecipes и после аспектов IC2.
+        UTAspects.register();
 
         // Аддон-модули: двойной гейт конфиг × наличие мода уже внутри
         // isEnabled(); вкладка исследований принадлежит CORE, поэтому

@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import net.minecraftforge.common.config.Configuration;
 import unboundtech.UTLog;
+import unboundtech.aspects.AspectFormula;
 import unboundtech.energy.EnergyCanon;
 import unboundtech.energy.OverclockRules;
 import unboundtech.module.UTModule;
@@ -18,6 +19,7 @@ public final class UTConfig {
     private static final String CAT_MODULES = "modules";
     private static final String CAT_ENERGY = "energy";
     private static final String CAT_OVERCLOCK = "overclock";
+    private static final String CAT_ASPECTS = "aspects";
 
     private static Configuration config;
     private static final Map<UTModule, Boolean> MODULE_FLAGS = new EnumMap<>(UTModule.class);
@@ -63,6 +65,15 @@ public final class UTConfig {
         EnergyCanon.EU_PERMUTATIO_AMPLIFIER = config.get(CAT_ENERGY, "eu_permutatio_amplifier", 5000,
                 "Mass Fabricator (phase 10): amplifier EU value of 1 Permutatio essentia.")
                 .getInt(5000);
+
+        config.setCategoryComment(CAT_ASPECTS,
+                "Aspect economy. Item aspects are derived from recipe components at runtime "
+                + "(canon: docs/design/04_systems/aspect_economy.md), not hand-assigned.");
+        AspectFormula.TRANSFER = config.get(CAT_ASPECTS, "transfer_coefficient", 0.6D,
+                "Share of component aspects inherited by the result. Canon range 0.5..0.75: "
+                + "below 0.5 items feel empty, above 0.75 crafting an item and melting it "
+                + "down yields more essentia than it cost. Values outside the range are clamped.")
+                .getDouble(0.6D);
 
         config.setCategoryComment(CAT_OVERCLOCK,
                 "Thaumic Overclocker (upgrade item, used from phase 3; read now so packs can "
