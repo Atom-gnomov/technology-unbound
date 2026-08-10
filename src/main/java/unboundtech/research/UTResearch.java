@@ -50,6 +50,8 @@ public final class UTResearch {
     public static final String VIS_TO_EU_GENERATOR = "VIS_TO_EU_GENERATOR";
     public static final String EU_TO_VIS_ENGINE = "EU_TO_VIS_ENGINE";
     public static final String LORE_RESONANCE_LIMITS = "LORE_RESONANCE_LIMITS";
+    /** Сводка курсов и темпов — справочник игрока, все числа в одном месте. */
+    public static final String THAUMODYNAMIC_TABLES = "THAUMODYNAMIC_TABLES";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -141,7 +143,9 @@ public final class UTResearch {
                 new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1,
                         thaumcraft.common.items.ItemResource.META_ALUMENTUM))
                 .setParents(INTRO)
-                .setPages(new ResearchPage("unboundtech.research_page.ALUMENTUM_FUEL.1"))
+                .setPages(
+                        new ResearchPage("unboundtech.research_page.ALUMENTUM_FUEL.1"),
+                        new ResearchPage("unboundtech.research_page.ALUMENTUM_FUEL.2"))
                 .registerResearchItem();
 
         // Поведение живёт в порте ≥1.2.8.1 (TileNitor = IHeatSource, 20 HU/t);
@@ -155,7 +159,9 @@ public final class UTResearch {
                 new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1,
                         thaumcraft.common.items.ItemResource.META_NITOR))
                 .setParents(INTRO)
-                .setPages(new ResearchPage("unboundtech.research_page.NITOR_HEAT.1"))
+                .setPages(
+                        new ResearchPage("unboundtech.research_page.NITOR_HEAT.1"),
+                        new ResearchPage("unboundtech.research_page.NITOR_HEAT.2"))
                 .registerResearchItem();
 
         UTLog.info("Research tab {} registered ({} entries)", CATEGORY, 6);
@@ -179,9 +185,10 @@ public final class UTResearch {
                 new ItemStack(unboundtech.common.UTBlocks.thaumGenerator))
                 .setParents(ORE_MACERATION)
                 .setPages(pagesWithRecipe(
+                        unboundtech.common.UTRecipes.thaumGenerator,
                         new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.1"),
                         new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.2"),
-                        unboundtech.common.UTRecipes.thaumGenerator));
+                        new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.3")));
         generator.registerResearchItem();
 
         new ResearchItem(
@@ -204,25 +211,47 @@ public final class UTResearch {
                 new ItemStack(unboundtech.common.UTBlocks.aethericEngine))
                 .setParents(VIS_TO_EU_GENERATOR)
                 .setPages(pagesWithRecipe(
+                        unboundtech.common.UTRecipes.aethericEngine,
                         new ResearchPage("unboundtech.research_page.EU_TO_VIS_ENGINE.1"),
                         new ResearchPage("unboundtech.research_page.EU_TO_VIS_ENGINE.2"),
-                        unboundtech.common.UTRecipes.aethericEngine))
+                        new ResearchPage("unboundtech.research_page.EU_TO_VIS_ENGINE.3")))
+                .registerResearchItem();
+
+        // Справочник: все курсы, темпы и сравнение с обычным топливом IC2
+        // в одном месте. Числа выведены из кода (формула генератора IC2:
+        // burnTime/4 тиков по 10 EU/t; Стирлинг: 0.5 EU за HU; регенерация
+        // узла: 600 тиков, BRIGHT 400, PALE 900, FADING — никогда).
+        new ResearchItem(
+                THAUMODYNAMIC_TABLES, CATEGORY,
+                new AspectList().add(Aspect.ORDER, 5).add(Aspect.MIND, 5)
+                        .add(Aspect.ENERGY, 3),
+                8, -1, 1,
+                new ItemStack(net.minecraft.init.Items.PAPER))
+                .setRound()
+                .setSecondary()
+                .setParents(EU_TO_VIS_ENGINE)
+                .setPages(
+                        new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.1"),
+                        new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.2"),
+                        new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.3"))
                 .registerResearchItem();
 
         UTLog.info("Converter research registered (phase 3a)");
     }
 
     /**
-     * Собирает страницы записи, добавляя страницу рецепта только если он
-     * зарегистрирован (без IC2-предмета рецепта нет — пустую страницу
+     * Собирает страницы записи, добавляя страницу рецепта последней и только
+     * если он зарегистрирован (без IC2-предмета рецепта нет — пустую страницу
      * показывать нельзя).
      */
-    private static ResearchPage[] pagesWithRecipe(ResearchPage first, ResearchPage second,
-            thaumcraft.api.crafting.ShapedArcaneRecipe recipe) {
+    private static ResearchPage[] pagesWithRecipe(
+            thaumcraft.api.crafting.ShapedArcaneRecipe recipe, ResearchPage... pages) {
         if (recipe == null) {
-            return new ResearchPage[]{first, second};
+            return pages;
         }
-        return new ResearchPage[]{first, second, new ResearchPage(recipe)};
+        ResearchPage[] all = java.util.Arrays.copyOf(pages, pages.length + 1);
+        all[pages.length] = new ResearchPage(recipe);
+        return all;
     }
 
     /**
