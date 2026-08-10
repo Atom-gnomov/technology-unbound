@@ -58,6 +58,11 @@ IC2 качается автоматически через CurseMaven (пин ф
 2. `./gradlew build` (Windows: `gradlew.bat build`) с JDK 8.
 3. Готовый мод: `build/libs/UnboundTechnology-<version>-universal.jar`.
 
+> ⚠️ **В `mods/` кладётся только `-universal`-jar.** Соседние `-dev` и
+> `-sources` — для сборки и IDE. Dev-jar не реобфусцирован (в нём
+> `MapColor.AIR` вместо `MapColor.field_151660_b`), и игра с ним падает на
+> `NoSuchFieldError` в preInit. То же правило для jar-а порта.
+
 Допущения по IC2 API (`docs/IC2_API_ASSUMPTIONS.md`) подтверждены первой
 сборкой 2026-08-06 против IC2 2.8.222-ex112; при смене пина IC2 — сверить
 заново по методу из того же файла.

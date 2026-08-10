@@ -1,5 +1,12 @@
 # libs/
 
+> ⚠️ **Jar-ы отсюда НЕЛЬЗЯ класть в `.minecraft/mods/`.** Это `-dev`-сборки:
+> они не проходят реобфускацию и хранят человеческие имена ванильных полей
+> (`MapColor.AIR` вместо `MapColor.field_151660_b`). В игре такой мод падает
+> на `NoSuchFieldError` ещё в preInit. Для игры нужен `-universal`-jar
+> (порт: `mod/build/libs/Thaumcraft-x.y.z-universal.jar`; сабмод:
+> `build/libs/UnboundTechnology-x.y.z-universal.jar`).
+
 Сюда кладутся jar-зависимости, которых нет в публичных мавенах:
 
 | Файл | Откуда |
