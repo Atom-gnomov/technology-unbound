@@ -17,7 +17,7 @@ import unboundtech.energy.EnergyCanon;
  * Эфирный Двигатель: EU → вис узла (спека фазы 3а §2).
  *
  * Раз в 20 тиков доливает 1 недостающий вис в ближайший неполный узел за
- * {@link EnergyCanon#EU_PER_AURA_BUY} EU — вчетверо дороже, чем Таум-Генератор
+ * {@link EnergyCanon#EU_PER_NODE_ASPECT_BUY} EU — вчетверо дороже, чем Таум-Генератор
  * платит за тот же вис. Это и есть «второй закон таумодинамики»: связка
  * генератор+двигатель на одном узле всегда убыточна, вечного двигателя нет.
  *
@@ -68,7 +68,7 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable {
         }
 
         boolean working = false;
-        if (this.sink.canUseEnergy(EnergyCanon.EU_PER_AURA_BUY)) {
+        if (this.sink.canUseEnergy(EnergyCanon.EU_PER_NODE_ASPECT_BUY)) {
             working = this.rechargeOneAspect();
         }
         this.setActive(working);
@@ -96,7 +96,7 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable {
             if (node.addToContainer(aspect, 1) != 0) {
                 continue;
             }
-            this.sink.useEnergy(EnergyCanon.EU_PER_AURA_BUY);
+            this.sink.useEnergy(EnergyCanon.EU_PER_NODE_ASPECT_BUY);
             NodeCache.syncNode(this.world, nodePos);
             return true;
         }

@@ -11,7 +11,6 @@ import unboundtech.UTLog;
  * Дробитель:
  *  - киноварь → 2× ртуть (как плавка, но с удвоением);
  *  - янтарная руда → 2× янтарь;
- *  - серебряная руда → 2× пыль серебра IC2;
  *  - зачарованные руды (6 стихий) → 2× осколка соответствующего аспекта;
  *  - кристалл-кластер аспекта → 4 осколка (переработка с потерей: крафт
  *    кластера в порте стоит 6 осколков).
@@ -22,7 +21,15 @@ import unboundtech.UTLog;
  *  - таинт-слизь / таинт-тендрил → резина («полимеризация скверны»);
  *  - серебролист → 2× живичной смолы.
  *
- * Входы задаём через оредикт, где он есть (oreCinnabar/oreAmber/oreSilver,
+ * Серебряной руды здесь НЕТ намеренно: IC2 обрабатывает её сам своим же
+ * конфигом (assets/ic2/config/macerator.ini: `OreDict:oreSilver =
+ * ic2:crushed#silver*2`), и у него есть вся цепочка — crushed → purified →
+ * dust → ingot, вплоть до термоцентрифуги. Свой рецепт `oreSilver → dust`
+ * либо не встал бы (addRecipe с overwrite=false), либо увёл бы руду мимо
+ * промывателя, оставив серебро единственной рудой пака без обогащения.
+ * Подробности: docs/design/04_systems/T13_crosscheck.md П-1 в репо порта.
+ *
+ * Входы задаём через оредикт, где он есть (oreCinnabar/oreAmber,
  * oreInfused*) — зарегистрированы портом в ConfigItems.registerOreDictionary.
  * Выходы — предметы порта, берём через оредикт-имена нельзя (нужны точные
  * меты), поэтому используем стеки из чужого реестра через GameRegistry.
@@ -41,8 +48,6 @@ public final class IC2Recipes {
         // --- Дробитель (macerator) ---
         added += macerate("oreCinnabar", TCItems.quicksilver(2));
         added += macerate("oreAmber", TCItems.amber(2));
-        added += macerate("oreSilver", IC2Handles.withCount(
-                IC2Handles.item("dust", "silver"), 2));
         String[] infusedOres = {"oreInfusedAir", "oreInfusedFire", "oreInfusedWater",
                 "oreInfusedEarth", "oreInfusedOrder", "oreInfusedEntropy"};
         for (int i = 0; i < infusedOres.length; i++) {

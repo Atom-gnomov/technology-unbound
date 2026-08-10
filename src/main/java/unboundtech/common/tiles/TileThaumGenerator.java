@@ -19,7 +19,7 @@ import unboundtech.energy.EnergyCanon;
  * Таум-Генератор: вис узла → EU (спека фазы 3а §1).
  *
  * Тянет по 1 вис Ignis/Potentia из ближайшего узла раз в 20 тиков и кладёт
- * в буфер {@link EnergyCanon#EU_PER_AURA_SELL} EU за единицу. Узел никогда
+ * в буфер {@link EnergyCanon#EU_PER_NODE_ASPECT_SELL} EU за единицу. Узел никогда
  * не выдаивается досуха: работает пол в 20% ПО-АСПЕКТНОЙ ёмкости
  * ({@code getNodeVisBase}), так что узел всегда остаётся живым и
  * восстанавливается сам. Долговременный потолок задаёт не машина, а реген
@@ -89,7 +89,7 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
         // Тянем, только когда в буфере есть место под целую порцию вис.
         if (!this.interfered
                 && this.source.getEnergyStored()
-                        <= CAPACITY - EnergyCanon.EU_PER_AURA_SELL) {
+                        <= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
             working = this.drainOneVis();
         }
         this.setActive(working);
@@ -124,7 +124,7 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
                 if (!node.takeFromContainer(aspect, 1)) {
                     continue;
                 }
-                this.source.addEnergy(EnergyCanon.EU_PER_AURA_SELL);
+                this.source.addEnergy(EnergyCanon.EU_PER_NODE_ASPECT_SELL);
                 NodeCache.syncNode(this.world, nodePos);
                 return true;
             }

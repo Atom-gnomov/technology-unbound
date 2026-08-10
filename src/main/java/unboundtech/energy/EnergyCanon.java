@@ -3,19 +3,28 @@ package unboundtech.energy;
 import unboundtech.UTLog;
 
 /**
- * Канонические курсы конвертации энергии (ревизия v5,
- * docs/integration/ic2_v5_decisions.md §2 в репо порта).
+ * Канонические курсы конвертации энергии.
  *
- * ВСЕ будущие конвертеры обязаны брать курсы отсюда — никакой предмет
- * не хардкодит собственный обменник. Значения переопределяются конфигом.
+ * Источник истины — канон дизайна в репо порта:
+ * {@code docs/design/02_world_model.md} §3 (единая таблица курсов).
+ *
+ * ВСЕ конвертеры обязаны брать курсы отсюда — никакой предмет не хардкодит
+ * собственный обменник. Значения переопределяются конфигом.
+ *
+ * <p><b>Терминология.</b> В моде НЕТ «ауры чанка»: классы
+ * {@code AuraHelper}/{@code AuraChunk}/{@code AuraHandler} в порте — мёртвый
+ * TC6-совместимый фасад (память, ничего не сохраняется и не читается).
+ * Единственный источник вис в мире — <b>узлы</b> ({@code INode}) с
+ * по-аспектной ёмкостью, поэтому курсы измеряются в «единицах аспекта узла».
+ * См. канон §1.1.
  */
 public final class EnergyCanon {
 
-    /** Аура → EU: Таум-Генератор, EU за 1 ед. ауры узла (Ignis/Potentia). */
-    public static int EU_PER_AURA_SELL = 2_000;
+    /** Узел → EU: Таум-Генератор, EU за 1 ед. аспекта узла (Ignis/Potentia). */
+    public static int EU_PER_NODE_ASPECT_SELL = 2_000;
 
-    /** EU → аура: Эфирный Двигатель, EU за 1 ед. ауры чанка. */
-    public static int EU_PER_AURA_BUY = 8_000;
+    /** EU → узел: Эфирный Двигатель, EU за 1 ед. аспекта узла. */
+    public static int EU_PER_NODE_ASPECT_BUY = 8_000;
 
     /** EU → вис в жезле: Сингулятор / иридиевый стержень. */
     public static int EU_PER_VIS = 20_000;
@@ -40,20 +49,20 @@ public final class EnergyCanon {
     }
 
     /**
-     * «Второй закон таумодинамики»: цикл аура → EU → аура обязан терять >= 75%.
+     * «Второй закон таумодинамики»: цикл узел → EU → узел обязан терять >= 75%.
      * Кривой конфиг не роняет игру, но громко ругается в лог.
      */
     public static void validateSecondLaw() {
-        if (EU_PER_AURA_BUY < 4 * EU_PER_AURA_SELL) {
+        if (EU_PER_NODE_ASPECT_BUY < 4 * EU_PER_NODE_ASPECT_SELL) {
             UTLog.warn("Energy config breaks the second law of thaumodynamics: "
-                    + "restoring aura costs {} EU while generating yields {} EU/unit "
+                    + "recharging a node costs {} EU while draining it yields {} EU/unit "
                     + "(round-trip > 25%). Perpetuum mobile possible — fix unboundtech.cfg.",
-                    EU_PER_AURA_BUY, EU_PER_AURA_SELL);
+                    EU_PER_NODE_ASPECT_BUY, EU_PER_NODE_ASPECT_SELL);
         }
-        if (EU_PER_VIS < EU_PER_AURA_SELL) {
-            UTLog.warn("Energy config: wand vis ({} EU) is cheaper than raw aura ({} EU) — "
+        if (EU_PER_VIS < EU_PER_NODE_ASPECT_SELL) {
+            UTLog.warn("Energy config: wand vis ({} EU) is cheaper than node vis ({} EU) — "
                     + "direct wand charging would obsolete nodes. Fix unboundtech.cfg.",
-                    EU_PER_VIS, EU_PER_AURA_SELL);
+                    EU_PER_VIS, EU_PER_NODE_ASPECT_SELL);
         }
     }
 }
