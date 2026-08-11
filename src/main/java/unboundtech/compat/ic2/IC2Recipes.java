@@ -48,11 +48,17 @@ public final class IC2Recipes {
         // --- Дробитель (macerator) ---
         added += macerate("oreCinnabar", TCItems.quicksilver(2));
         added += macerate("oreAmber", TCItems.amber(2));
+        // ×3 — решение владельца (ore_processing.md в репо порта): руды ТК
+        // роняют осколки, блок достаётся только Шёлковым касанием, и прежние
+        // ×2 проигрывали кирке с Фортуной III (до 4 осколков).
         String[] infusedOres = {"oreInfusedAir", "oreInfusedFire", "oreInfusedWater",
                 "oreInfusedEarth", "oreInfusedOrder", "oreInfusedEntropy"};
         for (int i = 0; i < infusedOres.length; i++) {
-            added += macerate(infusedOres[i], TCItems.shard(i, 2));
+            added += macerate(infusedOres[i], TCItems.shard(i, 3));
         }
+        // TODO (ore_processing.md §3): осколок -> 2 кристальные пыли,
+        // пыль + кварц -> синтетический кристалл, синтетика -> 1 кварц.
+        // Ждёт новых предметов (crystal_dust, synthetic_shard).
         for (int i = 0; i < 6; i++) {
             added += macerateStack(TCItems.crystalCluster(i, 1), TCItems.shard(i, 4));
         }

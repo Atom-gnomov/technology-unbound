@@ -177,6 +177,9 @@ public final class UTResearch {
                         .add(Aspect.MAGIC, 6).add(Aspect.FIRE, 4),
                 4, -2, 2,
                 new ItemStack(unboundtech.common.UTBlocks.thaumGenerator))
+                // TODO (T1_T4_audit А-7): родитель-ЗАГЛУШКА в обход гейта T2.
+                // Канон требует TEMPERED_THAUMIUM (03_progression §3), но его
+                // исследования ещё нет. Перевесить при реализации материала.
                 .setParents(ORE_MACERATION)
                 .setPages(pagesWithRecipe(
                         new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.1"),
