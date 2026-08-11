@@ -29,7 +29,7 @@ import unboundtech.energy.EnergyCanon;
  * обоснование — LORE_RESONANCE_LIMITS), иначе узел обставлялся бы кольцом
  * машин и превращался в ферму.
  */
-public class TileThaumGenerator extends TileThaumcraft implements ITickable {
+public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMachineStatus {
 
     /** Буфер: 10 «порций» ауры, tier 1 (LV, 32 EU/t на выход). */
     public static final double CAPACITY = 20_000.0;
@@ -197,6 +197,36 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
     /** Для тултипа/гогглов: машина заглушена соседним генератором. */
     public boolean isInterfered() {
         return this.interfered;
+    }
+
+    // ================= IMachineStatus =================
+
+    @Override
+    public String getStatusLine() {
+        int eu = (int) this.source.getEnergyStored();
+        if (this.interfered) {
+            return "\u00a7cРезонансная интерференция: рядом второй генератор";
+        }
+        if (eu >= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
+            return "\u00a7bБуфер полон: " + eu + " / " + (int) CAPACITY + " EU";
+        }
+        if (this.nodeCache.nodes(this.world, this.pos, this.counter).isEmpty()) {
+            return "\u00a7cНет узла в радиусе 8 блоков";
+        }
+        return (this.activeHold > 0 ? "\u00a7aРаботает: " : "\u00a7eЖдёт регенерации узла: ")
+                + eu + " / " + (int) CAPACITY + " EU";
+    }
+
+    @Override
+    public void writeWrenchNBT(NBTTagCompound tag) {
+        this.source.writeToNBT(tag);
+        tag.setBoolean("UTInterfered", this.interfered);
+    }
+
+    @Override
+    public void readWrenchNBT(NBTTagCompound tag) {
+        this.source.readFromNBT(tag);
+        this.interfered = tag.getBoolean("UTInterfered");
     }
 
     public double getEnergyStored() {

@@ -25,7 +25,7 @@ import unboundtech.energy.EnergyCanon;
  * угасающих узлов — отдельное исследование поздних фаз, здесь узел лишь
  * заполняется до своего собственного потолка.
  */
-public class TileAethericEngine extends TileThaumcraft implements ITickable {
+public class TileAethericEngine extends TileThaumcraft implements ITickable, IMachineStatus {
 
     /** Буфер: 5 «порций» ауры, tier 2 (MV, приём до 128 EU/t). */
     public static final double CAPACITY = 40_000.0;
@@ -134,6 +134,32 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable {
         }
         this.active = value;
         BlockMachineBase.setActive(this.world, this.pos, value);
+    }
+
+    // ================= IMachineStatus =================
+
+    @Override
+    public String getStatusLine() {
+        int eu = (int) this.sink.getEnergyStored();
+        if (eu < EnergyCanon.EU_PER_NODE_ASPECT_BUY) {
+            return "\u00a7eНакапливает заряд: " + eu + " / "
+                    + EnergyCanon.EU_PER_NODE_ASPECT_BUY + " EU на аспект";
+        }
+        if (this.nodeCache.nodes(this.world, this.pos, this.counter).isEmpty()) {
+            return "\u00a7cНет узла в радиусе 8 блоков";
+        }
+        return (this.active ? "\u00a7aЗаряжает узел: " : "\u00a7bВсе узлы полны: ")
+                + eu + " EU в буфере";
+    }
+
+    @Override
+    public void writeWrenchNBT(NBTTagCompound tag) {
+        this.sink.writeToNBT(tag);
+    }
+
+    @Override
+    public void readWrenchNBT(NBTTagCompound tag) {
+        this.sink.readFromNBT(tag);
     }
 
     public double getEnergyStored() {
