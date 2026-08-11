@@ -51,6 +51,13 @@
   Посчитанные итоги: Таум-Генератор — `Metallum 10, Praecantatio 6,
   Machina 6, Ignis 4, Potentia 2`; Эфирный Двигатель — `Metallum 11,
   Machina 7, Praecantatio 5, Cognitio 2`.
+- **Аспекты трёх солнечных шлемов ASP регистрировались в никуда.** Мы
+  использовали snake_case (`advanced_solar_helmet`), а ASP регистрирует
+  предметы в lowerCamelCase: `SolarHelmetTypes.getName()` возвращает
+  `this.name + "SolarHelmet"`, то есть `advancedSolarHelmet`,
+  `hybridSolarHelmet`, `ultimateSolarHelmet`. Snake_case у ASP встречается
+  только в путях моделей — на этом и легко обмануться. Шлемы оставались
+  без аспектов: не сканировались и ничего не давали в тигле.
 - **Версия синхронизирована:** `UnboundTech.VERSION` отставал от
   `build.gradle` (0.2.0 против 0.2.1), из-за чего `@Mod` объявлял одну
   версию, а mcmod.info — другую. Обе — 0.2.2.
