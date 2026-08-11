@@ -38,8 +38,16 @@ public final class AspectFormula {
     /** Порог значимости: доля от самого сильного аспекта (канон §2.2). */
     private static final double THRESHOLD_SHARE = 0.15D;
 
-    /** Абсолютный минимум порога: аспекты слабее 2 не показываем никогда. */
-    private static final int THRESHOLD_FLOOR = 2;
+    /**
+     * Абсолютный минимум порога.
+     *
+     * Был 2 — и убивал простые предметы целиком: у слитка закалённого таумия
+     * (Metallum 2, Praecantatio 1) отсекался ВЕСЬ Praecantatio, хотя весь его
+     * лор — «фиолетовые вкрапления», а у лопаты (1 слиток + 2 палки) не
+     * оставалось вообще ничего. Единица сохраняет разобранный пример канона
+     * §3 (там порог задаёт процент: 15 % от 18 = 2.7) и чинит мелкие предметы.
+     */
+    private static final int THRESHOLD_FLOOR = 1;
 
     /** Потолок разнообразия: не больше пяти аспектов (канон §2.3). */
     private static final int MAX_ASPECTS = 5;
@@ -107,10 +115,10 @@ public final class AspectFormula {
         AspectList transferred = transfer(sum);
         AspectList significant = threshold(transferred);
         AspectList trimmed = trim(significant);
-        AspectList withSignature = trimmed.copy().add(process.signature());
+        AspectList withSignature = clampSignature(trimmed, process);
         AspectList result = normalize(withSignature);
 
-        UTLog.info("Aspect formula {}: Σ={} → ×{}={} → порог={} → топ-{}={} → +{} → итог {}",
+        UTLog.info("Aspect formula {}: Σ={} → ×{}={} → порог={} → топ-{}={} → подпись {} (с потолком) → итог {}",
                 label, format(sum), TRANSFER, format(transferred), format(significant),
                 MAX_ASPECTS, format(trimmed), format(process.signature()), format(result));
         return result;
@@ -203,7 +211,13 @@ public final class AspectFormula {
         return out;
     }
 
-    /** §2.2: отсекаем следовые аспекты. */
+    /**
+     * §2.2: отсекаем следовые аспекты — но только у сложных предметов.
+     *
+     * Порог придуман против «двадцати аспектов по единице» у машин: следы
+     * редстоуна в корпусе не должны попадать в итог. Работает он процентом от
+     * сильнейшего аспекта; абсолютная нижняя граница — {@link #THRESHOLD_FLOOR}.
+     */
     private static AspectList threshold(AspectList list) {
         int strongest = 0;
         for (Aspect aspect : list.getAspects()) {
@@ -234,6 +248,37 @@ public final class AspectFormula {
         for (int i = 0; i < sorted.length && out.size() < MAX_ASPECTS; i++) {
             if (sorted[i] != null) {
                 out.add(sorted[i], list.getAmount(sorted[i]));
+            }
+        }
+        return out;
+    }
+
+    /**
+     * §2.4а: добавляет подпись процесса, но не даёт ей стать сильнее материала.
+     *
+     * Без этого правила подпись накапливается по цепочке: слиток получает от
+     * домны Ignis +3, а броня из восьми слитков — уже 14 Ignis, и «огонь»
+     * оказывается главным аспектом стального доспеха. Процесс не может
+     * определять предмет сильнее, чем то, из чего предмет сделан.
+     */
+    private static AspectList clampSignature(AspectList materials, Process process) {
+        int strongestMaterial = 0;
+        for (Aspect aspect : materials.getAspects()) {
+            if (aspect != null) {
+                strongestMaterial = Math.max(strongestMaterial, materials.getAmount(aspect));
+            }
+        }
+        AspectList out = materials.copy().add(process.signature());
+        for (Aspect aspect : process.signature().getAspects()) {
+            if (aspect == null) {
+                continue;
+            }
+            // Потолок — сильнейший материальный аспект, но не ниже того, что
+            // сами материалы уже дали по этому аспекту (подпись не отнимает).
+            int ceiling = Math.max(strongestMaterial, materials.getAmount(aspect));
+            if (out.getAmount(aspect) > ceiling) {
+                out.remove(aspect);
+                out.add(aspect, ceiling);
             }
         }
         return out;
