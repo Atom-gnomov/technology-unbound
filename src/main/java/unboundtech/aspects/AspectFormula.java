@@ -115,7 +115,7 @@ public final class AspectFormula {
         AspectList transferred = transfer(sum);
         AspectList significant = threshold(transferred);
         AspectList trimmed = trim(significant);
-        AspectList withSignature = clampSignature(trimmed, process);
+        AspectList withSignature = trim(clampSignature(trimmed, process));
         AspectList result = normalize(withSignature);
 
         UTLog.info("Aspect formula {}: Σ={} → ×{}={} → порог={} → топ-{}={} → подпись {} (с потолком) → итог {}",
@@ -241,7 +241,14 @@ public final class AspectFormula {
         return out;
     }
 
-    /** §2.3: оставляем пятёрку сильнейших. */
+    /**
+     * §2.3: оставляем пятёрку сильнейших.
+     *
+     * Вызывается дважды: до подписи (обрезать материалы) и после неё — иначе
+     * арканный верстак и инфузия, дающие по два аспекта подписи, выдали бы
+     * шесть-семь аспектов вопреки §2.3, то есть ровно ту «кашу в таумометре»,
+     * против которой формула и написана.
+     */
     private static AspectList trim(AspectList list) {
         Aspect[] sorted = list.getAspectsSortedAmount();
         AspectList out = new AspectList();
@@ -278,7 +285,11 @@ public final class AspectFormula {
             int ceiling = Math.max(strongestMaterial, materials.getAmount(aspect));
             if (out.getAmount(aspect) > ceiling) {
                 out.remove(aspect);
-                out.add(aspect, ceiling);
+                // Нулевую запись не кладём: AspectList.add пишет значение как
+                // есть, и предмет получил бы тег вида {Machina: 0}.
+                if (ceiling > 0) {
+                    out.add(aspect, ceiling);
+                }
             }
         }
         return out;

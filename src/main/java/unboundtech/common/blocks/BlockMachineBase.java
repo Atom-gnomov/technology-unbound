@@ -34,6 +34,10 @@ public abstract class BlockMachineBase extends BlockContainer {
         this.setHardness(3.0f);
         this.setResistance(15.0f);
         this.setSoundType(net.minecraft.block.SoundType.METAL);
+        // Канон карточек: «кирка >= 1». Без этого Material.IRON ломается
+        // деревянной киркой с дропом (ForgeHooks.canHarvestBlock уходит в
+        // ItemPickaxe.canHarvestBlock, который для IRON верен на любом уровне).
+        this.setHarvestLevel("pickaxe", 1);
         this.setDefaultState(this.blockState.getBaseState()
                 .withProperty(FACING, EnumFacing.NORTH)
                 .withProperty(ACTIVE, Boolean.FALSE));
@@ -109,6 +113,13 @@ public abstract class BlockMachineBase extends BlockContainer {
             return;
         }
         world.setBlockState(pos, state.withProperty(ACTIVE, active), 3);
+        // Пометить чанк изменённым обязан кто-то: setBlockState этого не делает
+        // для тайла, а машина копит EU и флаги в NBT. Без markDirty автосейв
+        // (Chunk.needsSaving -> isModified) может не сохранить буфер вовсе.
+        net.minecraft.tileentity.TileEntity tile = world.getTileEntity(pos);
+        if (tile != null) {
+            tile.markDirty();
+        }
     }
 
     @Override

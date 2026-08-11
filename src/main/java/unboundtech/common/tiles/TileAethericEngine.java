@@ -100,7 +100,8 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable {
             NodeCache.syncNode(this.world, nodePos);
             return true;
         }
-        this.nodeCache.markStale();
+        // Все узлы полны — это норма, а не устаревший кэш (см. NodeCache).
+        this.nodeCache.markStaleIfNodesGone(this.world);
         return false;
     }
 

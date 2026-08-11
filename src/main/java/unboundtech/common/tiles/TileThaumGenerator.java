@@ -45,7 +45,17 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
     /** Аспекты, которые генератор умеет сжигать (Ignis / Potentia). */
     private static final Aspect[] FUEL_ASPECTS = {Aspect.FIRE, Aspect.ENERGY};
 
+    /**
+     * Сколько тиков «морда» остаётся горящей после удачного забора вис.
+     * Чуть больше интервала регенерации узла (600), чтобы у работающей на
+     * пределе машины состояние не мигало.
+     */
+    private static final int ACTIVE_HOLD_TICKS = 640;
+
     private final BasicSource source = new BasicSource(this, CAPACITY, TIER);
+
+    /** Остаток «залипания» состояния ACTIVE в тиках (см. ACTIVE_HOLD_TICKS). */
+    private int activeHold = 0;
     private final NodeCache nodeCache = new NodeCache();
 
     private int counter;
@@ -92,7 +102,16 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
                         <= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
             working = this.drainOneVis();
         }
-        this.setActive(working);
+        // ACTIVE — «машина в работе», а не «забрала вис прямо в этом такте».
+        // Узел регенерирует 1 вис за 600 тиков, машина пробует раз в 20 — без
+        // залипания морда горела бы 20 тиков из 600 и каждое переключение
+        // тянуло бы пересчёт освещения и пакет всем клиентам рядом.
+        if (working) {
+            this.activeHold = ACTIVE_HOLD_TICKS;
+        } else if (this.activeHold > 0) {
+            this.activeHold -= DRAIN_INTERVAL;
+        }
+        this.setActive(this.activeHold > 0);
     }
 
     /**
@@ -129,8 +148,9 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
                 return true;
             }
         }
-        // Ни один узел не отдал вис — возможно, кэш устарел.
-        this.nodeCache.markStale();
+        // Ни один узел не отдал вис. Это штатное состояние (реген узла — 1 вис
+        // за 600 тиков), поэтому пересканируем мир только если узлы исчезли.
+        this.nodeCache.markStaleIfNodesGone(this.world);
         return false;
     }
 
@@ -189,6 +209,7 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
         this.source.readFromNBT(tag);
         this.active = tag.getBoolean("UTActive");
         this.interfered = tag.getBoolean("UTInterfered");
+        this.activeHold = tag.getInteger("UTActiveHold");
     }
 
     @Override
@@ -197,6 +218,7 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
         this.source.writeToNBT(tag);
         tag.setBoolean("UTActive", this.active);
         tag.setBoolean("UTInterfered", this.interfered);
+        tag.setInteger("UTActiveHold", this.activeHold);
     }
 
     @Override

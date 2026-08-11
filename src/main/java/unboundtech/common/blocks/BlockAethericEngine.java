@@ -9,7 +9,9 @@ public class BlockAethericEngine extends BlockMachineBase {
 
     @Override
     protected int activeLightLevel() {
-        return 5;
+        // 7 — как у работающего генератора IC2 и как у Таум-Генератора:
+        // канон machine_feedback.md §4 задаёт одну светимость всем машинам.
+        return 7;
     }
 
     @Override

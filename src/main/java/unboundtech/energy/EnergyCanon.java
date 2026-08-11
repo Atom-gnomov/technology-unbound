@@ -45,6 +45,14 @@ public final class EnergyCanon {
     /** Массфабрикатор (фаза 10): EU-эквивалент усиления за 1 ед. Permutatio. */
     public static int EU_PERMUTATIO_AMPLIFIER = 5_000;
 
+    /**
+     * Ёмкость буфера Таум-Генератора. Дублируется здесь намеренно: тайл нельзя
+     * трогать из проверки конфига (она бежит в preInit, до реестра блоков), а
+     * курс больше буфера делает машину мёртвой — условие «есть место под целую
+     * порцию» не выполнится никогда.
+     */
+    public static final int THAUM_GENERATOR_CAPACITY = 20_000;
+
     private EnergyCanon() {
     }
 
@@ -58,6 +66,12 @@ public final class EnergyCanon {
                     + "recharging a node costs {} EU while draining it yields {} EU/unit "
                     + "(round-trip > 25%). Perpetuum mobile possible — fix unboundtech.cfg.",
                     EU_PER_NODE_ASPECT_BUY, EU_PER_NODE_ASPECT_SELL);
+        }
+        if (EU_PER_NODE_ASPECT_SELL > THAUM_GENERATOR_CAPACITY) {
+            UTLog.warn("Energy config: one node aspect is worth {} EU, which does not fit the "
+                    + "Thaumic Alternator buffer ({} EU) — the machine would never start. "
+                    + "Lower eu_per_node_aspect_generated or the machine stays dead.",
+                    EU_PER_NODE_ASPECT_SELL, THAUM_GENERATOR_CAPACITY);
         }
         if (EU_PER_VIS < EU_PER_NODE_ASPECT_SELL) {
             UTLog.warn("Energy config: wand vis ({} EU) is cheaper than node vis ({} EU) — "
