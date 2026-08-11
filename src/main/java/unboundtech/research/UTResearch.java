@@ -149,8 +149,10 @@ public final class UTResearch {
         // генератором в фазе 3+ (rt_1_ic2.md).
         new ResearchItem(
                 NITOR_HEAT, CATEGORY,
-                new AspectList().add(Aspect.FIRE, 4).add(Aspect.LIGHT, 4)
-                        .add(Aspect.ENERGY, 4),
+                // 18 единиц: T2 по research_design.md §2.2 (3 аспекта, 15–25).
+                // Было 12 — ниже нижней границы тира.
+                new AspectList().add(Aspect.FIRE, 7).add(Aspect.LIGHT, 6)
+                        .add(Aspect.ENERGY, 5),
                 4, 0, 1,
                 new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1,
                         thaumcraft.common.items.ItemResource.META_NITOR))
@@ -173,9 +175,12 @@ public final class UTResearch {
     public static void registerConverters() {
         ResearchItem generator = new ResearchItem(
                 VIS_TO_EU_GENERATOR, CATEGORY,
-                new AspectList().add(Aspect.ENERGY, 8).add(Aspect.MECHANISM, 6)
+                // complexity 3: §2.4 канона отводит тройку конвертерам
+                // («всё, что меняет правила игры»); было 2.
+                // 28 единиц: T3 по §2.2 (25–35); было 24 — ниже границы.
+                new AspectList().add(Aspect.ENERGY, 10).add(Aspect.MECHANISM, 8)
                         .add(Aspect.MAGIC, 6).add(Aspect.FIRE, 4),
-                4, -2, 2,
+                4, -2, 3,
                 new ItemStack(unboundtech.common.UTBlocks.thaumGenerator))
                 // TODO (T1_T4_audit А-7): родитель-ЗАГЛУШКА в обход гейта T2.
                 // Канон требует TEMPERED_THAUMIUM (03_progression §3), но его
@@ -201,9 +206,10 @@ public final class UTResearch {
 
         new ResearchItem(
                 EU_TO_VIS_ENGINE, CATEGORY,
+                // complexity 3 — как у генератора, оба конвертера (§2.4).
                 new AspectList().add(Aspect.ENERGY, 10).add(Aspect.AURA, 8)
                         .add(Aspect.EXCHANGE, 6).add(Aspect.ORDER, 4),
-                6, -1, 2,
+                6, -1, 3,
                 new ItemStack(unboundtech.common.UTBlocks.aethericEngine))
                 .setParents(VIS_TO_EU_GENERATOR)
                 .setPages(pagesWithRecipe(
