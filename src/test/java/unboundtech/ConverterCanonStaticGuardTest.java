@@ -25,14 +25,14 @@ public class ConverterCanonStaticGuardTest {
         String source = read("src/main/java/unboundtech/energy/EnergyCanon.java");
 
         assertTrue("аура → EU должен стоить 2,000",
-                source.contains("EU_PER_AURA_SELL = 2_000;"));
+                source.contains("EU_PER_NODE_ASPECT_SELL = 2_000;"));
         assertTrue("EU → аура должен стоить 8,000",
-                source.contains("EU_PER_AURA_BUY = 8_000;"));
+                source.contains("EU_PER_NODE_ASPECT_BUY = 8_000;"));
         assertTrue("вис в жезл должен стоить 20,000",
                 source.contains("EU_PER_VIS = 20_000;"));
         // Второй закон: обратный курс минимум вчетверо дороже прямого.
         assertTrue("проверка второго закона должна остаться в коде",
-                source.contains("EU_PER_AURA_BUY < 4 * EU_PER_AURA_SELL"));
+                source.contains("EU_PER_NODE_ASPECT_BUY < 4 * EU_PER_NODE_ASPECT_SELL"));
     }
 
     @Test
@@ -53,7 +53,7 @@ public class ConverterCanonStaticGuardTest {
         assertTrue("интерференция — 16 блоков",
                 source.contains("INTERFERENCE_RADIUS = 16;"));
         assertTrue("вис обращается в EU по канону",
-                source.contains("addEnergy(EnergyCanon.EU_PER_AURA_SELL)"));
+                source.contains("addEnergy(EnergyCanon.EU_PER_NODE_ASPECT_SELL)"));
         assertTrue("после изменения узла обязателен синк",
                 source.contains("NodeCache.syncNode(this.world, nodePos)"));
     }
@@ -67,7 +67,7 @@ public class ConverterCanonStaticGuardTest {
         assertTrue("тир MV", source.contains("TIER = 2;"));
         assertTrue("такт работы — 20 тиков", source.contains("WORK_INTERVAL = 20;"));
         assertTrue("вис покупается по канону",
-                source.contains("useEnergy(EnergyCanon.EU_PER_AURA_BUY)"));
+                source.contains("useEnergy(EnergyCanon.EU_PER_NODE_ASPECT_BUY)"));
         assertTrue("EU списываются только если вис реально влез",
                 source.contains("node.addToContainer(aspect, 1) != 0"));
         assertTrue("после изменения узла обязателен синк",

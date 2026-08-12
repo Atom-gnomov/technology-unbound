@@ -20,7 +20,9 @@ import unboundtech.compat.ModItems;
  * Реестровые имена и меты сверены декомпиляцией ASP 4.3.0 (Chocohead):
  *  - advanced_solar_panels:machines (ItemBlock, меты = TEs.getId 0..5);
  *  - advanced_solar_panels:crafting (ItemMulti, меты = CraftingTypes 0..13);
- *  - шлемы — отдельные предметы (модели/registry: *_solar_helmet).
+ *  - шлемы — отдельные предметы; registry-имена в lowerCamelCase
+ *    (advancedSolarHelmet / hybridSolarHelmet / ultimateSolarHelmet), а
+ *    snake_case встречается только в путях моделей — легко перепутать.
  *
  * Ориентиры величин — канон аспектов машин IC2 (ic2_v3_machines.md §1):
  * solar_generator = Machina 4/Lux 4/Potentia 2, lapotron = Potentia 12/
@@ -80,11 +82,11 @@ public final class ASPAspects {
                 .add(Aspect.ENERGY, 8));                       // Quantum Core
 
         // --- Солнечные шлемы ---
-        tag("advanced_solar_helmet", 0, list().add(Aspect.ARMOR, 4)
+        tag("advancedSolarHelmet", 0, list().add(Aspect.ARMOR, 4)
                 .add(Aspect.LIGHT, 6).add(Aspect.MECHANISM, 4).add(Aspect.ENERGY, 2));
-        tag("hybrid_solar_helmet", 0, list().add(Aspect.ARMOR, 6)
+        tag("hybridSolarHelmet", 0, list().add(Aspect.ARMOR, 6)
                 .add(Aspect.LIGHT, 8).add(Aspect.MECHANISM, 6).add(Aspect.ENERGY, 4));
-        tag("ultimate_solar_helmet", 0, list().add(Aspect.ARMOR, 8)
+        tag("ultimateSolarHelmet", 0, list().add(Aspect.ARMOR, 8)
                 .add(Aspect.LIGHT, 10).add(Aspect.MECHANISM, 8).add(Aspect.ENERGY, 6));
 
         UTLog.info("ASP aspects: {} registered, {} missing", registered, missing);

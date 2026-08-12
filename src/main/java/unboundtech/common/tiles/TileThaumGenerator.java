@@ -19,7 +19,7 @@ import unboundtech.energy.EnergyCanon;
  * Таум-Генератор: вис узла → EU (спека фазы 3а §1).
  *
  * Тянет по 1 вис Ignis/Potentia из ближайшего узла раз в 20 тиков и кладёт
- * в буфер {@link EnergyCanon#EU_PER_AURA_SELL} EU за единицу. Узел никогда
+ * в буфер {@link EnergyCanon#EU_PER_NODE_ASPECT_SELL} EU за единицу. Узел никогда
  * не выдаивается досуха: работает пол в 20% ПО-АСПЕКТНОЙ ёмкости
  * ({@code getNodeVisBase}), так что узел всегда остаётся живым и
  * восстанавливается сам. Долговременный потолок задаёт не машина, а реген
@@ -29,7 +29,7 @@ import unboundtech.energy.EnergyCanon;
  * обоснование — LORE_RESONANCE_LIMITS), иначе узел обставлялся бы кольцом
  * машин и превращался в ферму.
  */
-public class TileThaumGenerator extends TileThaumcraft implements ITickable {
+public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMachineStatus {
 
     /** Буфер: 10 «порций» ауры, tier 1 (LV, 32 EU/t на выход). */
     public static final double CAPACITY = 20_000.0;
@@ -45,7 +45,17 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
     /** Аспекты, которые генератор умеет сжигать (Ignis / Potentia). */
     private static final Aspect[] FUEL_ASPECTS = {Aspect.FIRE, Aspect.ENERGY};
 
+    /**
+     * Сколько тиков «морда» остаётся горящей после удачного забора вис.
+     * Чуть больше интервала регенерации узла (600), чтобы у работающей на
+     * пределе машины состояние не мигало.
+     */
+    private static final int ACTIVE_HOLD_TICKS = 640;
+
     private final BasicSource source = new BasicSource(this, CAPACITY, TIER);
+
+    /** Остаток «залипания» состояния ACTIVE в тиках (см. ACTIVE_HOLD_TICKS). */
+    private int activeHold = 0;
     private final NodeCache nodeCache = new NodeCache();
 
     private int counter;
@@ -89,10 +99,19 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
         // Тянем, только когда в буфере есть место под целую порцию вис.
         if (!this.interfered
                 && this.source.getEnergyStored()
-                        <= CAPACITY - EnergyCanon.EU_PER_AURA_SELL) {
+                        <= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
             working = this.drainOneVis();
         }
-        this.setActive(working);
+        // ACTIVE — «машина в работе», а не «забрала вис прямо в этом такте».
+        // Узел регенерирует 1 вис за 600 тиков, машина пробует раз в 20 — без
+        // залипания морда горела бы 20 тиков из 600 и каждое переключение
+        // тянуло бы пересчёт освещения и пакет всем клиентам рядом.
+        if (working) {
+            this.activeHold = ACTIVE_HOLD_TICKS;
+        } else if (this.activeHold > 0) {
+            this.activeHold -= DRAIN_INTERVAL;
+        }
+        this.setActive(this.activeHold > 0);
     }
 
     /**
@@ -124,13 +143,14 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
                 if (!node.takeFromContainer(aspect, 1)) {
                     continue;
                 }
-                this.source.addEnergy(EnergyCanon.EU_PER_AURA_SELL);
+                this.source.addEnergy(EnergyCanon.EU_PER_NODE_ASPECT_SELL);
                 NodeCache.syncNode(this.world, nodePos);
                 return true;
             }
         }
-        // Ни один узел не отдал вис — возможно, кэш устарел.
-        this.nodeCache.markStale();
+        // Ни один узел не отдал вис. Это штатное состояние (реген узла — 1 вис
+        // за 600 тиков), поэтому пересканируем мир только если узлы исчезли.
+        this.nodeCache.markStaleIfNodesGone(this.world);
         return false;
     }
 
@@ -179,6 +199,36 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
         return this.interfered;
     }
 
+    // ================= IMachineStatus =================
+
+    @Override
+    public String getStatusLine() {
+        int eu = (int) this.source.getEnergyStored();
+        if (this.interfered) {
+            return "\u00a7cРезонансная интерференция: рядом второй генератор";
+        }
+        if (eu >= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
+            return "\u00a7bБуфер полон: " + eu + " / " + (int) CAPACITY + " EU";
+        }
+        if (this.nodeCache.nodes(this.world, this.pos, this.counter).isEmpty()) {
+            return "\u00a7cНет узла в радиусе 8 блоков";
+        }
+        return (this.activeHold > 0 ? "\u00a7aРаботает: " : "\u00a7eЖдёт регенерации узла: ")
+                + eu + " / " + (int) CAPACITY + " EU";
+    }
+
+    @Override
+    public void writeWrenchNBT(NBTTagCompound tag) {
+        this.source.writeToNBT(tag);
+        tag.setBoolean("UTInterfered", this.interfered);
+    }
+
+    @Override
+    public void readWrenchNBT(NBTTagCompound tag) {
+        this.source.readFromNBT(tag);
+        this.interfered = tag.getBoolean("UTInterfered");
+    }
+
     public double getEnergyStored() {
         return this.source.getEnergyStored();
     }
@@ -189,6 +239,7 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
         this.source.readFromNBT(tag);
         this.active = tag.getBoolean("UTActive");
         this.interfered = tag.getBoolean("UTInterfered");
+        this.activeHold = tag.getInteger("UTActiveHold");
     }
 
     @Override
@@ -197,6 +248,7 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable {
         this.source.writeToNBT(tag);
         tag.setBoolean("UTActive", this.active);
         tag.setBoolean("UTInterfered", this.interfered);
+        tag.setInteger("UTActiveHold", this.activeHold);
     }
 
     @Override

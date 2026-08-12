@@ -47,8 +47,22 @@ public final class IC2Aspects {
                 list().add(Aspect.CLOTH, 2).add(Aspect.ORDER, 2).add(Aspect.FIRE, 1));
         tag("crafting", "scrap",
                 list().add(Aspect.ENTROPY, 2).add(Aspect.EXCHANGE, 1));
+        // ВНИМАНИЕ: crafting#iridium — это НЕ сырьё, а Iridium Reinforced Plate
+        // (assets/ic2/lang_ic2/en_us.properties: «crafting.iridium = Iridium
+        // Reinforced Plate»), собираемая из 4 иридиевых руд + 4 продвинутых
+        // сплавов + алмаза (shaped_recipes.ini). Поэтому у неё аспекты
+        // готового изделия, а само сырьё тегается ниже.
         tag("crafting", "iridium",
+                list().add(Aspect.METAL, 12).add(Aspect.ELDRITCH, 4)
+                        .add(Aspect.ARMOR, 4).add(Aspect.CRYSTAL, 2));
+        // Сырьё: иридиевая руда и осколок. Оба лежат в misc_resource и
+        // раньше не получали аспектов вообще — авто-вывод ТК до них не
+        // добирается (generateTagsFromCraftingRecipes читает только
+        // ForgeRegistries.RECIPES, а руда делается компрессором и УУ-сборкой).
+        tag("misc_resource", "iridium_ore",
                 list().add(Aspect.METAL, 8).add(Aspect.ELDRITCH, 4));
+        tag("misc_resource", "iridium_shard",
+                list().add(Aspect.METAL, 2).add(Aspect.ELDRITCH, 1));
         tag("misc_resource", "matter",
                 list().add(Aspect.ELDRITCH, 8).add(Aspect.EXCHANGE, 8).add(Aspect.VOID, 4));
 

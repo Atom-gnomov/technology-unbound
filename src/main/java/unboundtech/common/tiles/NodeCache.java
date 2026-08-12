@@ -49,6 +49,32 @@ public final class NodeCache {
         this.stale = true;
     }
 
+    /**
+     * Мягкая версия: помечает кэш устаревшим, только если он действительно мог
+     * устареть — список пуст или хотя бы один закэшированный узел исчез.
+     *
+     * Нужна потому, что «взять нечего» — это ШТАТНЫЙ режим, а не поломка:
+     * узел регенерирует 1 вис за 600 тиков, а машина пробует раз в 20, то есть
+     * 29 попыток из 30 заканчиваются ничем. Прямой markStale() на каждой такой
+     * попытке заставлял бы пересканировать 4913 позиций каждые 100 тиков
+     * вечно — у живого, никуда не девшегося узла.
+     *
+     * @return true, если кэш помечен устаревшим
+     */
+    public boolean markStaleIfNodesGone(World world) {
+        if (this.nodes.isEmpty()) {
+            this.stale = true;
+            return true;
+        }
+        for (BlockPos pos : this.nodes) {
+            if (world.isBlockLoaded(pos) && nodeAt(world, pos) == null) {
+                this.stale = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void rescan(World world, BlockPos center) {
         List<BlockPos> found = new ArrayList<>();
         for (int x = -RADIUS; x <= RADIUS; x++) {
