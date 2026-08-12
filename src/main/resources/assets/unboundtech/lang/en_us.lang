@@ -22,7 +22,7 @@ unboundtech.research_page.LORE_ELAN_VITAL.1=A saturated aura meddles with delica
 
 tc.research_name.THAUM_ORE_MACERATION=Macerating Magical Ores
 tc.research_text.THAUM_ORE_MACERATION=The macerator versus cinnabar
-unboundtech.research_page.THAUM_ORE_MACERATION.1=The macerator holds no reverence for magic: to it, cinnabar is merely soft stone. But the result speaks for itself — one ore yields twice the quicksilver of smelting.<BR><BR>Amber-bearing and silver ores submit just as readily. Even the infused stone of the six elements is ground into pure shards — two from every block.
+unboundtech.research_page.THAUM_ORE_MACERATION.1=The macerator holds no reverence for magic: to it, cinnabar is merely soft stone. But the result speaks for itself — one ore yields twice the quicksilver of smelting.<BR><BR>Amber-bearing and silver ores submit just as readily. Even the infused stone of the six elements is ground into pure shards — three from every block, more than a Fortune pick will knock loose.
 unboundtech.research_page.THAUM_ORE_MACERATION.2=The taint deserves a special note: the extractor squeezes a springy polymer mass out of taint slime and tendrils, indistinguishable from rubber. Corruption made useful — there is something deeply wrong about that. And profitable.
 
 tc.research_name.ALUMENTUM_FUEL=Alumentum: Machine Fuel
@@ -47,7 +47,7 @@ unboundtech.research_page.LORE_RESONANCE_LIMITS.1=Two alternators near one node 
 
 tc.research_name.THAUMODYNAMIC_TABLES=Thaumodynamic Tables
 tc.research_text.THAUMODYNAMIC_TABLES=Rates, throughputs and prices
-unboundtech.research_page.THAUMODYNAMIC_TABLES.1=Set down in a column so nobody has to work it out twice.<BR><BR>Vis into current: 2,000 EU per unit.<BR>Current into vis: 8,000 EU per unit.<BR>Current into wand vis: 20,000 EU (still out of reach).<BR><BR>From which follows the important, unwelcome part: the loop node into current and back returns exactly a quarter of what went in. Three quarters leave as heat, hum and the smell of scorched insulation. A perpetual engine is impossible not because it is forbidden, but because the arithmetic refuses — and no amount of tuning mends that, only breaks it.
+unboundtech.research_page.THAUMODYNAMIC_TABLES.1=Set down in a column so nobody has to work it out twice.<BR><BR>Vis into current: 2,000 EU per unit.<BR>Current into vis: 8,000 EU per unit.<BR>Current into wand vis: 10,000 EU (still out of reach).<BR><BR>From which follows the important, unwelcome part: the loop node into current and back returns exactly a quarter of what went in. Three quarters leave as heat, hum and the smell of scorched insulation. A perpetual engine is impossible not because it is forbidden, but because the arithmetic refuses — and no amount of tuning mends that, only breaks it.
 unboundtech.research_page.THAUMODYNAMIC_TABLES.2=The same again, in units an engineer already trusts.<BR><BR>Coal in a generator: 4,000 EU.<BR>Alumentum: 16,000 EU — exactly four coal.<BR>One vis from a node: 2,000 EU — half a coal.<BR>A nitor block at a Stirling: 10 EU a tick, forever and free.<BR><BR>Put plainly, a lump of alumentum is worth eight vis. Eight vis out of a node means four minutes of waiting, while the alumentum burns through in eighty seconds — and it had to be brewed from something in the first place.<BR><BR>Accept the conclusion early: magic is not cheaper than machinery here. It simply never runs out.
 unboundtech.research_page.THAUMODYNAMIC_TABLES.3=And throughput, which is what actually decides things.<BR><BR>Thaumic Alternator: up to 100 EU/t in bursts, 32 out on LV.<BR>The same over the long run, once the surplus is gone:<BR>— ordinary node: 3 EU/t (a vis every half minute);<BR>— bright node: 5 EU/t;<BR>— pale node: 2 EU/t;<BR>— fading node: nothing, and nothing ever after.<BR><BR>Aetheric Engine: 128 EU/t intake, a vis every three seconds.<BR><BR>Three units of current a tick looks absurd beside a bank of solar panels. Then again, panels stop at dusk, while a node shines on unattended and asks for no fuel. Do not build on one node — build on many, one alternator each, no closer than sixteen blocks apart.
 
@@ -67,3 +67,55 @@ tc.research_name.TECHNO_MATERIALS=Titanium, Niobium and Living Metal
 tc.research_text.TECHNO_MATERIALS=New metals under the thaumometer
 unboundtech.research_page.TECHNO_MATERIALS.1=The toolmakers' workshop has delivered a whole shelf of new materials: stubborn titanium, cold-drinking niobium, superconducting weaves, circuits dense as honeycomb. The thaumometer reads them eagerly — Metallum in abundance, Potentia in the alloys, strict Ordo in the lattices.<BR><BR>Study them all: an aspect gathered from a scan is an aspect you need not hunt elsewhere.
 unboundtech.research_page.TECHNO_MATERIALS.2=One find stands apart: nano living metal. The instrument shows Victus — life — inside a factory-made alloy. Either the engineers have crossed a line, or the border between golem craft and machinery was never as solid as the books claim.<BR><BR>Their laser weapons, meanwhile, hint at what a Tesla focus might one day become.
+
+# ============================ Tier T2 ============================
+# Tempered thaumium and everything forged from it.
+
+item.unboundtech.tempered_thaumium_ingot.name=Tempered Thaumium
+item.unboundtech.tempered_helmet.name=Tempered Thaumium Helmet
+item.unboundtech.tempered_chestplate.name=Tempered Thaumium Chestplate
+item.unboundtech.tempered_leggings.name=Tempered Thaumium Leggings
+item.unboundtech.tempered_boots.name=Tempered Thaumium Boots
+item.unboundtech.tempered_sword.name=Tempered Thaumium Sword
+item.unboundtech.tempered_pickaxe.name=Tempered Thaumium Pickaxe
+item.unboundtech.tempered_axe.name=Tempered Thaumium Axe
+item.unboundtech.tempered_shovel.name=Tempered Thaumium Shovel
+item.unboundtech.tempered_hoe.name=Tempered Thaumium Hoe
+item.unboundtech.thaumium_wrench.name=Thaumium Wrench
+item.unboundtech.electric_scribing_tools.name=Electric Scribing Tools
+
+unboundtech.tooltip.tempered_ingot=The blast furnace takes thaumium, the crucible takes steel. Same ingot
+unboundtech.tooltip.tempered_tool=Durability 1873 - 20% above diamond
+unboundtech.tooltip.tempered_armor=Full set: vis cost +20%
+unboundtech.tooltip.thaumium_wrench=Works on our machines and on IC2 ones. Right-click to rotate, sneak-click to remove
+unboundtech.tooltip.electric_scribing=Notes remaining
+
+tc.research_name.TEMPERED_THAUMIUM=Tempered Thaumium
+tc.research_text.TEMPERED_THAUMIUM=A metal that holds both current and magic
+unboundtech.research_page.TEMPERED_THAUMIUM.1=Tempering is always a loss.<BR><BR>The blast furnace holds thaumium at a heat no crucible ever reached, under a pressure that rebuilds its lattice. Strength arrives, but part of the Praecantatio burns away: what was an even lilac glow sets into rare violet flecks in a grey body.<BR><BR>Alchemists call it spoilage, engineers call it stabilisation. Both are right: no wand will ever come of this metal, but it holds a machine casing without buckling under current.
+unboundtech.research_page.TEMPERED_THAUMIUM.2=There are two roads, and they come from opposite sides.<BR><BR>The magical road: take a finished thaumium ingot and send it into the blast furnace. Five minutes and a tankful of compressed air - exactly what the furnace asks for ordinary steel, not a tick longer.<BR><BR>The technical road: take a steel ingot and drop it into the crucible. Steel is already dead; magic is not poured into it but fused in - hence the stabilisers. Permutatio rebuilds the lattice, Vitreus holds the shape as it cools. The recipe is on the next page.<BR><BR>The ingot is the same either way, and both stack together. Take whichever road runs through the half of your workshop that already exists.
+
+tc.research_name.TEMPERED_ARMOR=Forged Plate
+tc.research_text.TEMPERED_ARMOR=Armour you hammer, not armour you infuse
+unboundtech.research_page.TEMPERED_ARMOR.1=Fortress armour is forged on an altar, and the vis lays each plate where it belongs. Tempered thaumium allows no such thing: its shape was set by the furnace, not by will. The smith swings a hammer where a thaumaturge would merely wish - and you can see it the moment you pick the suit up. It is crude. The plates are thicker, the seams show, the runes ran crooked and hold vis worse than they might have.<BR><BR>On the other hand, you can wear it the day after your furnace starts.<BR><BR>Count it honestly. Twenty-four armour across the set against diamond's twenty, and that is the only line you win. Toughness is halved, the enchanting table offers short dull lists, and every casting in this suit costs a fifth more. This is not a better diamond suit. It is a different one.
+
+tc.research_name.TEMPERED_TOOLS=Tempered Thaumium Tools
+tc.research_text.TEMPERED_TOOLS=A workhorse, not a wand
+unboundtech.research_page.TEMPERED_TOOLS.1="Tempered thaumium remembers both the anvil and the crucible. A tool made of it does not cut stone - it persuades it: no sparks, no shriek, just the stubbornness of metal that has already survived a blast furnace. Mages complain there is little magic left in it. It will outlive three of their wands."
+unboundtech.research_page.TEMPERED_TOOLS.2=Where it stands in the line, by the numbers.<BR><BR>Thaumium tools: 500 durability, enchantability 18, the occasional favour from the metal.<BR>Void: 600 durability, enchantability 20, mends itself.<BR>Diamond: 1561 durability, enchantability 10.<BR>Ours: 1873 durability, enchantability 10, no favours at all.<BR><BR>So it outlasts everything a thaumaturge owns, and beats diamond by a fifth. It was paid for with research, a long haul of metalwork and a ceiling on enchanting: no amount of books will wring a good pickaxe out of it. There are no special effects and there will not be - that ground belongs to the order's own tools.
+
+tc.research_name.ELECTRIC_SCRIBING=Electric Scribing Tools
+tc.research_text.ELECTRIC_SCRIBING=A pen that writes with a discharge
+unboundtech.research_page.ELECTRIC_SCRIBING.1=A pen that writes not with ink but with a discharge: the needle leaves a thin scorched line on the parchment, and such notes outlast handwritten ones. A charge does not last long - but set it on a charging pad, go make tea, and you can write again. Engineers find this obvious; thaumaturges find it humiliating.<BR><BR>Four thousand EU, fifty per research point, eighty points on a full charge. An ordinary inkwell wins on capacity; this one wins because the capacity comes back for free.<BR><BR>Carry only one kind at a time: the table grabs the first inkwell it finds, not the best one.
+
+tile.unboundtech.phial_station.name=Phial Station
+tile.unboundtech.essentia_burner.name=Essentia Burner
+
+tc.research_name.PHIAL_STATION=Phial Station
+tc.research_text.PHIAL_STATION=An end to handling phials by hand
+unboundtech.research_page.PHIAL_STATION.1=A glass column with a clamp and a thin needle. An empty phial settles into the cradle, the needle enters the neck, and the essentia pours itself across - exactly eight units, not a drop more. It works the other way too, if the needle is put in reverse. There is nothing magical about it, and that is the whole point.<BR><BR>A wrench switches the station between filling and draining. Right-clicking with a phial sets the aspect it reaches for; an empty phial clears the filter and the station takes whatever arrives first.<BR><BR>Two hundred EU per phial, a two-thousand buffer - ten operations. Roughly a phial a second. If the output slot is occupied the station simply stops: nothing spills and nothing is lost.
+
+tc.research_name.ESSENTIA_BURNER=Essentia Burner
+tc.research_text.ESSENTIA_BURNER=My rubbish is a power plant now
+unboundtech.research_page.ESSENTIA_BURNER.1=Essentia burns reluctantly and inelegantly: the flame takes the colour of whichever aspect is going up, and the smell is such that alchemists prefer to site the burner some way off. In exchange it takes everything the pipe brings and turns it into the dull, even units engineers are so fond of.<BR><BR>Where the Thaumic Alternator has a finite node, this has renewable matter: wood, flesh and plants become essentia, and essentia becomes current.
+unboundtech.research_page.ESSENTIA_BURNER.2=The going rates.<BR><BR>Ignis and Potentia: 2,000 EU per unit - fuel in its purest form.<BR>Perditio: 1,250 - decay is energy too.<BR>Arbor and Herba: 500 apiece - cheap, but you will have a great deal of it.<BR><BR>No other aspect is accepted at all: the burner declares no suction for them and the pipe simply passes it by. It finishes whatever it has already taken before switching to something else.<BR><BR>A ten-thousand EU buffer, output on a low-voltage line. When the buffer is full the suction drops: no essentia is burned for nothing.

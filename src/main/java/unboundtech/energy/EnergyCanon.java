@@ -26,8 +26,19 @@ public final class EnergyCanon {
     /** EU → узел: Эфирный Двигатель, EU за 1 ед. аспекта узла. */
     public static int EU_PER_NODE_ASPECT_BUY = 8_000;
 
-    /** EU → вис в жезле: Сингулятор / иридиевый стержень. */
-    public static int EU_PER_VIS = 20_000;
+    /**
+     * EU → вис в жезле: Сингулятор / иридиевый стержень (канон §3.1, строка 3).
+     * Было 20 000; решением владельца курс снижен вдвое — обходной маршрут
+     * (Двигатель за 8 000 плюс бесплатный набор жезлом) всё равно остаётся
+     * дешевле, разрыв 25 %.
+     */
+    public static int EU_PER_VIS = 10_000;
+
+    /**
+     * Вис в жезле → EU: Фокус Заряда (канон §3.1, строка 4). Вдвое хуже
+     * Таум-Генератора намеренно. Цикл EU → жезл → EU возвращает 10 %.
+     */
+    public static int EU_PER_WAND_VIS_BACK = 1_000;
 
     /**
      * Справочно (кода не требует): алюментум горит 6400 тиков (парити TC4,
@@ -36,14 +47,42 @@ public final class EnergyCanon {
     public static final int EU_ALUMENTUM_REFERENCE = 16_000;
 
     // Курсы будущих фаз — здесь же, чтобы канон жил в одном классе.
-    /** Эссент. Горелка (фаза 4): EU за 1 ед. Ignis/Potentia. */
+    /** Эссент. Горелка (T2): EU за 1 ед. Ignis/Potentia. ⚠️ Курс предварительный. */
     public static int EU_ESSENTIA_HOT = 2_000;
-    /** Эссент. Горелка: EU за 1 ед. Perditio. */
+    /** Эссент. Горелка: EU за 1 ед. Perditio. ⚠️ Курс предварительный. */
     public static int EU_ESSENTIA_PERDITIO = 1_250;
-    /** Эссент. Горелка: EU за 1 ед. Arbor/Herba. */
+    /** Эссент. Горелка: EU за 1 ед. Arbor/Herba. ⚠️ Курс предварительный. */
     public static int EU_ESSENTIA_PLANT = 500;
-    /** Массфабрикатор (фаза 10): EU-эквивалент усиления за 1 ед. Permutatio. */
-    public static int EU_PERMUTATIO_AMPLIFIER = 5_000;
+    // Строка «Permutatio → усиление UU в массфабрикаторе» УДАЛЕНА из канона
+    // (§3.1, решение владельца): она была единственной без системы и карточки.
+    // Нишу «электричество делает материю» закрыл Молекулярный Преобразователь
+    // ASP с листами преобразования, у каждого своя строка курса.
+
+    /** Фиал-станция (T2): EU за один фиал, розлив или слив (канон §3.4). */
+    public static int EU_PER_PHIAL = 200;
+
+    /**
+     * Сколько EU даёт единица эссенции в горелке.
+     * Аспекты вне таблицы горелка не принимает вовсе — здесь это ноль
+     * (`essentia_burner.md` §4).
+     */
+    public static int essentiaValue(thaumcraft.api.aspects.Aspect aspect) {
+        if (aspect == null) {
+            return 0;
+        }
+        if (aspect == thaumcraft.api.aspects.Aspect.FIRE
+                || aspect == thaumcraft.api.aspects.Aspect.ENERGY) {
+            return EU_ESSENTIA_HOT;          // Ignis / Potentia
+        }
+        if (aspect == thaumcraft.api.aspects.Aspect.ENTROPY) {
+            return EU_ESSENTIA_PERDITIO;     // Perditio
+        }
+        if (aspect == thaumcraft.api.aspects.Aspect.TREE
+                || aspect == thaumcraft.api.aspects.Aspect.PLANT) {
+            return EU_ESSENTIA_PLANT;        // Arbor / Herba
+        }
+        return 0;
+    }
 
     /**
      * Ёмкость буфера Таум-Генератора. Дублируется здесь намеренно: тайл нельзя

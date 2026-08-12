@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "unboundtech:items/electric_scribing_tools"
+  }
+}

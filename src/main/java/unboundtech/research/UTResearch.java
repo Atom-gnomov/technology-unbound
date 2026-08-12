@@ -46,6 +46,13 @@ public final class UTResearch {
     public static final String ALUMENTUM_FUEL = "ALUMENTUM_FUEL";
     /** Нитор-тепло: порт ≥1.2.8.1 отдаёт 20 HU/t машинам IC2 (rt_1: NITOR_HEAT). */
     public static final String NITOR_HEAT = "NITOR_HEAT";
+    /** Тир T2: материал моста и всё, что из него (`03_progression.md` §3). */
+    public static final String TEMPERED_THAUMIUM = "TEMPERED_THAUMIUM";
+    public static final String TEMPERED_ARMOR = "TEMPERED_ARMOR";
+    public static final String TEMPERED_TOOLS = "TEMPERED_TOOLS";
+    public static final String ELECTRIC_SCRIBING = "ELECTRIC_SCRIBING";
+    public static final String PHIAL_STATION = "PHIAL_STATION";
+    public static final String ESSENTIA_BURNER = "ESSENTIA_BURNER";
     /** Фаза 3а: конвертеры (спека phase3_converters_spec.md §3). */
     public static final String VIS_TO_EU_GENERATOR = "VIS_TO_EU_GENERATOR";
     public static final String EU_TO_VIS_ENGINE = "EU_TO_VIS_ENGINE";
@@ -188,10 +195,10 @@ public final class UTResearch {
                         .add(Aspect.MAGIC, 6).add(Aspect.FIRE, 4),
                 4, -2, 3,
                 new ItemStack(unboundtech.common.UTBlocks.thaumGenerator))
-                // TODO (T1_T4_audit А-7): родитель-ЗАГЛУШКА в обход гейта T2.
-                // Канон требует TEMPERED_THAUMIUM (03_progression §3), но его
-                // исследования ещё нет. Перевесить при реализации материала.
-                .setParents(ORE_MACERATION)
+                // Родитель по канону (03_progression §3): корпус конвертера —
+                // закалённый таумий, значит гейт T2 стоит перед гейтом T3.
+                // Заглушка ORE_MACERATION (T1_T4_audit А-7) снята.
+                .setParents(TEMPERED_THAUMIUM)
                 .setPages(pagesWithRecipe(
                         unboundtech.common.UTRecipes.thaumGenerator,
                         new ResearchPage("unboundtech.research_page.VIS_TO_EU_GENERATOR.1"),
@@ -261,6 +268,144 @@ public final class UTResearch {
         ResearchPage[] all = java.util.Arrays.copyOf(pages, pages.length + 1);
         all[pages.length] = new ResearchPage(recipe);
         return all;
+    }
+
+    /**
+     * Тир T2 — материал моста и всё, что из него куётся.
+     * Вызывается ПОСЛЕ {@link unboundtech.common.UTRecipesT2#register()}:
+     * страницы держат сами объекты рецептов.
+     *
+     * Стоимости — по лестнице `research_design.md` §2.2 (T2: 3 аспекта,
+     * 15–25 единиц); complexity 2 — «материалы и простые машины» (§2.4).
+     */
+    public static void registerTemperedTier() {
+        ItemStack ingot = new ItemStack(unboundtech.common.UTItems.temperedIngot);
+
+        // --- Материал: два пути (tempered_thaumium.md §6) ---
+        // 24 единицы: Metallum 10 + Ignis 8 + Praecantatio 6.
+        ResearchItem material = new ResearchItem(
+                TEMPERED_THAUMIUM, CATEGORY,
+                new AspectList().add(Aspect.METAL, 10).add(Aspect.FIRE, 8)
+                        .add(Aspect.MAGIC, 6),
+                2, -3, 2,
+                ingot)
+                .setParents(ORE_MACERATION)
+                .setPages(temperedMaterialPages());
+        material.registerResearchItem();
+
+        // --- Броня: 25 единиц, верхняя граница T2 ---
+        new ResearchItem(
+                TEMPERED_ARMOR, CATEGORY,
+                new AspectList().add(Aspect.METAL, 10).add(Aspect.ARMOR, 9)
+                        .add(Aspect.MAGIC, 6),
+                0, -4, 2,
+                new ItemStack(unboundtech.common.UTItems.temperedChestplate))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.TEMPERED_ARMOR.1"),
+                        recipePage(unboundtech.common.UTCrafting.helmet),
+                        recipePage(unboundtech.common.UTCrafting.chestplate),
+                        recipePage(unboundtech.common.UTCrafting.leggings),
+                        recipePage(unboundtech.common.UTCrafting.boots)))
+                .registerResearchItem();
+
+        // --- Инструменты: 18 единиц (Instrumentum 8, Metallum 6, Ordo 4) ---
+        new ResearchItem(
+                TEMPERED_TOOLS, CATEGORY,
+                new AspectList().add(Aspect.TOOL, 8).add(Aspect.METAL, 6)
+                        .add(Aspect.ORDER, 4),
+                2, -5, 2,
+                new ItemStack(unboundtech.common.UTItems.temperedPickaxe))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.TEMPERED_TOOLS.1"),
+                        new ResearchPage("unboundtech.research_page.TEMPERED_TOOLS.2"),
+                        recipePage(unboundtech.common.UTCrafting.pickaxe),
+                        recipePage(unboundtech.common.UTCrafting.axe),
+                        recipePage(unboundtech.common.UTCrafting.shovel),
+                        recipePage(unboundtech.common.UTCrafting.sword),
+                        recipePage(unboundtech.common.UTCrafting.hoe)))
+                .registerResearchItem();
+
+        // --- Электрочернильница: 24 единицы (Cognitio 10, Potentia 8, Instrumentum 6) ---
+        new ResearchItem(
+                ELECTRIC_SCRIBING, CATEGORY,
+                new AspectList().add(Aspect.MIND, 10).add(Aspect.ENERGY, 8)
+                        .add(Aspect.TOOL, 6),
+                4, -4, 2,
+                new ItemStack(unboundtech.common.UTItems.electricScribingTools))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.ELECTRIC_SCRIBING.1"),
+                        recipePage(unboundtech.common.UTCrafting.scribingTools)))
+                .registerResearchItem();
+
+        // --- Фиал-станция: 24 единицы (Aqua 10, Machina 8, Ordo 6) ---
+        new ResearchItem(
+                PHIAL_STATION, CATEGORY,
+                new AspectList().add(Aspect.WATER, 10).add(Aspect.MECHANISM, 8)
+                        .add(Aspect.ORDER, 6),
+                -2, -3, 2,
+                new ItemStack(unboundtech.common.UTBlocks.phialStation))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.PHIAL_STATION.1"),
+                        arcanePage(unboundtech.common.UTRecipesT2.phialStation)))
+                .registerResearchItem();
+
+        // --- Эссент. Горелка: 24 единицы (Ignis 10, Potentia 8, Machina 6) ---
+        new ResearchItem(
+                ESSENTIA_BURNER, CATEGORY,
+                new AspectList().add(Aspect.FIRE, 10).add(Aspect.ENERGY, 8)
+                        .add(Aspect.MECHANISM, 6),
+                -2, -5, 2,
+                new ItemStack(unboundtech.common.UTBlocks.essentiaBurner))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.1"),
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.2"),
+                        arcanePage(unboundtech.common.UTRecipesT2.essentiaBurner)))
+                .registerResearchItem();
+
+        UTLog.info("Tier T2 research registered (tempered thaumium and kin)");
+    }
+
+    private static ResearchPage arcanePage(
+            thaumcraft.api.crafting.ShapedArcaneRecipe recipe) {
+        return recipe == null ? null : new ResearchPage(recipe);
+    }
+
+    /**
+     * Страницы записи о материале: лор, затем ОБА пути (§6 карточки — игрок
+     * сразу видит, что путей два), затем ключ, который идёт в комплекте.
+     *
+     * ⚠️ Путь А показан текстом, а не страницей рецепта: рецепт доменной печи
+     * живёт в реестре IC2, а {@code ResearchPage} умеет только рецепты ТК и
+     * ванильный {@code IRecipe}. Страницы «рецепт машины IC2» в API нет.
+     */
+    private static ResearchPage[] temperedMaterialPages() {
+        return pages(
+                new ResearchPage("unboundtech.research_page.TEMPERED_THAUMIUM.1"),
+                new ResearchPage("unboundtech.research_page.TEMPERED_THAUMIUM.2"),
+                unboundtech.common.UTRecipesT2.temperedCrucible == null
+                        ? null
+                        : new ResearchPage(unboundtech.common.UTRecipesT2.temperedCrucible),
+                recipePage(unboundtech.common.UTCrafting.wrench));
+    }
+
+    private static ResearchPage recipePage(net.minecraft.item.crafting.IRecipe recipe) {
+        return recipe == null ? null : new ResearchPage(recipe);
+    }
+
+    /** Выбрасывает страницы, которых нет: пустую страницу показывать нельзя. */
+    private static ResearchPage[] pages(ResearchPage... candidates) {
+        java.util.List<ResearchPage> kept = new java.util.ArrayList<>();
+        for (ResearchPage page : candidates) {
+            if (page != null) {
+                kept.add(page);
+            }
+        }
+        return kept.toArray(new ResearchPage[0]);
     }
 
     /**

@@ -12,10 +12,13 @@ import unboundtech.compat.ic2.IC2Handles;
 import unboundtech.research.UTResearch;
 
 /**
- * Рецепты арканного верстака для машин мода (спека фазы 3а §3).
+ * Рецепты арканного верстака для машин мода.
  *
- * Корпус собирается из таумия: таум-сталь — материал фазы 3в, до неё
- * временно стоит слиток таумия (TODO фазы 3в: заменить обе строки).
+ * Корпус — ЗАКАЛЁННЫЙ ТАУМИЙ (`05_objects/tempered_thaumium.md` §2): именно
+ * он в каноне корпусной материал моста. Временный обычный таумий с
+ * пометкой «фаза 3в» убран вместе с самим названием «таум-сталь», которое
+ * канон отменил (карточка §0: рядом с «Таум-слитком» порта оно путалось).
+ *
  * Рецепты хранятся в полях — страницы исследований показывают сам объект
  * рецепта, поэтому карта ConfigResearch.recipes не нужна.
  */
@@ -45,12 +48,15 @@ public final class UTRecipes {
         return ThaumcraftApi.addArcaneCraftingRecipe(
                 UTResearch.VIS_TO_EU_GENERATOR,
                 new ItemStack(UTBlocks.thaumGenerator),
-                new AspectList().add(Aspect.ORDER, 25).add(Aspect.FIRE, 25)
-                        .add(Aspect.WATER, 25),
+                // Ordo 8, Ignis 8, Aqua 8 — пересчёт по recipe_calibration.md §4
+                // (было 25/25/25 = 75 вис, в 3.1 раза выше эталона ТК;
+                // вилка T3 — 20–35 вис). Пропорции и главный примал те же.
+                new AspectList().add(Aspect.ORDER, 8).add(Aspect.FIRE, 8)
+                        .add(Aspect.WATER, 8),
                 "TST",
                 "TGT",
                 " S ",
-                'T', thaumium(),
+                'T', temperedThaumium(),
                 'S', new ItemStack(ConfigItems.itemShard, 1, SHARD_FIRE),
                 'G', generator);
     }
@@ -64,21 +70,21 @@ public final class UTRecipes {
         return ThaumcraftApi.addArcaneCraftingRecipe(
                 UTResearch.EU_TO_VIS_ENGINE,
                 new ItemStack(UTBlocks.aethericEngine),
-                new AspectList().add(Aspect.ORDER, 25).add(Aspect.ENTROPY, 25)
-                        .add(Aspect.AIR, 25),
+                // Ordo 8, Perditio 8, Aer 8 — тот же пересчёт (§4).
+                new AspectList().add(Aspect.ORDER, 8).add(Aspect.ENTROPY, 8)
+                        .add(Aspect.AIR, 8),
                 "TST",
                 "TCT",
                 " Q ",
-                'T', thaumium(),
+                'T', temperedThaumium(),
                 'S', new ItemStack(ConfigItems.itemShard, 1, SHARD_ORDER),
                 'C', circuit,
                 'Q', new ItemStack(ConfigItems.itemResource, 1,
                         ItemResource.META_QUICKSILVER));
     }
 
-    /** TODO(фаза 3в): заменить на таум-сталь, когда она появится. */
-    private static ItemStack thaumium() {
-        return new ItemStack(ConfigItems.itemResource, 1,
-                ItemResource.META_THAUMIUM_INGOT);
+    /** Корпусной материал моста — закалённый таумий (T2). */
+    private static ItemStack temperedThaumium() {
+        return new ItemStack(UTItems.temperedIngot);
     }
 }

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import unboundtech.UnboundTech;
 import unboundtech.common.UTBlocks;
+import unboundtech.common.UTItems;
 
 /**
  * Модели предметов-блоков. Отдельный клиентский подписчик вместо
@@ -30,6 +31,10 @@ public final class UTModels {
             Item item = Item.getItemFromBlock(block);
             ModelLoader.setCustomModelResourceLocation(item, 0,
                     new ModelResourceLocation(block.getRegistryName(), "inventory"));
+        }
+        for (Item item : UTItems.all()) {
+            ModelLoader.setCustomModelResourceLocation(item, 0,
+                    new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
     }
 }

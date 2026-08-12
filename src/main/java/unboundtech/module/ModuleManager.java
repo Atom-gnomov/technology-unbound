@@ -6,7 +6,9 @@ import unboundtech.aspects.UTAspects;
 import unboundtech.compat.asp.ASPAspects;
 import unboundtech.compat.ic2.IC2Aspects;
 import unboundtech.compat.ic2.IC2Recipes;
+import unboundtech.common.UTItems;
 import unboundtech.common.UTRecipes;
+import unboundtech.common.UTRecipesT2;
 import unboundtech.compat.mets.METSAspects;
 import unboundtech.research.UTResearch;
 
@@ -29,7 +31,10 @@ public final class ModuleManager {
     }
 
     public static void init() {
-        // Фаза 1: нечего регистрировать на init.
+        // Оредикт и материалы починки: предметы уже созданы (регистрация идёт
+        // по событию реестра, до init), а Thaumcraft свой ingotThaumium к
+        // этому моменту тоже объявил.
+        UTItems.init();
     }
 
     /**
@@ -45,8 +50,15 @@ public final class ModuleManager {
         UTResearch.register();
         IC2Recipes.register();
 
+        // Тир T2: сперва два пути материала (домна + тигель), затем записи —
+        // страницы держат сам объект рецепта тигля. Кузнечные рецепты T2 уже
+        // зарегистрированы событием реестра, до postInit.
+        UTRecipesT2.register();
+        UTResearch.registerTemperedTier();
+
         // Фаза 3а: сначала рецепты, потом исследования — страницы записей
-        // держат сами объекты рецептов.
+        // держат сами объекты рецептов. Корпус конвертеров теперь из
+        // закалённого таумия, поэтому строго после T2.
         UTRecipes.register();
         UTResearch.registerConverters();
 

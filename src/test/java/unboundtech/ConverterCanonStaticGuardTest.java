@@ -28,8 +28,13 @@ public class ConverterCanonStaticGuardTest {
                 source.contains("EU_PER_NODE_ASPECT_SELL = 2_000;"));
         assertTrue("EU → аура должен стоить 8,000",
                 source.contains("EU_PER_NODE_ASPECT_BUY = 8_000;"));
-        assertTrue("вис в жезл должен стоить 20,000",
-                source.contains("EU_PER_VIS = 20_000;"));
+        // Канон §3.1 снизил курс Сингулятора вдвое: было 20 000.
+        assertTrue("вис в жезл должен стоить 10,000",
+                source.contains("EU_PER_VIS = 10_000;"));
+        assertTrue("обратный курс Фокуса Заряда — 1,000",
+                source.contains("EU_PER_WAND_VIS_BACK = 1_000;"));
+        assertTrue("курс отменённого массфабрикатора должен быть удалён",
+                !source.contains("EU_PERMUTATIO_AMPLIFIER"));
         // Второй закон: обратный курс минимум вчетверо дороже прямого.
         assertTrue("проверка второго закона должна остаться в коде",
                 source.contains("EU_PER_NODE_ASPECT_BUY < 4 * EU_PER_NODE_ASPECT_SELL"));
@@ -88,6 +93,107 @@ public class ConverterCanonStaticGuardTest {
                 source.contains("world.setBlockState(pos, state.withProperty(ACTIVE, active), 3);"));
         assertTrue("тайл не переустанавливается вручную",
                 !source.contains("world.setTileEntity(pos, tile)"));
+    }
+
+    /**
+     * Тир T2. Числа взяты из карточек `05_objects/tempered_thaumium*.md`,
+     * `phial_station.md` и `essentia_burner.md`; разъехавшись, они ломают
+     * прогрессию тихо.
+     */
+    @Test
+    public void temperedTierKeepsCardNumbers() throws IOException {
+        String items = read("src/main/java/unboundtech/common/UTItems.java");
+
+        assertTrue("инструмент — алмаз с прочностью x1.2 (3/1873/8.0/3.0/10)",
+                items.contains("\"TEMPERED_THAUMIUM\", 3, 1873, 8.0F, 3.0F, 10"));
+        // Массив брони индексируется слотом: ботинки, поножи, нагрудник, шлем.
+        // Канон задаёт шлем 4, нагрудник 10, поножи 7, ботинки 3; сумма 24.
+        assertTrue("броня 3/7/10/4, прочность 30, зачаровываемость 6, стойкость 1.0",
+                items.contains("new int[]{3, 7, 10, 4}, 6, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F"));
+        assertTrue("оредикт материала", items.contains("ORE_INGOT = \"ingotTemperedThaumium\""));
+
+        String material = read("src/main/java/unboundtech/common/UTRecipesT2.java");
+        assertTrue("домна: как обычная сталь, 6 000 тиков",
+                material.contains("BLAST_DURATION = 6_000;"));
+        assertTrue("домна: 1 мБ воздуха ЗА ТИК, как у стали",
+                material.contains("BLAST_FLUID = 1;"));
+        assertTrue("тигель: Praecantatio 4",
+                material.contains("add(Aspect.MAGIC, 4)"));
+        assertTrue("тигель: стабилизаторы Permutatio 2 и Vitreus 2",
+                material.contains("add(Aspect.EXCHANGE, 2)")
+                        && material.contains("add(Aspect.CRYSTAL, 2)"));
+
+        String scribing = read(
+                "src/main/java/unboundtech/common/items/ItemElectricScribingTools.java");
+        assertTrue("чернильница: 4 000 EU", scribing.contains("CAPACITY = 4_000.0;"));
+        assertTrue("чернильница: 50 EU за очко", scribing.contains("EU_PER_POINT = 50.0;"));
+
+        String armor = read(
+                "src/main/java/unboundtech/common/items/ItemTemperedArmor.java");
+        assertTrue("штраф вис -5% за элемент",
+                armor.contains("VIS_PENALTY_PER_PIECE = -5;"));
+    }
+
+    @Test
+    public void essentiaMachinesKeepCardNumbers() throws IOException {
+        String burner = read("src/main/java/unboundtech/common/tiles/TileEssentiaBurner.java");
+        assertTrue("горелка: буфер 10 000 EU", burner.contains("CAPACITY = 10_000.0;"));
+        assertTrue("горелка: тир LV", burner.contains("TIER = 1;"));
+        assertTrue("горелка: цикл 20 тиков", burner.contains("CYCLE = 20;"));
+        assertTrue("горелка: буфер эссенции 8", burner.contains("ESSENTIA_BUFFER = 8;"));
+        assertTrue("горелка ничего не отдаёт наружу",
+                burner.contains("public int takeEssentia(Aspect aspect, int amount, EnumFacing face) {\n        return 0;"));
+
+        String station = read("src/main/java/unboundtech/common/tiles/TilePhialStation.java");
+        assertTrue("станция: буфер 2 000 EU", station.contains("CAPACITY = 2_000.0;"));
+        assertTrue("станция: фиал — 8 единиц", station.contains("PHIAL_AMOUNT = 8;"));
+        assertTrue("станция: цикл 40 тиков (фиал за две секунды)",
+                station.contains("CYCLE = 40;"));
+
+        String canon = read("src/main/java/unboundtech/energy/EnergyCanon.java");
+        assertTrue("курс горелки Ignis/Potentia", canon.contains("EU_ESSENTIA_HOT = 2_000;"));
+        assertTrue("курс горелки Perditio", canon.contains("EU_ESSENTIA_PERDITIO = 1_250;"));
+        assertTrue("курс горелки Arbor/Herba", canon.contains("EU_ESSENTIA_PLANT = 500;"));
+        assertTrue("фиал — 200 EU", canon.contains("EU_PER_PHIAL = 200;"));
+    }
+
+    /**
+     * Арканные рецепты платят висом из жезла, а жезл хранит только шесть
+     * прималов (канон §6.8). Составной аспект в стоимости — ошибка: заплатить
+     * за него нечем, и заметить это можно только в игре.
+     */
+    @Test
+    public void arcaneRecipesCostPrimalsOnly() throws IOException {
+        String[] sources = {
+                "src/main/java/unboundtech/common/UTRecipes.java",
+                "src/main/java/unboundtech/common/UTRecipesT2.java",
+        };
+        String[] primalsOnly = {"Aspect.AIR", "Aspect.EARTH", "Aspect.FIRE",
+                "Aspect.WATER", "Aspect.ORDER", "Aspect.ENTROPY"};
+        for (String path : sources) {
+            for (String line : read(path).split("\n")) {
+                if (!line.contains("addArcaneCraftingRecipe") && !line.contains("new AspectList()")
+                        && !line.trim().startsWith(".add(Aspect.")) {
+                    continue;
+                }
+                if (!line.contains(".add(Aspect.")) {
+                    continue;
+                }
+                boolean primal = false;
+                for (String allowed : primalsOnly) {
+                    if (line.contains(allowed + ",")) {
+                        primal = true;
+                        break;
+                    }
+                }
+                // Строки тигля (Praecantatio и стабилизаторы) сюда не относятся:
+                // тигель платит эссенцией, а не висом из жезла.
+                boolean crucible = line.contains("Aspect.MAGIC") || line.contains("Aspect.EXCHANGE")
+                        || line.contains("Aspect.CRYSTAL");
+                assertTrue("стоимость арканного рецепта обязана быть в прималах: " + line.trim(),
+                        primal || crucible);
+            }
+        }
     }
 
     private static String read(String path) throws IOException {

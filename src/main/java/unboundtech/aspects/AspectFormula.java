@@ -68,7 +68,14 @@ public final class AspectFormula {
         /** Дробитель / прессование. */
         MACERATION(Aspect.ENTROPY, 2, null, 0),
         /** Сборка механизма — наши машины. */
-        MACHINE_ASSEMBLY(Aspect.MECHANISM, 3, null, 0);
+        MACHINE_ASSEMBLY(Aspect.MECHANISM, 3, null, 0),
+        /**
+         * Обычный верстак — подписи НЕТ (канон §2.4).
+         * «Сложил руками» — не процесс, а его отсутствие; плюс назначение
+         * предмета (Telum, Perfodio, Tutamen) ТК приписывает сам по классу,
+         * и дублировать его подписью нельзя (§2.6).
+         */
+        PLAIN_BENCH(null, 0, null, 0);
 
         private final Aspect first;
         private final int firstAmount;
@@ -85,11 +92,13 @@ public final class AspectFormula {
         /** Подпись процесса как готовый список аспектов. */
         public AspectList signature() {
             AspectList list = new AspectList();
-            list.add(this.first, this.firstAmount);
+            if (this.first != null) {
+                list.add(this.first, this.firstAmount);
+            }
             if (this.second != null) {
                 list.add(this.second, this.secondAmount);
             }
-            return list;
+            return list;   // у PLAIN_BENCH пустой — так и задумано
         }
     }
 
