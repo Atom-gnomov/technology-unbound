@@ -22,6 +22,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import unboundtech.common.tiles.IMachineStatus;
 
 /**
  * Общий каркас блока-машины Unbound Technology (шаблон из
@@ -206,7 +207,9 @@ public abstract class BlockMachineBase extends BlockContainer implements IWrench
         if (te instanceof IMachineStatus) {
             NBTTagCompound saved = new NBTTagCompound();
             ((IMachineStatus) te).writeWrenchNBT(saved);
-            if (!saved.hasNoTags()) {
+            // stable_39: func_82582_d = isEmpty(); hasNoTags() — имя из
+            // snapshot-маппингов, на нашей сборке его нет.
+            if (!saved.isEmpty()) {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setTag(WRENCH_TAG, saved);
                 drop.setTagCompound(tag);
