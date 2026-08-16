@@ -62,28 +62,39 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMa
     }
 
     /**
-     * Нить родных частиц вис между машиной и узлом: 3–4 искры, разложенные
-     * по отрезку. {@code reverse} — направление чтения (у двигателя поток
-     * идёт от машины к узлу). Клиентский код: sparkle сам молчит на сервере.
+     * Эффект обмена вис между машиной и узлом — ровно тот, каким ТК рисует
+     * зарядку жезла: фиолетовый разряд {@code nodeBolt}
+     * ({@code FXLightningBolt}, как в инфузионной матрице порта) плюс пара
+     * родных искр у принимающей стороны. {@code reverse} — направление
+     * (у двигателя разряд бьёт от машины к узлу). Клиентский код: и bolt,
+     * и sparkle сами молчат на сервере.
      */
     protected static void spawnVisThread(net.minecraft.world.World world, BlockPos machine,
                                          int packedOffset, boolean reverse) {
         int dx = (packedOffset & 31) - 8;
         int dy = (packedOffset >> 5 & 31) - 8;
         int dz = (packedOffset >> 10 & 31) - 8;
-        float sx = machine.getX() + 0.5F;
-        float sy = machine.getY() + 0.5F;
-        float sz = machine.getZ() + 0.5F;
-        int count = 3 + world.rand.nextInt(2);   // 3–4, потолок канона — 4
-        for (int i = 0; i < count; i++) {
-            float t = (i + 0.5F) / count;
-            if (reverse) {
-                t = 1.0F - t;
-            }
-            // Лёгкий провис нити, чтобы она не читалась линейкой.
-            float sag = net.minecraft.util.math.MathHelper.sin(t * (float) Math.PI) * 0.25F;
+        float mx = machine.getX() + 0.5F;
+        float my = machine.getY() + 0.5F;
+        float mz = machine.getZ() + 0.5F;
+        float nx = mx + dx;
+        float ny = my + dy;
+        float nz = mz + dz;
+        // Разряд: у генератора — от узла к машине, у двигателя — наоборот.
+        if (reverse) {
+            thaumcraft.common.Thaumcraft.proxy.nodeBolt(world, mx, my, mz, nx, ny, nz);
+        } else {
+            thaumcraft.common.Thaumcraft.proxy.nodeBolt(world, nx, ny, nz, mx, my, mz);
+        }
+        // Пара искр у принимающей стороны — послесвечение разряда.
+        float tx = reverse ? nx : mx;
+        float ty = reverse ? ny : my;
+        float tz = reverse ? nz : mz;
+        for (int i = 0; i < 2; i++) {
             thaumcraft.common.Thaumcraft.proxy.sparkle(
-                    sx + dx * t, sy + dy * t + sag, sz + dz * t,
+                    tx + (world.rand.nextFloat() - 0.5F) * 0.6F,
+                    ty + 0.3F + world.rand.nextFloat() * 0.4F,
+                    tz + (world.rand.nextFloat() - 0.5F) * 0.6F,
                     1.2F, 0, -0.02F);   // type 0 — фиолетовый вис
         }
     }

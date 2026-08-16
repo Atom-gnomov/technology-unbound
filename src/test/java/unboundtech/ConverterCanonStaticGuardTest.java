@@ -134,6 +134,40 @@ public class ConverterCanonStaticGuardTest {
     }
 
     /**
+     * Тир T3: Флюкс-Конденсатор и Таум-Оверклокер — числа карточек.
+     */
+    @Test
+    public void tier3KeepsCardNumbers() throws IOException {
+        String canon = read("src/main/java/unboundtech/energy/EnergyCanon.java");
+        assertTrue("курс конденсатора — 2 000 EU за Praecantatio",
+                canon.contains("EU_PER_FLUX_ESSENTIA = 2_000;"));
+
+        String condenser = read("src/main/java/unboundtech/common/tiles/TileFluxCondenser.java");
+        assertTrue("конденсатор: буфер 10 000 EU", condenser.contains("CAPACITY = 10_000.0;"));
+        assertTrue("конденсатор: тир LV", condenser.contains("TIER = 1;"));
+        assertTrue("конденсатор: буфер эссенции 8", condenser.contains("ESSENTIA_BUFFER = 8;"));
+        assertTrue("сгущение: 4 Praecantatio за Флюкс-Заряд",
+                condenser.contains("THICKEN_ESSENTIA = 4;"));
+        assertTrue("конденсатор принимает только Praecantatio",
+                condenser.contains("return Aspect.MAGIC;"));
+
+        String rules = read("src/main/java/unboundtech/energy/OverclockRules.java");
+        assertTrue("оверклокер: время ×0.6", rules.contains("PROCESS_TIME_MULTIPLIER = 0.6D;"));
+        assertTrue("оверклокер: потребление ×1.2",
+                rules.contains("ENERGY_DEMAND_MULTIPLIER = 1.2D;"));
+        assertTrue("оверклокер: пулы по 32", rules.contains("CHARGE_CAPACITY = 32;"));
+        assertTrue("оверклокер: 600 тиков на единицу",
+                rules.contains("TICKS_PER_ESSENTIA_UNIT = 600;"));
+        assertTrue("оверклокер: порог перегрева 6 000",
+                rules.contains("HEAT_THRESHOLD = 6_000;"));
+
+        String upgrade = read(
+                "src/main/java/unboundtech/common/items/ItemThaumicOverclocker.java");
+        assertTrue("стопка запрещена: Math.pow(mult, stackCount) у IC2",
+                upgrade.contains("setMaxStackSize(1)"));
+    }
+
+    /**
      * Арканные рецепты платят висом из жезла, а жезл хранит только шесть
      * прималов (канон §6.8). Составной аспект в стоимости — ошибка: заплатить
      * за него нечем, и заметить это можно только в игре.
@@ -143,6 +177,7 @@ public class ConverterCanonStaticGuardTest {
         String[] sources = {
                 "src/main/java/unboundtech/common/UTRecipes.java",
                 "src/main/java/unboundtech/common/UTRecipesT2.java",
+                "src/main/java/unboundtech/common/UTRecipesT3.java",
         };
         String[] primalsOnly = {"Aspect.AIR", "Aspect.EARTH", "Aspect.FIRE",
                 "Aspect.WATER", "Aspect.ORDER", "Aspect.ENTROPY"};

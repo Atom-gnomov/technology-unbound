@@ -59,6 +59,8 @@ public final class UTResearch {
     public static final String THAUMODYNAMIC_TABLES = "THAUMODYNAMIC_TABLES";
     /** Тир T3: конец флюксовой цепочки (`flux_condenser.md`). */
     public static final String FLUX_CONDENSER = "FLUX_CONDENSER";
+    /** Тир T3: скорость за эссенцию (`thaumic_overclocker.md`). */
+    public static final String THAUMIC_OVERCLOCKER = "THAUMIC_OVERCLOCKER";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -349,35 +351,49 @@ public final class UTResearch {
     }
 
     /**
-     * Тир T3, первая запись: Флюкс-Конденсатор. Вызывается ПОСЛЕ
-     * {@link unboundtech.common.UTRecipesT3#register()} — страница держит
-     * сам объект рецепта.
+     * Тир T3. Вызывается ПОСЛЕ {@link unboundtech.common.UTRecipesT3#register()}
+     * — страницы держат сами объекты рецептов.
      *
-     * ⚠️ Родитель по дереву гейтов — THAUMIC_OVERCLOCKER, но оверклокера в
-     * коде ещё нет. Временно висит на VIS_TO_EU_GENERATOR (по смыслу — та же
-     * резонансная линейка); перевесить при реализации оверклокера. Тот же
-     * приём-заглушка, что был у самого генератора до T2 (А-7).
-     *
-     * Стоимость — §6 карточки: Praecantatio 12, Potentia 10, Perditio 8,
-     * Machina 4 (4 аспекта, 34 единицы, вилка T3 25–35); complexity 3 —
-     * конвертер, «всё, что меняет правила игры» (§2.4).
+     * Дерево — по канону (`03_progression.md` §3): TEMPERED_THAUMIUM →
+     * THAUMIC_OVERCLOCKER → FLUX_CONDENSER (перегрев рождает флюкс, его
+     * надо куда-то девать). Стоимости — §6 карточек; complexity 3 у обоих —
+     * «всё, что меняет правила игры» (§2.4).
      */
     public static void registerT3() {
+        // Оверклокер: Machina 12, Motus 10, Potentia 8, Praecantatio 4 = 34.
+        new ResearchItem(
+                THAUMIC_OVERCLOCKER, CATEGORY,
+                new AspectList().add(Aspect.MECHANISM, 12).add(Aspect.MOTION, 10)
+                        .add(Aspect.ENERGY, 8).add(Aspect.MAGIC, 4),
+                4, -6, 3,
+                new ItemStack(unboundtech.common.UTItems.thaumicOverclocker))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.THAUMIC_OVERCLOCKER.1"),
+                        new ResearchPage("unboundtech.research_page.THAUMIC_OVERCLOCKER.2"),
+                        new ResearchPage("unboundtech.research_page.THAUMIC_OVERCLOCKER.3"),
+                        unboundtech.common.UTRecipesT3.thaumicOverclocker == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.thaumicOverclocker)))
+                .registerResearchItem();
+
         new ResearchItem(
                 FLUX_CONDENSER, CATEGORY,
                 new AspectList().add(Aspect.MAGIC, 12).add(Aspect.ENERGY, 10)
                         .add(Aspect.ENTROPY, 8).add(Aspect.MECHANISM, 4),
                 6, -5, 3,
                 new ItemStack(unboundtech.common.UTBlocks.fluxCondenser))
-                .setParents(VIS_TO_EU_GENERATOR)
+                .setParents(THAUMIC_OVERCLOCKER)
                 .setPages(pages(
                         new ResearchPage("unboundtech.research_page.FLUX_CONDENSER.1"),
                         new ResearchPage("unboundtech.research_page.FLUX_CONDENSER.2"),
                         new ResearchPage("unboundtech.research_page.FLUX_CONDENSER.3"),
+                        // Дописка про второй источник мути — перегрев оверклокера.
+                        new ResearchPage("unboundtech.research_page.FLUX_CONDENSER.4"),
                         unboundtech.common.UTRecipesT3.fluxCondenser == null ? null
                                 : new ResearchPage(unboundtech.common.UTRecipesT3.fluxCondenser)))
                 .registerResearchItem();
-        UTLog.info("Tier T3 research registered (flux condenser)");
+        UTLog.info("Tier T3 research registered (overclocker, flux condenser)");
     }
 
 

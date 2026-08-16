@@ -14,6 +14,7 @@ import unboundtech.UnboundTech;
 import unboundtech.common.items.ItemElectricScribingTools;
 import unboundtech.common.items.ItemFluxCharge;
 import unboundtech.common.items.ItemTemperedArmor;
+import unboundtech.common.items.ItemThaumicOverclocker;
 import unboundtech.common.items.ItemTemperedTools;
 import unboundtech.common.items.ItemThaumiumWrench;
 import unboundtech.common.items.ItemUTResource;
@@ -42,6 +43,8 @@ public final class UTItems {
     public static final String ELECTRIC_SCRIBING = "electric_scribing_tools";
     /** T3: сгущённый флюкс, сырьё флюкс-патрона (`flux_condenser.md` §4.2). */
     public static final String FLUX_CHARGE = "flux_charge";
+    /** T3: апгрейд машин IC2 — скорость за эссенцию (`thaumic_overclocker.md`). */
+    public static final String THAUMIC_OVERCLOCKER = "thaumic_overclocker";
 
     /** Оредикт материала (`tempered_thaumium.md`). */
     public static final String ORE_INGOT = "ingotTemperedThaumium";
@@ -79,6 +82,7 @@ public final class UTItems {
     public static Item thaumiumWrench;
     public static Item electricScribingTools;
     public static Item fluxCharge;
+    public static Item thaumicOverclocker;
 
     private UTItems() {
     }
@@ -106,6 +110,7 @@ public final class UTItems {
         thaumiumWrench = make(new ItemThaumiumWrench(), THAUMIUM_WRENCH);
         electricScribingTools = make(new ItemElectricScribingTools(), ELECTRIC_SCRIBING);
         fluxCharge = make(new ItemFluxCharge(), FLUX_CHARGE);
+        thaumicOverclocker = make(new ItemThaumicOverclocker(), THAUMIC_OVERCLOCKER);
 
         event.getRegistry().registerAll(all());
     }
@@ -120,6 +125,9 @@ public final class UTItems {
         ItemStack ingot = new ItemStack(temperedIngot);
         TOOL_MATERIAL.setRepairItem(ingot);
         ARMOR_MATERIAL.setRepairItem(ingot);
+        // Регистр апгрейдов IC2 — только подсказки в GUI машин (§12.1
+        // карточки: побочной валидации у него нет, безопасно).
+        ic2.api.upgrade.UpgradeRegistry.register(new ItemStack(thaumicOverclocker));
     }
 
     private static Item make(Item item, String name) {
@@ -135,7 +143,7 @@ public final class UTItems {
                 temperedIngot,
                 temperedHelmet, temperedChestplate, temperedLeggings, temperedBoots,
                 temperedSword, temperedPickaxe, temperedAxe, temperedShovel, temperedHoe,
-                thaumiumWrench, electricScribingTools, fluxCharge,
+                thaumiumWrench, electricScribingTools, fluxCharge, thaumicOverclocker,
         };
     }
 }

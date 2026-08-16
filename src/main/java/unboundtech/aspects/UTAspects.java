@@ -42,6 +42,11 @@ public final class UTAspects {
                 AspectFormula.Process.MACHINE_ASSEMBLY, "aetheric_engine");
         registered += fromArcane(UTBlocks.fluxCondenser, UTRecipesT3.fluxCondenser,
                 AspectFormula.Process.MACHINE_ASSEMBLY, "flux_condenser");
+        // Оверклокер — предмет с арканного верстака: подпись верстака (§7
+        // карточки), а не «сборки механизма».
+        registered += fromArcaneItem(UTItems.thaumicOverclocker,
+                UTRecipesT3.thaumicOverclocker,
+                AspectFormula.Process.ARCANE_BENCH, "thaumic_overclocker");
 
         // Флюкс-Заряд делается не из предметов, а из эссенции — формула по
         // рецепту неприменима, поэтому её шаги проведены руками:
@@ -131,6 +136,21 @@ public final class UTAspects {
         }
         AspectList aspects = AspectFormula.derive(
                 java.util.Arrays.asList(components), process, label);
+        if (aspects == null || aspects.size() == 0) {
+            return 0;
+        }
+        ThaumcraftApi.registerObjectTag(new ItemStack(item), aspects);
+        return 1;
+    }
+
+    /** То же, что {@link #fromArcane}, но для предмета. */
+    private static int fromArcaneItem(Item item, ShapedArcaneRecipe recipe,
+                                      AspectFormula.Process process, String label) {
+        if (item == null) {
+            UTLog.warn("Aspects for {} skipped: item is not registered", label);
+            return 0;
+        }
+        AspectList aspects = AspectFormula.deriveFromArcane(recipe, process, label);
         if (aspects == null || aspects.size() == 0) {
             return 0;
         }

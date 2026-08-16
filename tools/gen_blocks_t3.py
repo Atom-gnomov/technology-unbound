@@ -22,6 +22,8 @@ P = {
     'f': (0x3A, 0x1E, 0x52, 255),   # муть, тень
     'F': (0x6A, 0x3F, 0x9E, 255),   # муть
     'X': (0x9B, 0x5B, 0xC4, 255),   # муть, свечение (актив)
+    'b': (0x17, 0x4A, 0x74, 255),   # заряд фиала, тень
+    'B': (0x3F, 0xAE, 0xE8, 255),   # заряд фиала, свет
 }
 
 FRONT_OFF = """
@@ -60,6 +62,27 @@ FRONT_ON = """
 2111111111111112
 2222222222222222
 2222222222222222
+"""
+
+# Оверклокер: плата с дорожками (силуэт апгрейда IC2), тёмно-фиолетовая
+# подложка, светящиеся дорожки, маленький фиал в углу (§8 карточки).
+OVERCLOCKER = """
+................
+.kkkkkkkkkkkkk..
+.kffffffffffFk..
+.kfXXfXXXfXfFk..
+.kffXffXffXfFk..
+.kfXXfXXXfXfFk..
+.kffffffffffFk..
+.kfXfXXfXXXfFk..
+.kfXffXffXffFk..
+.kfXfXXXfXXfFk..
+.kffffffkkkkkk..
+.kfXXfXfkgGgk...
+.kffffffkgGgk...
+.kFFFFFFkbBbk...
+.kkkkkkkkkkkk...
+................
 """
 
 # Иконка Флюкс-Заряда: гранёный сгусток мути в металлической оправе.
@@ -139,7 +162,12 @@ def main():
     draw(FRONT_OFF).save(os.path.join(ROOT, "textures", "blocks", name + "_front.png"))
     draw(FRONT_ON).save(os.path.join(ROOT, "textures", "blocks", name + "_front_active.png"))
     draw(CHARGE).save(os.path.join(ROOT, "textures", "items", "flux_charge.png"))
-    print("flux_condenser: блокстейт, модели, морды; flux_charge: иконка")
+    draw(OVERCLOCKER).save(os.path.join(ROOT, "textures", "items",
+                                        "thaumic_overclocker.png"))
+    write_json(os.path.join(ROOT, "models", "item", "thaumic_overclocker.json"),
+               {"parent": "item/generated",
+                "textures": {"layer0": "unboundtech:items/thaumic_overclocker"}})
+    print("flux_condenser: блокстейт, модели, морды; flux_charge + overclocker: иконки")
 
 
 if __name__ == "__main__":

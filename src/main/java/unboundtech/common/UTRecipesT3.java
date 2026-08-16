@@ -6,6 +6,7 @@ import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.ShapedArcaneRecipe;
 import thaumcraft.common.config.ConfigBlocks;
+import thaumcraft.common.config.ConfigItems;
 import unboundtech.UTLog;
 import unboundtech.compat.ic2.IC2Handles;
 import unboundtech.research.UTResearch;
@@ -22,12 +23,38 @@ import unboundtech.research.UTResearch;
 public final class UTRecipesT3 {
 
     public static ShapedArcaneRecipe fluxCondenser;
+    public static ShapedArcaneRecipe thaumicOverclocker;
 
     private UTRecipesT3() {
     }
 
     public static void register() {
         fluxCondenser = registerFluxCondenser();
+        thaumicOverclocker = registerThaumicOverclocker();
+    }
+
+    /**
+     * Оверклокер (`thaumic_overclocker.md` §6): пустой фиал над родным
+     * оверклокером IC2 в оправе из трёх слитков. Аспекты — Ordo 8, Aer 8,
+     * Ignis 4 после калибровки (было 50 вис при вилке T3 20–35).
+     */
+    private static ShapedArcaneRecipe registerThaumicOverclocker() {
+        ItemStack ic2Overclocker = IC2Handles.item("upgrade", "overclocker");
+        if (ic2Overclocker.isEmpty()) {
+            UTLog.warn("Thaumic Overclocker recipe skipped: IC2 overclocker not found");
+            return null;
+        }
+        return ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.THAUMIC_OVERCLOCKER,
+                new ItemStack(UTItems.thaumicOverclocker),
+                new AspectList().add(Aspect.ORDER, 8).add(Aspect.AIR, 8)
+                        .add(Aspect.FIRE, 4),
+                " P ",
+                "TOT",
+                " T ",
+                'P', new ItemStack(ConfigItems.itemEssence, 1, 0),
+                'O', ic2Overclocker,
+                'T', new ItemStack(UTItems.temperedIngot));
     }
 
     /**
