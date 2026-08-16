@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import unboundtech.UnboundTech;
 import unboundtech.common.items.ItemElectricScribingTools;
+import unboundtech.common.items.ItemFluxCharge;
 import unboundtech.common.items.ItemTemperedArmor;
 import unboundtech.common.items.ItemTemperedTools;
 import unboundtech.common.items.ItemThaumiumWrench;
@@ -39,6 +40,8 @@ public final class UTItems {
     public static final String TEMPERED_HOE = "tempered_hoe";
     public static final String THAUMIUM_WRENCH = "thaumium_wrench";
     public static final String ELECTRIC_SCRIBING = "electric_scribing_tools";
+    /** T3: сгущённый флюкс, сырьё флюкс-патрона (`flux_condenser.md` §4.2). */
+    public static final String FLUX_CHARGE = "flux_charge";
 
     /** Оредикт материала (`tempered_thaumium.md`). */
     public static final String ORE_INGOT = "ingotTemperedThaumium";
@@ -75,6 +78,7 @@ public final class UTItems {
     public static Item temperedHoe;
     public static Item thaumiumWrench;
     public static Item electricScribingTools;
+    public static Item fluxCharge;
 
     private UTItems() {
     }
@@ -101,6 +105,7 @@ public final class UTItems {
 
         thaumiumWrench = make(new ItemThaumiumWrench(), THAUMIUM_WRENCH);
         electricScribingTools = make(new ItemElectricScribingTools(), ELECTRIC_SCRIBING);
+        fluxCharge = make(new ItemFluxCharge(), FLUX_CHARGE);
 
         event.getRegistry().registerAll(all());
     }
@@ -130,7 +135,7 @@ public final class UTItems {
                 temperedIngot,
                 temperedHelmet, temperedChestplate, temperedLeggings, temperedBoots,
                 temperedSword, temperedPickaxe, temperedAxe, temperedShovel, temperedHoe,
-                thaumiumWrench, electricScribingTools,
+                thaumiumWrench, electricScribingTools, fluxCharge,
         };
     }
 }

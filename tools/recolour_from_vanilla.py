@@ -55,9 +55,9 @@ ITEMS = {
     "tempered_chestplate": "diamond_chestplate",
     "tempered_leggings": "diamond_leggings",
     "tempered_boots": "diamond_boots",
-    # Книга с пером — единственный ванильный предмет, который читается как
-    # «этим пишут». Ровно то, что нужно чернильнице.
-    "electric_scribing_tools": "book_writable",
+    # Чернильница ванильной основы больше не имеет: перекрашенная книга
+    # читалась книгой, а не прибором (решение владельца). Рисуется вручную
+    # в gen_textures.py, как и ключ.
 }
 
 # Таумий: ключ по канону из ОБЫЧНОГО таумия, поэтому он лиловый, а не серый.
@@ -206,11 +206,8 @@ def main():
             recolour(image, flecks=False).save(os.path.join(armor_dir, ours + ".png"))
             print("armor", ours, "<-", vanilla)
 
-    add_charge_light(os.path.join(items_dir, "electric_scribing_tools.png"))
-    print("item  electric_scribing_tools: добавлен индикатор заряда")
-
-    # Ключ ванильного аналога не имеет — он нарисован руками
-    # (tools/gen_textures.py), здесь ему только наводится объём.
+    # Ключ и чернильница ванильного аналога не имеют — они нарисованы руками
+    # (tools/gen_textures.py), здесь им только наводится объём.
     wrench = os.path.join(items_dir, "thaumium_wrench.png")
     if os.path.isfile(wrench):
         shade_flat(wrench, THAUMIUM)

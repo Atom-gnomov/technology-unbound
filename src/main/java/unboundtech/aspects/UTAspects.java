@@ -12,6 +12,7 @@ import unboundtech.UTLog;
 import unboundtech.common.UTBlocks;
 import unboundtech.common.UTItems;
 import unboundtech.common.UTRecipes;
+import unboundtech.common.UTRecipesT3;
 import unboundtech.compat.ic2.IC2Handles;
 
 /**
@@ -39,6 +40,18 @@ public final class UTAspects {
                 AspectFormula.Process.MACHINE_ASSEMBLY, "thaum_generator");
         registered += fromArcane(UTBlocks.aethericEngine, UTRecipes.aethericEngine,
                 AspectFormula.Process.MACHINE_ASSEMBLY, "aetheric_engine");
+        registered += fromArcane(UTBlocks.fluxCondenser, UTRecipesT3.fluxCondenser,
+                AspectFormula.Process.MACHINE_ASSEMBLY, "flux_condenser");
+
+        // Флюкс-Заряд делается не из предметов, а из эссенции — формула по
+        // рецепту неприменима, поэтому её шаги проведены руками:
+        // Σ = Praecantatio 4 (вход сгущения) → ×0.6 = 2 (округление к
+        // ближайшему) → порог max(1; 15%) проходит → подпись машины
+        // Machina +3 зажата сильнейшим материальным аспектом (§2.4а) → 2.
+        ThaumcraftApi.registerObjectTag(new ItemStack(UTItems.fluxCharge),
+                new AspectList().add(thaumcraft.api.aspects.Aspect.MAGIC, 2)
+                        .add(thaumcraft.api.aspects.Aspect.MECHANISM, 2));
+        registered++;
         UTLog.info("Object aspects derived by formula: {}", registered);
     }
 

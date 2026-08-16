@@ -57,6 +57,8 @@ public final class UTResearch {
     public static final String LORE_RESONANCE_LIMITS = "LORE_RESONANCE_LIMITS";
     /** Сводка курсов и темпов — справочник игрока, все числа в одном месте. */
     public static final String THAUMODYNAMIC_TABLES = "THAUMODYNAMIC_TABLES";
+    /** Тир T3: конец флюксовой цепочки (`flux_condenser.md`). */
+    public static final String FLUX_CONDENSER = "FLUX_CONDENSER";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -247,7 +249,9 @@ public final class UTResearch {
                 .setPages(
                         new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.1"),
                         new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.2"),
-                        new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.3"))
+                        new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.3"),
+                        // Дописка T3: курс конденсатора и цена Флюкс-Заряда.
+                        new ResearchPage("unboundtech.research_page.THAUMODYNAMIC_TABLES.4"))
                 .registerResearchItem();
 
         UTLog.info("Converter research registered (phase 3a)");
@@ -342,6 +346,38 @@ public final class UTResearch {
                 .registerResearchItem();
 
         UTLog.info("Tier T2 research registered (tempered thaumium and kin)");
+    }
+
+    /**
+     * Тир T3, первая запись: Флюкс-Конденсатор. Вызывается ПОСЛЕ
+     * {@link unboundtech.common.UTRecipesT3#register()} — страница держит
+     * сам объект рецепта.
+     *
+     * ⚠️ Родитель по дереву гейтов — THAUMIC_OVERCLOCKER, но оверклокера в
+     * коде ещё нет. Временно висит на VIS_TO_EU_GENERATOR (по смыслу — та же
+     * резонансная линейка); перевесить при реализации оверклокера. Тот же
+     * приём-заглушка, что был у самого генератора до T2 (А-7).
+     *
+     * Стоимость — §6 карточки: Praecantatio 12, Potentia 10, Perditio 8,
+     * Machina 4 (4 аспекта, 34 единицы, вилка T3 25–35); complexity 3 —
+     * конвертер, «всё, что меняет правила игры» (§2.4).
+     */
+    public static void registerT3() {
+        new ResearchItem(
+                FLUX_CONDENSER, CATEGORY,
+                new AspectList().add(Aspect.MAGIC, 12).add(Aspect.ENERGY, 10)
+                        .add(Aspect.ENTROPY, 8).add(Aspect.MECHANISM, 4),
+                6, -5, 3,
+                new ItemStack(unboundtech.common.UTBlocks.fluxCondenser))
+                .setParents(VIS_TO_EU_GENERATOR)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.FLUX_CONDENSER.1"),
+                        new ResearchPage("unboundtech.research_page.FLUX_CONDENSER.2"),
+                        new ResearchPage("unboundtech.research_page.FLUX_CONDENSER.3"),
+                        unboundtech.common.UTRecipesT3.fluxCondenser == null ? null
+                                : new ResearchPage(unboundtech.common.UTRecipesT3.fluxCondenser)))
+                .registerResearchItem();
+        UTLog.info("Tier T3 research registered (flux condenser)");
     }
 
 

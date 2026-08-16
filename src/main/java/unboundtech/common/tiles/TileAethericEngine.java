@@ -98,6 +98,10 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable, IMa
             }
             this.sink.useEnergy(EnergyCanon.EU_PER_NODE_ASPECT_BUY);
             NodeCache.syncNode(this.world, nodePos);
+            // Нить вис от машины к узлу (обратное направление, §3).
+            this.world.addBlockEvent(this.pos, this.getBlockType(),
+                    TileThaumGenerator.EVENT_VIS_FLOW,
+                    TileThaumGenerator.packOffset(this.pos, nodePos));
             return true;
         }
         // Все узлы полны — это норма, а не устаревший кэш (см. NodeCache).
@@ -134,6 +138,19 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable, IMa
         }
         this.active = value;
         BlockMachineBase.setActive(this.world, this.pos, value);
+    }
+
+    /** Приём блок-события частиц; сама нить — общий код генератора. */
+    @Override
+    public boolean receiveClientEvent(int id, int param) {
+        if (this.world == null || !this.world.isRemote) {
+            return id == TileThaumGenerator.EVENT_VIS_FLOW;
+        }
+        if (id == TileThaumGenerator.EVENT_VIS_FLOW) {
+            TileThaumGenerator.spawnVisThread(this.world, this.pos, param, true);
+            return true;
+        }
+        return super.receiveClientEvent(id, param);
     }
 
     // ================= IMachineStatus =================

@@ -9,6 +9,7 @@ import unboundtech.compat.ic2.IC2Recipes;
 import unboundtech.common.UTItems;
 import unboundtech.common.UTRecipes;
 import unboundtech.common.UTRecipesT2;
+import unboundtech.common.UTRecipesT3;
 import unboundtech.compat.mets.METSAspects;
 import unboundtech.research.UTResearch;
 
@@ -61,6 +62,10 @@ public final class ModuleManager {
         // закалённого таумия, поэтому строго после T2.
         UTRecipes.register();
         UTResearch.registerConverters();
+
+        // Тир T3: рецепты, затем запись — страница держит объект рецепта.
+        UTRecipesT3.register();
+        UTResearch.registerT3();
 
         // Аспекты наших объектов считаются по формуле из состава рецепта,
         // поэтому строго после UTRecipes и после аспектов IC2.

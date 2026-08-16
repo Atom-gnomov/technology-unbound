@@ -56,6 +56,9 @@ public final class UTConfig {
         EnergyCanon.EU_PER_WAND_VIS_BACK = config.get(CAT_ENERGY, "eu_per_wand_vis_back", 1000,
                 "EU produced by the Focus of Charge per 1 vis drawn from the wand.")
                 .getInt(1000);
+        EnergyCanon.EU_PER_FLUX_ESSENTIA = config.get(CAT_ENERGY, "eu_per_flux_essentia", 2000,
+                "Flux Condenser: EU per 1 Praecantatio essentia from the TC flux scrubber.")
+                .getInt(2000);
 
         config.setCategoryComment(CAT_ASPECTS,
                 "Aspect economy. Item aspects are derived from recipe components at runtime "

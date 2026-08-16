@@ -46,6 +46,69 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMa
     private static final Aspect[] FUEL_ASPECTS = {Aspect.FIRE, Aspect.ENERGY};
 
     /**
+     * Блок-события для частиц (`machine_feedback.md` §3). Доставка ванильная:
+     * {@code World.addBlockEvent} с сервера → {@code receiveClientEvent} на
+     * клиенте, никакого своего сетевого канала. Параметр — смещение узла от
+     * машины, упакованное по 5 бит на ось (радиус 8 влезает с запасом).
+     */
+    protected static final int EVENT_VIS_FLOW = 1;
+    /** Красная искра отказа — не чаще раза в 100 тиков (§3). */
+    protected static final int EVENT_FAULT = 2;
+
+    protected static int packOffset(BlockPos from, BlockPos to) {
+        return (to.getX() - from.getX() + 8)
+                | (to.getY() - from.getY() + 8) << 5
+                | (to.getZ() - from.getZ() + 8) << 10;
+    }
+
+    /**
+     * Нить родных частиц вис между машиной и узлом: 3–4 искры, разложенные
+     * по отрезку. {@code reverse} — направление чтения (у двигателя поток
+     * идёт от машины к узлу). Клиентский код: sparkle сам молчит на сервере.
+     */
+    protected static void spawnVisThread(net.minecraft.world.World world, BlockPos machine,
+                                         int packedOffset, boolean reverse) {
+        int dx = (packedOffset & 31) - 8;
+        int dy = (packedOffset >> 5 & 31) - 8;
+        int dz = (packedOffset >> 10 & 31) - 8;
+        float sx = machine.getX() + 0.5F;
+        float sy = machine.getY() + 0.5F;
+        float sz = machine.getZ() + 0.5F;
+        int count = 3 + world.rand.nextInt(2);   // 3–4, потолок канона — 4
+        for (int i = 0; i < count; i++) {
+            float t = (i + 0.5F) / count;
+            if (reverse) {
+                t = 1.0F - t;
+            }
+            // Лёгкий провис нити, чтобы она не читалась линейкой.
+            float sag = net.minecraft.util.math.MathHelper.sin(t * (float) Math.PI) * 0.25F;
+            thaumcraft.common.Thaumcraft.proxy.sparkle(
+                    sx + dx * t, sy + dy * t + sag, sz + dz * t,
+                    1.2F, 0, -0.02F);   // type 0 — фиолетовый вис
+        }
+    }
+
+    @Override
+    public boolean receiveClientEvent(int id, int param) {
+        if (this.world == null || !this.world.isRemote) {
+            // Сервер получает то же событие — подтверждаем, чтобы ванила не
+            // перепроверяла блок, но не делаем ничего.
+            return id == EVENT_VIS_FLOW || id == EVENT_FAULT;
+        }
+        if (id == EVENT_VIS_FLOW) {
+            spawnVisThread(this.world, this.pos, param, false);
+            return true;
+        }
+        if (id == EVENT_FAULT) {
+            thaumcraft.common.Thaumcraft.proxy.sparkle(
+                    this.pos.getX() + 0.5F, this.pos.getY() + 1.05F, this.pos.getZ() + 0.5F,
+                    1.0F, 4, -0.01F);   // type 4 — красная искра у полоски
+            return true;
+        }
+        return super.receiveClientEvent(id, param);
+    }
+
+    /**
      * Сколько тиков «морда» остаётся горящей после удачного забора вис.
      * Чуть больше интервала регенерации узла (600), чтобы у работающей на
      * пределе машины состояние не мигало.
@@ -89,6 +152,10 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMa
 
         if (this.counter % INTERFERENCE_INTERVAL == 0) {
             this.interfered = this.hasNeighbouringGenerator();
+            if (this.interfered) {
+                // Одиночная красная искра у полоски, не чаще раза в 100 тиков.
+                this.world.addBlockEvent(this.pos, this.getBlockType(), EVENT_FAULT, 0);
+            }
         }
 
         if (this.counter % DRAIN_INTERVAL != 0) {
@@ -145,6 +212,9 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMa
                 }
                 this.source.addEnergy(EnergyCanon.EU_PER_NODE_ASPECT_SELL);
                 NodeCache.syncNode(this.world, nodePos);
+                // Нить вис от узла к машине — раз в успешный цикл (§3).
+                this.world.addBlockEvent(this.pos, this.getBlockType(),
+                        EVENT_VIS_FLOW, packOffset(this.pos, nodePos));
                 return true;
             }
         }
