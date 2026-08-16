@@ -58,8 +58,23 @@ public class ItemElectricScribingTools extends Item implements IScribeTools, IEl
 
     // ================= прочность ↔ заряд =================
 
+    /**
+     * ⚠️ Чтение заряда обязано быть БЕЗ побочных эффектов: {@link #getDamage}
+     * зовут на каждом кадре отрисовки и при каждом сравнении стеков.
+     *
+     * А {@code ElectricItem.manager.getCharge} побочный эффект имеет: он
+     * реализован как {@code discharge(..., simulate)}, и внутри стоит
+     * {@code StackUtil.getOrCreateNbtData(stack)} — то есть чтение НАВЕШИВАЕТ
+     * на стек NBT-тег (проверено по байткоду
+     * {@code ic2.core.item.ElectricItemManager}). Поэтому у стека без тега
+     * заряд возвращаем нулём, не спрашивая менеджер: тега нет — значит IC2
+     * ничего в него и не клал.
+     */
     private static double charge(ItemStack stack) {
-        return ElectricItem.manager == null ? 0.0 : ElectricItem.manager.getCharge(stack);
+        if (!stack.hasTagCompound() || ElectricItem.manager == null) {
+            return 0.0;
+        }
+        return ElectricItem.manager.getCharge(stack);
     }
 
     /** Полный заряд = 0 «урона», пустой = 80. */

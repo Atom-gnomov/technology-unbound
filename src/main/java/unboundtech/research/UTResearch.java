@@ -303,6 +303,7 @@ public final class UTResearch {
                 .setParents(TEMPERED_THAUMIUM)
                 .setPages(pages(
                         new ResearchPage("unboundtech.research_page.TEMPERED_ARMOR.1"),
+                        new ResearchPage("unboundtech.research_page.TEMPERED_ARMOR.2"),
                         recipePage(unboundtech.common.UTCrafting.helmet),
                         recipePage(unboundtech.common.UTCrafting.chestplate),
                         recipePage(unboundtech.common.UTCrafting.leggings),
@@ -320,6 +321,7 @@ public final class UTResearch {
                 .setPages(pages(
                         new ResearchPage("unboundtech.research_page.TEMPERED_TOOLS.1"),
                         new ResearchPage("unboundtech.research_page.TEMPERED_TOOLS.2"),
+                        new ResearchPage("unboundtech.research_page.TEMPERED_TOOLS.3"),
                         recipePage(unboundtech.common.UTCrafting.pickaxe),
                         recipePage(unboundtech.common.UTCrafting.axe),
                         recipePage(unboundtech.common.UTCrafting.shovel),
@@ -337,6 +339,7 @@ public final class UTResearch {
                 .setParents(TEMPERED_THAUMIUM)
                 .setPages(pages(
                         new ResearchPage("unboundtech.research_page.ELECTRIC_SCRIBING.1"),
+                        new ResearchPage("unboundtech.research_page.ELECTRIC_SCRIBING.2"),
                         recipePage(unboundtech.common.UTCrafting.scribingTools)))
                 .registerResearchItem();
 
@@ -350,6 +353,7 @@ public final class UTResearch {
                 .setParents(TEMPERED_THAUMIUM)
                 .setPages(pages(
                         new ResearchPage("unboundtech.research_page.PHIAL_STATION.1"),
+                        new ResearchPage("unboundtech.research_page.PHIAL_STATION.2"),
                         arcanePage(unboundtech.common.UTRecipesT2.phialStation)))
                 .registerResearchItem();
 
@@ -364,6 +368,7 @@ public final class UTResearch {
                 .setPages(pages(
                         new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.1"),
                         new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.2"),
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.3"),
                         arcanePage(unboundtech.common.UTRecipesT2.essentiaBurner)))
                 .registerResearchItem();
 
@@ -387,6 +392,7 @@ public final class UTResearch {
         return pages(
                 new ResearchPage("unboundtech.research_page.TEMPERED_THAUMIUM.1"),
                 new ResearchPage("unboundtech.research_page.TEMPERED_THAUMIUM.2"),
+                new ResearchPage("unboundtech.research_page.TEMPERED_THAUMIUM.3"),
                 unboundtech.common.UTRecipesT2.temperedCrucible == null
                         ? null
                         : new ResearchPage(unboundtech.common.UTRecipesT2.temperedCrucible),

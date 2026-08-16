@@ -302,6 +302,16 @@ public class TilePhialStation extends TileThaumcraft
         return this.mode;
     }
 
+    /** Фильтр аспекта; {@code null} — «любой». */
+    public Aspect getFilter() {
+        return this.filter;
+    }
+
+    /** Причина простоя словами — её же показывает GUI. */
+    public String getIdleReason() {
+        return this.idleReason;
+    }
+
     public ItemStackHandler getSlots() {
         return this.slots;
     }

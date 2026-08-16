@@ -147,11 +147,31 @@ public abstract class BlockMachineBase extends BlockContainer implements IWrench
      * GUI у машин нет намеренно, поэтому без этого игрок не отличит
      * «интерференция» от «нет узла» и от «буфер полон».
      */
+    /**
+     * Есть ли у машины экран. У кого есть — по ПКМ пустой рукой открывается
+     * он, а не строка статуса: строка была вынужденной мерой, пока GUI не
+     * было (`machine_feedback.md` §4), и остаётся у машин без экрана.
+     */
+    protected boolean hasGui() {
+        return false;
+    }
+
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state,
                                     EntityPlayer player, EnumHand hand,
                                     EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (world.isRemote || !player.getHeldItem(hand).isEmpty()) {
+        if (!player.getHeldItem(hand).isEmpty()) {
+            return false;
+        }
+        if (this.hasGui()) {
+            if (!world.isRemote) {
+                player.openGui(unboundtech.UnboundTech.instance,
+                        unboundtech.UTGuiHandler.GUI_MACHINE,
+                        world, pos.getX(), pos.getY(), pos.getZ());
+            }
+            return true;
+        }
+        if (world.isRemote) {
             return false;
         }
         TileEntity tile = world.getTileEntity(pos);

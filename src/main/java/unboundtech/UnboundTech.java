@@ -43,6 +43,8 @@ public class UnboundTech {
         UTConfig.load(event.getSuggestedConfigurationFile());
         ModuleManager.preInit();
         MinecraftForge.EVENT_BUS.register(this);
+        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE
+                .registerGuiHandler(this, new UTGuiHandler());
     }
 
     @Mod.EventHandler

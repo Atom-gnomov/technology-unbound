@@ -15,6 +15,11 @@ public class BlockEssentiaBurner extends BlockMachineBase {
     }
 
     @Override
+    protected boolean hasGui() {
+        return true;
+    }
+
+    @Override
     public TileEntity createNewTileEntity(World world, int meta) {
         return new TileEssentiaBurner();
     }
