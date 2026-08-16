@@ -7,12 +7,9 @@ import thaumcraft.api.ThaumcraftApi;
 import thaumcraft.api.aspects.Aspect;
 import thaumcraft.api.aspects.AspectList;
 import thaumcraft.api.crafting.CrucibleRecipe;
-import thaumcraft.api.crafting.ShapedArcaneRecipe;
-import thaumcraft.common.config.ConfigBlocks;
 import thaumcraft.common.config.ConfigItems;
 import thaumcraft.common.items.ItemResource;
 import unboundtech.UTLog;
-import unboundtech.compat.ic2.IC2Handles;
 import unboundtech.research.UTResearch;
 
 /**
@@ -43,15 +40,8 @@ public final class UTRecipesT2 {
     /** Путь А: сжатый воздух, мБ ЗА ТИК — как у стали. */
     private static final int BLAST_FLUID = 1;
 
-    /** Меты осколков: 1 = Ignis (огонь). */
-    private static final int SHARD_FIRE = 1;
-
     /** Рецепт тигля — страница Таумономикона показывает сам объект. */
     public static CrucibleRecipe temperedCrucible;
-
-    /** Арканные рецепты машин T2. */
-    public static ShapedArcaneRecipe phialStation;
-    public static ShapedArcaneRecipe essentiaBurner;
 
     private UTRecipesT2() {
     }
@@ -59,59 +49,8 @@ public final class UTRecipesT2 {
     public static void register() {
         registerBlastFurnace();
         temperedCrucible = registerCrucible();
-        phialStation = registerPhialStation();
-        essentiaBurner = registerEssentiaBurner();
     }
 
-    /**
-     * Фиал-станция: 4 закалённых таумия, 2 стекла, труба ТК, RE-батарея
-     * (`phial_station.md` §6). Аспекты — Aqua 6, Ordo 6: только примордиалы,
-     * арканный верстак платит висом из жезла (канон §6.8). Числа пересчитаны
-     * калибровкой (было 20/20 = 40 вис при вилке T2 в 10–20).
-     */
-    private static ShapedArcaneRecipe registerPhialStation() {
-        ItemStack battery = IC2Handles.item("re_battery", null);
-        if (battery.isEmpty()) {
-            UTLog.warn("Phial Station recipe skipped: IC2 RE-battery not found");
-            return null;
-        }
-        return ThaumcraftApi.addArcaneCraftingRecipe(
-                UTResearch.PHIAL_STATION,
-                new ItemStack(UTBlocks.phialStation),
-                new AspectList().add(Aspect.WATER, 6).add(Aspect.ORDER, 6),
-                "TGT",
-                "TPT",
-                " B ",
-                'T', new ItemStack(UTItems.temperedIngot),
-                'G', new ItemStack(net.minecraft.init.Blocks.GLASS),
-                'P', new ItemStack(ConfigBlocks.blockTube),
-                'B', battery);
-    }
-
-    /**
-     * Эссент. Горелка: 4 закалённых таумия, генератор IC2, труба ТК,
-     * 2 осколка Ignis (`essentia_burner.md` §6). Аспекты — Ignis 8, Ordo 4,
-     * Perditio 3, тоже только примордиалы (было 30/15/10 = 55 вис).
-     */
-    private static ShapedArcaneRecipe registerEssentiaBurner() {
-        ItemStack generator = IC2Handles.item("te", "generator");
-        if (generator.isEmpty()) {
-            UTLog.warn("Essentia Burner recipe skipped: IC2 generator not found");
-            return null;
-        }
-        return ThaumcraftApi.addArcaneCraftingRecipe(
-                UTResearch.ESSENTIA_BURNER,
-                new ItemStack(UTBlocks.essentiaBurner),
-                new AspectList().add(Aspect.FIRE, 8).add(Aspect.ORDER, 4)
-                        .add(Aspect.ENTROPY, 3),
-                "TST",
-                "TGT",
-                " P ",
-                'T', new ItemStack(UTItems.temperedIngot),
-                'S', new ItemStack(ConfigItems.itemShard, 1, SHARD_FIRE),
-                'G', generator,
-                'P', new ItemStack(ConfigBlocks.blockTube));
-    }
 
     /** Путь А: таумий → закалённый таумий в доменной печи IC2. */
     private static void registerBlastFurnace() {

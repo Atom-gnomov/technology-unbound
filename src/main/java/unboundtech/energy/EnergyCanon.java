@@ -46,43 +46,10 @@ public final class EnergyCanon {
      */
     public static final int EU_ALUMENTUM_REFERENCE = 16_000;
 
-    // Курсы будущих фаз — здесь же, чтобы канон жил в одном классе.
-    /** Эссент. Горелка (T2): EU за 1 ед. Ignis/Potentia. ⚠️ Курс предварительный. */
-    public static int EU_ESSENTIA_HOT = 2_000;
-    /** Эссент. Горелка: EU за 1 ед. Perditio. ⚠️ Курс предварительный. */
-    public static int EU_ESSENTIA_PERDITIO = 1_250;
-    /** Эссент. Горелка: EU за 1 ед. Arbor/Herba. ⚠️ Курс предварительный. */
-    public static int EU_ESSENTIA_PLANT = 500;
-    // Строка «Permutatio → усиление UU в массфабрикаторе» УДАЛЕНА из канона
-    // (§3.1, решение владельца): она была единственной без системы и карточки.
-    // Нишу «электричество делает материю» закрыл Молекулярный Преобразователь
-    // ASP с листами преобразования, у каждого своя строка курса.
-
-    /** Фиал-станция (T2): EU за один фиал, розлив или слив (канон §3.4). */
-    public static int EU_PER_PHIAL = 200;
-
-    /**
-     * Сколько EU даёт единица эссенции в горелке.
-     * Аспекты вне таблицы горелка не принимает вовсе — здесь это ноль
-     * (`essentia_burner.md` §4).
-     */
-    public static int essentiaValue(thaumcraft.api.aspects.Aspect aspect) {
-        if (aspect == null) {
-            return 0;
-        }
-        if (aspect == thaumcraft.api.aspects.Aspect.FIRE
-                || aspect == thaumcraft.api.aspects.Aspect.ENERGY) {
-            return EU_ESSENTIA_HOT;          // Ignis / Potentia
-        }
-        if (aspect == thaumcraft.api.aspects.Aspect.ENTROPY) {
-            return EU_ESSENTIA_PERDITIO;     // Perditio
-        }
-        if (aspect == thaumcraft.api.aspects.Aspect.TREE
-                || aspect == thaumcraft.api.aspects.Aspect.PLANT) {
-            return EU_ESSENTIA_PLANT;        // Arbor / Herba
-        }
-        return 0;
-    }
+    // Курсы эссенции (Эссент. Горелка) и цена фиала удалены вместе с самими
+    // объектами: решением владельца Фиал-станция и Эссент. Горелка вычеркнуты
+    // из канона и из мода как бесполезные. Строка «Permutatio -> усиление UU»
+    // была отменена раньше и по той же причине здесь отсутствует.
 
     /**
      * Ёмкость буфера Таум-Генератора. Дублируется здесь намеренно: тайл нельзя

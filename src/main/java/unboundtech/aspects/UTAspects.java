@@ -12,7 +12,6 @@ import unboundtech.UTLog;
 import unboundtech.common.UTBlocks;
 import unboundtech.common.UTItems;
 import unboundtech.common.UTRecipes;
-import unboundtech.common.UTRecipesT2;
 import unboundtech.compat.ic2.IC2Handles;
 
 /**
@@ -40,10 +39,6 @@ public final class UTAspects {
                 AspectFormula.Process.MACHINE_ASSEMBLY, "thaum_generator");
         registered += fromArcane(UTBlocks.aethericEngine, UTRecipes.aethericEngine,
                 AspectFormula.Process.MACHINE_ASSEMBLY, "aetheric_engine");
-        registered += fromArcane(UTBlocks.phialStation, UTRecipesT2.phialStation,
-                AspectFormula.Process.MACHINE_ASSEMBLY, "phial_station");
-        registered += fromArcane(UTBlocks.essentiaBurner, UTRecipesT2.essentiaBurner,
-                AspectFormula.Process.MACHINE_ASSEMBLY, "essentia_burner");
         UTLog.info("Object aspects derived by formula: {}", registered);
     }
 

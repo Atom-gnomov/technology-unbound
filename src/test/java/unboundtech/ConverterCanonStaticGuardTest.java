@@ -96,9 +96,8 @@ public class ConverterCanonStaticGuardTest {
     }
 
     /**
-     * Тир T2. Числа взяты из карточек `05_objects/tempered_thaumium*.md`,
-     * `phial_station.md` и `essentia_burner.md`; разъехавшись, они ломают
-     * прогрессию тихо.
+     * Тир T2. Числа взяты из карточек `05_objects/tempered_thaumium*.md` и
+     * `electric_scribing_tools.md`; разъехавшись, они ломают прогрессию тихо.
      */
     @Test
     public void temperedTierKeepsCardNumbers() throws IOException {
@@ -132,29 +131,6 @@ public class ConverterCanonStaticGuardTest {
                 "src/main/java/unboundtech/common/items/ItemTemperedArmor.java");
         assertTrue("штраф вис -5% за элемент",
                 armor.contains("VIS_PENALTY_PER_PIECE = -5;"));
-    }
-
-    @Test
-    public void essentiaMachinesKeepCardNumbers() throws IOException {
-        String burner = read("src/main/java/unboundtech/common/tiles/TileEssentiaBurner.java");
-        assertTrue("горелка: буфер 10 000 EU", burner.contains("CAPACITY = 10_000.0;"));
-        assertTrue("горелка: тир LV", burner.contains("TIER = 1;"));
-        assertTrue("горелка: цикл 20 тиков", burner.contains("CYCLE = 20;"));
-        assertTrue("горелка: буфер эссенции 8", burner.contains("ESSENTIA_BUFFER = 8;"));
-        assertTrue("горелка ничего не отдаёт наружу",
-                burner.contains("public int takeEssentia(Aspect aspect, int amount, EnumFacing face) {\n        return 0;"));
-
-        String station = read("src/main/java/unboundtech/common/tiles/TilePhialStation.java");
-        assertTrue("станция: буфер 2 000 EU", station.contains("CAPACITY = 2_000.0;"));
-        assertTrue("станция: фиал — 8 единиц", station.contains("PHIAL_AMOUNT = 8;"));
-        assertTrue("станция: цикл 40 тиков (фиал за две секунды)",
-                station.contains("CYCLE = 40;"));
-
-        String canon = read("src/main/java/unboundtech/energy/EnergyCanon.java");
-        assertTrue("курс горелки Ignis/Potentia", canon.contains("EU_ESSENTIA_HOT = 2_000;"));
-        assertTrue("курс горелки Perditio", canon.contains("EU_ESSENTIA_PERDITIO = 1_250;"));
-        assertTrue("курс горелки Arbor/Herba", canon.contains("EU_ESSENTIA_PLANT = 500;"));
-        assertTrue("фиал — 200 EU", canon.contains("EU_PER_PHIAL = 200;"));
     }
 
     /**

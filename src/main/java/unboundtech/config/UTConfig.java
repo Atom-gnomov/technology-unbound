@@ -56,21 +56,6 @@ public final class UTConfig {
         EnergyCanon.EU_PER_WAND_VIS_BACK = config.get(CAT_ENERGY, "eu_per_wand_vis_back", 1000,
                 "EU produced by the Focus of Charge per 1 vis drawn from the wand.")
                 .getInt(1000);
-        EnergyCanon.EU_ESSENTIA_HOT = config.get(CAT_ENERGY, "eu_per_essentia_ignis_potentia", 2000,
-                "Essentia Burner (phase 4): EU per 1 Ignis/Potentia essentia.")
-                .getInt(2000);
-        EnergyCanon.EU_ESSENTIA_PERDITIO = config.get(CAT_ENERGY, "eu_per_essentia_perditio", 1250,
-                "Essentia Burner (phase 4): EU per 1 Perditio essentia.")
-                .getInt(1250);
-        EnergyCanon.EU_ESSENTIA_PLANT = config.get(CAT_ENERGY, "eu_per_essentia_arbor_herba", 500,
-                "Essentia Burner (phase 4): EU per 1 Arbor/Herba essentia.")
-                .getInt(500);
-        // Ключ eu_permutatio_amplifier удалён вместе со строкой курса: канон
-        // отменил массфабрикатор на эссенции. Старое значение в существующих
-        // конфигах просто игнорируется.
-        EnergyCanon.EU_PER_PHIAL = config.get(CAT_ENERGY, "eu_per_phial", 200,
-                "Phial Station: EU per phial filled or emptied.")
-                .getInt(200);
 
         config.setCategoryComment(CAT_ASPECTS,
                 "Aspect economy. Item aspects are derived from recipe components at runtime "

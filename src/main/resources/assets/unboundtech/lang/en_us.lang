@@ -108,33 +108,8 @@ tc.research_name.ELECTRIC_SCRIBING=Electric Scribing Tools
 tc.research_text.ELECTRIC_SCRIBING=A pen that writes with a discharge
 unboundtech.research_page.ELECTRIC_SCRIBING.1=A pen that writes not with ink but with a discharge: the needle leaves a thin scorched line on the parchment, and such notes outlast handwritten ones. A charge does not last long - but set it on a charging pad, go make tea, and you can write again. Engineers find this obvious; thaumaturges find it humiliating.<BR><BR>Four thousand EU, fifty per research point, eighty points on a full charge. An ordinary inkwell wins on capacity; this one wins because the capacity comes back for free.<BR><BR>Carry only one kind at a time: the table grabs the first inkwell it finds, not the best one.
 
-tile.unboundtech.phial_station.name=Phial Station
-tile.unboundtech.essentia_burner.name=Essentia Burner
-
-tc.research_name.PHIAL_STATION=Phial Station
-tc.research_text.PHIAL_STATION=An end to handling phials by hand
-unboundtech.research_page.PHIAL_STATION.1=A glass column with a clamp and a thin needle. An empty phial settles into the cradle, the needle enters the neck, and the essentia pours itself across - exactly eight units, not a drop more. It works the other way too, if the needle is put in reverse. There is nothing magical about it, and that is the whole point.<BR><BR>A wrench switches the station between filling and draining. Right-clicking with a phial sets the aspect it reaches for; an empty phial clears the filter and the station takes whatever arrives first.<BR><BR>Two hundred EU per phial, a two-thousand buffer - ten operations. Roughly a phial a second. If the output slot is occupied the station simply stops: nothing spills and nothing is lost.
-
-tc.research_name.ESSENTIA_BURNER=Essentia Burner
-tc.research_text.ESSENTIA_BURNER=My rubbish is a power plant now
-unboundtech.research_page.ESSENTIA_BURNER.1=Essentia burns reluctantly and inelegantly: the flame takes the colour of whichever aspect is going up, and the smell is such that alchemists prefer to site the burner some way off. In exchange it takes everything the pipe brings and turns it into the dull, even units engineers are so fond of.<BR><BR>Where the Thaumic Alternator has a finite node, this has renewable matter: wood, flesh and plants become essentia, and essentia becomes current.
-unboundtech.research_page.ESSENTIA_BURNER.2=The going rates.<BR><BR>Ignis and Potentia: 2,000 EU per unit - fuel in its purest form.<BR>Perditio: 1,250 - decay is energy too.<BR>Arbor and Herba: 500 apiece - cheap, but you will have a great deal of it.<BR><BR>No other aspect is accepted at all: the burner declares no suction for them and the pipe simply passes it by. It finishes whatever it has already taken before switching to something else.<BR><BR>A ten-thousand EU buffer, output on a low-voltage line. When the buffer is full the suction drops: no essentia is burned for nothing.
 
 # --- Machine screens ---
-container.unboundtech.phial_station=Phial Station
-container.unboundtech.essentia_burner=Essentia Burner
-gui.unboundtech.energy=Charge: %s / %s EU
-gui.unboundtech.essentia=Essentia: %s / %s
-gui.unboundtech.burner.idle=Idle: no essentia
-gui.unboundtech.burner.burning=Burning: %s at %s EU per unit
-gui.unboundtech.burner.hint1=Run an essentia pipe into any side.
-gui.unboundtech.burner.hint2=Draw power with an IC2 cable: this is an LV source.
-gui.unboundtech.station.fill=Fill
-gui.unboundtech.station.drain=Drain
-gui.unboundtech.station.filter=Filter: %s
-gui.unboundtech.station.any=any aspect
-gui.unboundtech.station.hint_fill=Empty phials on the left, full ones come out right.
-gui.unboundtech.station.hint_drain=Full phials on the left, empty ones come out right.
 
 # --- "How to use" pages ---
 unboundtech.research_page.TEMPERED_THAUMIUM.3=How to use this.<BR><BR>The furnace road: build an IC2 industrial blast furnace, give it compressed air and power, and put a thaumium ingot inside. Five minutes later you take out a tempered one.<BR><BR>The crucible road: heat a crucible, drop in an IC2 steel ingot and pour in four Praecantatio, two Permutatio and two Vitreus. The ingot surfaces on its own.<BR><BR>From there the metal goes anywhere a recipe asks for tempered thaumium: armour, tools, and the casings of the Phial Station, the Burner and both converters. It also repairs them, armour and tools alike, on an anvil.<BR><BR>The thaumium wrench (recipe on the last page) is made from ORDINARY thaumium, not tempered. Right-click a machine to rotate it, sneak and right-click to remove it with its buffer intact. It works on IC2 machines too.
@@ -145,6 +120,4 @@ unboundtech.research_page.TEMPERED_TOOLS.3=How to use this.<BR><BR>Ordinary benc
 
 unboundtech.research_page.ELECTRIC_SCRIBING.2=How to use this.<BR><BR>Just keep it in your inventory: the research table finds the first inkwell it sees and spends that one. If you carry both an ordinary inkwell and this, the table takes whichever sits earlier - put the other in a chest.<BR><BR>Recharge in any IC2 charger: a batbox, an MFE, an MFSU. The bar under the item shows the remaining charge, the tooltip shows how many notes are left.<BR><BR>A flat inkwell does not break or vanish: the table simply stops noticing it until you put it back on charge.
 
-unboundtech.research_page.PHIAL_STATION.2=How to use this.<BR><BR>Place the station, run an essentia pipe into any side and an IC2 cable for power. Right-click with an empty hand to open the screen.<BR><BR>Inside, the input slot is on the left, the output on the right, and the mode button sits between them.<BR>- Fill: put empty phials in, take full ones out.<BR>- Drain: put full phials in, take empty ones out, and the essentia goes into the pipe.<BR><BR>The mode switches with the button or with a wrench on the block. Right-clicking the block with a phial sets which aspect the station reaches for; an empty phial clears the filter.<BR><BR>If the output slot is occupied the station stops and loses nothing. A pickaxe drops it empty, a wrench drops it with buffer and settings; either way the phials in the slots fall out.
 
-unboundtech.research_page.ESSENTIA_BURNER.3=How to use this.<BR><BR>Place the burner, run an essentia pipe into any side, and take the current off with an IC2 cable - this is a low-voltage source, like an ordinary generator.<BR><BR>Right-click with an empty hand to open the screen: charge on the left, essentia stock on the right, and between them what is burning and at what rate.<BR><BR>Feed it by pipe from jars or alembics; the simplest setup is a crucible nearby, burning whatever your organics yield. The burner declares suction itself and takes one unit per cycle.<BR><BR>If the screen says the buffer is full, suction has been dropped and no essentia is being wasted. Connect a consumer and it resumes.

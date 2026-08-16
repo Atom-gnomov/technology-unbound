@@ -32,7 +32,7 @@ public class UnboundTech {
 
     public static final String MODID = "unboundtech";
     public static final String NAME = "Unbound Technology";
-    public static final String VERSION = "0.3.0";
+    public static final String VERSION = "0.3.1";
 
     @Mod.Instance(MODID)
     public static UnboundTech instance;
@@ -43,8 +43,6 @@ public class UnboundTech {
         UTConfig.load(event.getSuggestedConfigurationFile());
         ModuleManager.preInit();
         MinecraftForge.EVENT_BUS.register(this);
-        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE
-                .registerGuiHandler(this, new UTGuiHandler());
     }
 
     @Mod.EventHandler

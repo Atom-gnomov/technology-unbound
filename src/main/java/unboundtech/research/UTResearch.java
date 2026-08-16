@@ -51,8 +51,6 @@ public final class UTResearch {
     public static final String TEMPERED_ARMOR = "TEMPERED_ARMOR";
     public static final String TEMPERED_TOOLS = "TEMPERED_TOOLS";
     public static final String ELECTRIC_SCRIBING = "ELECTRIC_SCRIBING";
-    public static final String PHIAL_STATION = "PHIAL_STATION";
-    public static final String ESSENTIA_BURNER = "ESSENTIA_BURNER";
     /** Фаза 3а: конвертеры (спека phase3_converters_spec.md §3). */
     public static final String VIS_TO_EU_GENERATOR = "VIS_TO_EU_GENERATOR";
     public static final String EU_TO_VIS_ENGINE = "EU_TO_VIS_ENGINE";
@@ -343,42 +341,9 @@ public final class UTResearch {
                         recipePage(unboundtech.common.UTCrafting.scribingTools)))
                 .registerResearchItem();
 
-        // --- Фиал-станция: 24 единицы (Aqua 10, Machina 8, Ordo 6) ---
-        new ResearchItem(
-                PHIAL_STATION, CATEGORY,
-                new AspectList().add(Aspect.WATER, 10).add(Aspect.MECHANISM, 8)
-                        .add(Aspect.ORDER, 6),
-                -2, -3, 2,
-                new ItemStack(unboundtech.common.UTBlocks.phialStation))
-                .setParents(TEMPERED_THAUMIUM)
-                .setPages(pages(
-                        new ResearchPage("unboundtech.research_page.PHIAL_STATION.1"),
-                        new ResearchPage("unboundtech.research_page.PHIAL_STATION.2"),
-                        arcanePage(unboundtech.common.UTRecipesT2.phialStation)))
-                .registerResearchItem();
-
-        // --- Эссент. Горелка: 24 единицы (Ignis 10, Potentia 8, Machina 6) ---
-        new ResearchItem(
-                ESSENTIA_BURNER, CATEGORY,
-                new AspectList().add(Aspect.FIRE, 10).add(Aspect.ENERGY, 8)
-                        .add(Aspect.MECHANISM, 6),
-                -2, -5, 2,
-                new ItemStack(unboundtech.common.UTBlocks.essentiaBurner))
-                .setParents(TEMPERED_THAUMIUM)
-                .setPages(pages(
-                        new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.1"),
-                        new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.2"),
-                        new ResearchPage("unboundtech.research_page.ESSENTIA_BURNER.3"),
-                        arcanePage(unboundtech.common.UTRecipesT2.essentiaBurner)))
-                .registerResearchItem();
-
         UTLog.info("Tier T2 research registered (tempered thaumium and kin)");
     }
 
-    private static ResearchPage arcanePage(
-            thaumcraft.api.crafting.ShapedArcaneRecipe recipe) {
-        return recipe == null ? null : new ResearchPage(recipe);
-    }
 
     /**
      * Страницы записи о материале: лор, затем ОБА пути (§6 карточки — игрок
