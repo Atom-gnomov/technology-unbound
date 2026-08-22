@@ -42,6 +42,8 @@ public final class UTAspects {
                 AspectFormula.Process.MACHINE_ASSEMBLY, "aetheric_engine");
         registered += fromArcane(UTBlocks.fluxCondenser, UTRecipesT3.fluxCondenser,
                 AspectFormula.Process.MACHINE_ASSEMBLY, "flux_condenser");
+        registered += fromArcane(UTBlocks.resonantSplitter, UTRecipesT3.resonantSplitter,
+                AspectFormula.Process.MACHINE_ASSEMBLY, "resonant_splitter");
         // Оверклокер — предмет с арканного верстака: подпись верстака (§7
         // карточки), а не «сборки механизма».
         registered += fromArcaneItem(UTItems.thaumicOverclocker,

@@ -165,6 +165,16 @@ public class ConverterCanonStaticGuardTest {
                 "src/main/java/unboundtech/common/items/ItemThaumicOverclocker.java");
         assertTrue("стопка запрещена: Math.pow(mult, stackCount) у IC2",
                 upgrade.contains("setMaxStackSize(1)"));
+
+        assertTrue("расщепление — 6 000 EU за операцию",
+                canon.contains("EU_PER_SPLIT = 6_000;"));
+        String splitter = read(
+                "src/main/java/unboundtech/common/tiles/TileResonantSplitter.java");
+        assertTrue("расщепитель: темп родной центрифуги — 39 тиков",
+                splitter.contains("CYCLE_TICKS = 39;"));
+        assertTrue("расщепитель: буферы по 8", splitter.contains("BUFFER = 8;"));
+        assertTrue("примордиалы не принимаются",
+                splitter.contains("aspect.isPrimal()"));
     }
 
     /**

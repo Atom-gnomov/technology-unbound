@@ -59,6 +59,9 @@ public final class UTConfig {
         EnergyCanon.EU_PER_FLUX_ESSENTIA = config.get(CAT_ENERGY, "eu_per_flux_essentia", 2000,
                 "Flux Condenser: EU per 1 Praecantatio essentia from the TC flux scrubber.")
                 .getInt(2000);
+        EnergyCanon.EU_PER_SPLIT = config.get(CAT_ENERGY, "eu_per_split", 6000,
+                "Resonant Splitter: EU per operation (1 compound -> both components).")
+                .getInt(6000);
 
         config.setCategoryComment(CAT_ASPECTS,
                 "Aspect economy. Item aspects are derived from recipe components at runtime "

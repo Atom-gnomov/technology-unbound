@@ -61,6 +61,8 @@ public final class UTResearch {
     public static final String FLUX_CONDENSER = "FLUX_CONDENSER";
     /** Тир T3: скорость за эссенцию (`thaumic_overclocker.md`). */
     public static final String THAUMIC_OVERCLOCKER = "THAUMIC_OVERCLOCKER";
+    /** Тир T3: расщепление без потерь (`resonant_splitter.md`). */
+    public static final String RESONANT_SPLITTER = "RESONANT_SPLITTER";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -393,7 +395,29 @@ public final class UTResearch {
                         unboundtech.common.UTRecipesT3.fluxCondenser == null ? null
                                 : new ResearchPage(unboundtech.common.UTRecipesT3.fluxCondenser)))
                 .registerResearchItem();
-        UTLog.info("Tier T3 research registered (overclocker, flux condenser)");
+
+        // Расщепитель: Permutatio 12, Ordo 10, Machina 8, Praecantatio 4 = 34.
+        // ⚠️ Родитель по канону — INDUCTION_CRUCIBLE, которого в коде ещё
+        // нет; временно висит на TEMPERED_THAUMIUM (алхимическая ветка),
+        // перевесить при реализации тигля — тот же приём, что был у
+        // конвертеров до T2 (А-7).
+        new ResearchItem(
+                RESONANT_SPLITTER, CATEGORY,
+                new AspectList().add(Aspect.EXCHANGE, 12).add(Aspect.ORDER, 10)
+                        .add(Aspect.MECHANISM, 8).add(Aspect.MAGIC, 4),
+                0, -6, 3,
+                new ItemStack(unboundtech.common.UTBlocks.resonantSplitter))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.RESONANT_SPLITTER.1"),
+                        new ResearchPage("unboundtech.research_page.RESONANT_SPLITTER.2"),
+                        new ResearchPage("unboundtech.research_page.RESONANT_SPLITTER.3"),
+                        unboundtech.common.UTRecipesT3.resonantSplitter == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.resonantSplitter)))
+                .registerResearchItem();
+
+        UTLog.info("Tier T3 research registered (overclocker, condenser, splitter)");
     }
 
 

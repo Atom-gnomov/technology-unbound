@@ -13,9 +13,11 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import unboundtech.UnboundTech;
 import unboundtech.common.blocks.BlockAethericEngine;
 import unboundtech.common.blocks.BlockFluxCondenser;
+import unboundtech.common.blocks.BlockResonantSplitter;
 import unboundtech.common.blocks.BlockThaumGenerator;
 import unboundtech.common.tiles.TileAethericEngine;
 import unboundtech.common.tiles.TileFluxCondenser;
+import unboundtech.common.tiles.TileResonantSplitter;
 import unboundtech.common.tiles.TileThaumGenerator;
 
 /**
@@ -32,10 +34,12 @@ public final class UTBlocks {
     public static final String THAUM_GENERATOR = "thaum_generator";
     public static final String AETHERIC_ENGINE = "aetheric_engine";
     public static final String FLUX_CONDENSER = "flux_condenser";
+    public static final String RESONANT_SPLITTER = "resonant_splitter";
 
     public static Block thaumGenerator;
     public static Block aethericEngine;
     public static Block fluxCondenser;
+    public static Block resonantSplitter;
 
     /** Вкладка креатива мода; иконка — Таум-Генератор. */
     public static final CreativeTabs TAB = new CreativeTabs(UnboundTech.MODID) {
@@ -55,6 +59,7 @@ public final class UTBlocks {
         thaumGenerator = make(new BlockThaumGenerator(), THAUM_GENERATOR);
         aethericEngine = make(new BlockAethericEngine(), AETHERIC_ENGINE);
         fluxCondenser = make(new BlockFluxCondenser(), FLUX_CONDENSER);
+        resonantSplitter = make(new BlockResonantSplitter(), RESONANT_SPLITTER);
         event.getRegistry().registerAll(all());
 
         GameRegistry.registerTileEntity(TileThaumGenerator.class,
@@ -63,6 +68,8 @@ public final class UTBlocks {
                 new ResourceLocation(UnboundTech.MODID, AETHERIC_ENGINE));
         GameRegistry.registerTileEntity(TileFluxCondenser.class,
                 new ResourceLocation(UnboundTech.MODID, FLUX_CONDENSER));
+        GameRegistry.registerTileEntity(TileResonantSplitter.class,
+                new ResourceLocation(UnboundTech.MODID, RESONANT_SPLITTER));
     }
 
     @SubscribeEvent
@@ -87,6 +94,6 @@ public final class UTBlocks {
 
     /** Все блоки мода — для регистрации и для моделей на клиенте. */
     public static Block[] all() {
-        return new Block[]{thaumGenerator, aethericEngine, fluxCondenser};
+        return new Block[]{thaumGenerator, aethericEngine, fluxCondenser, resonantSplitter};
     }
 }

@@ -222,6 +222,53 @@ def coil_front(furnace, vertical, active):
     return face
 
 
+def splitter_front(furnace, active):
+    """Морда расщепителя: корпус печи + Y-руна «один поток входит, два
+    расходятся» — силуэт читает механику (1 -> 2), по правилу арт-гайда."""
+    face = recolour(furnace, STEEL)
+    for (bx, by) in ((1, 1), (13, 1), (1, 13), (13, 13)):
+        brass_bolt(face, bx, by)
+    x0, y0, x1, y1 = 3, 3, 12, 12
+    for x in range(x0, x1 + 1):
+        put(face, x, y0, BRASS[3])
+        put(face, x, y1, BRASS[1])
+    for y in range(y0, y1 + 1):
+        put(face, x0, y, BRASS[2])
+        put(face, x1, y, BRASS[2])
+    for x in range(x0 + 1, x1):
+        for y in range(y0 + 1, y1):
+            put(face, x, y, MURK[1] if active else MURK[0])
+    hot = MURK[6] if active else MURK[3]
+    mid = MURK[5] if active else MURK[2]
+    # ствол снизу по центру
+    for y in range(8, y1):
+        put(face, 7, y, hot)
+        put(face, 8, y, mid)
+    # развилка в два потока к верхним углам окна
+    for i in range(4):
+        put(face, 6 - i, 7 - i, hot)
+        put(face, 9 + i, 7 - i, mid)
+    if active:
+        put(face, 3 + 1, 4, MURK[7])
+        put(face, 11, 4, MURK[7])
+    return face
+
+
+def splitter_top(machine_top, active):
+    """Верх: родная крышка машины + латунное кольцо центрифуги."""
+    top = machine_top.copy()
+    cx, cy, r_out, r_in = 7.5, 7.5, 5.5, 3.5
+    for y in range(16):
+        for x in range(16):
+            d2 = (x - cx) ** 2 + (y - cy) ** 2
+            if r_in ** 2 <= d2 <= r_out ** 2:
+                shade = BRASS[4] if (x + y) % 3 else BRASS[2]
+                put(top, x, y, shade)
+            elif d2 < r_in ** 2:
+                put(top, x, y, (MURK[5] if active else MURK[1]))
+    return top
+
+
 def write_json(path, data):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
@@ -229,7 +276,16 @@ def write_json(path, data):
 
 
 def blockstate_and_models():
-    name = "flux_condenser"
+    for name, top in (("flux_condenser", "unboundtech:blocks/machine_top"),
+                      ("resonant_splitter", "unboundtech:blocks/resonant_splitter_top")):
+        _machine_assets(name, top)
+    for item in ("flux_charge", "thaumic_overclocker"):
+        write_json(os.path.join(ROOT, "models", "item", item + ".json"),
+                   {"parent": "item/generated",
+                    "textures": {"layer0": "unboundtech:items/" + item}})
+
+
+def _machine_assets(name, top_texture):
     variants = {}
     for active in ("false", "true"):
         model = "unboundtech:" + name + ("_active" if active == "true" else "")
@@ -248,7 +304,7 @@ def blockstate_and_models():
             "textures": {
                 "particle": "unboundtech:blocks/machine_side",
                 "down": "unboundtech:blocks/machine_bottom",
-                "up": "unboundtech:blocks/machine_top",
+                "up": top_texture + ("_active" if active and "splitter" in name else ""),
                 "north": front,
                 "south": "unboundtech:blocks/machine_side",
                 "east": "unboundtech:blocks/machine_side",
@@ -257,10 +313,6 @@ def blockstate_and_models():
         })
     write_json(os.path.join(ROOT, "models", "item", name + ".json"),
                {"parent": "unboundtech:block/" + name})
-    for item in ("flux_charge", "thaumic_overclocker"):
-        write_json(os.path.join(ROOT, "models", "item", item + ".json"),
-                   {"parent": "item/generated",
-                    "textures": {"layer0": "unboundtech:items/" + item}})
 
 
 def main():
@@ -271,6 +323,8 @@ def main():
     with zipfile.ZipFile(jar) as zf:
         furnace = load(zf, "assets/minecraft/textures/blocks/furnace_front_off.png")
         pearl = load(zf, "assets/minecraft/textures/items/ender_pearl.png")
+    machine_top = Image.open(os.path.join(ROOT, "textures", "blocks",
+                                          "machine_top.png")).convert("RGBA")
 
     blocks = os.path.join(ROOT, "textures", "blocks")
     items = os.path.join(ROOT, "textures", "items")
@@ -287,6 +341,14 @@ def main():
         os.path.join(blocks, "aetheric_engine_front.png"))
     coil_front(furnace.copy(), True, True).save(
         os.path.join(blocks, "aetheric_engine_front_active.png"))
+    splitter_front(furnace.copy(), False).save(
+        os.path.join(blocks, "resonant_splitter_front.png"))
+    splitter_front(furnace.copy(), True).save(
+        os.path.join(blocks, "resonant_splitter_front_active.png"))
+    splitter_top(machine_top, False).save(
+        os.path.join(blocks, "resonant_splitter_top.png"))
+    splitter_top(machine_top, True).save(
+        os.path.join(blocks, "resonant_splitter_top_active.png"))
     overclocker().save(os.path.join(items, "thaumic_overclocker.png"))
     blockstate_and_models()
     print("T3: морды из furnace_front, заряд из ender_pearl, плата оверклокера")

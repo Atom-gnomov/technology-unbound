@@ -24,6 +24,7 @@ public final class UTRecipesT3 {
 
     public static ShapedArcaneRecipe fluxCondenser;
     public static ShapedArcaneRecipe thaumicOverclocker;
+    public static ShapedArcaneRecipe resonantSplitter;
 
     private UTRecipesT3() {
     }
@@ -31,6 +32,32 @@ public final class UTRecipesT3 {
     public static void register() {
         fluxCondenser = registerFluxCondenser();
         thaumicOverclocker = registerThaumicOverclocker();
+        resonantSplitter = registerResonantSplitter();
+    }
+
+    /**
+     * Расщепитель (`resonant_splitter.md` §6): четыре слитка вокруг
+     * центрифуги ТК и корпуса машины IC2. §12.2 карточки закрыт: центрифуга
+     * порта — это `blockTube` мета 2 (сверено по ConfigRecipesArcaneSlice),
+     * а не blockMetalDevice. Аспекты — Ordo 10, Perditio 8, Aer 4 после
+     * калибровки (было 55 вис при вилке T3 20–35).
+     */
+    private static ShapedArcaneRecipe registerResonantSplitter() {
+        ItemStack casing = IC2Handles.item("resource", "machine");
+        if (casing.isEmpty()) {
+            UTLog.warn("Resonant Splitter recipe skipped: IC2 machine casing not found");
+            return null;
+        }
+        return ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.RESONANT_SPLITTER,
+                new ItemStack(UTBlocks.resonantSplitter),
+                new AspectList().add(Aspect.ORDER, 10).add(Aspect.ENTROPY, 8)
+                        .add(Aspect.AIR, 4),
+                "TCT",
+                "TMT",
+                'T', new ItemStack(UTItems.temperedIngot),
+                'C', new ItemStack(ConfigBlocks.blockTube, 1, 2),
+                'M', casing);
     }
 
     /**
