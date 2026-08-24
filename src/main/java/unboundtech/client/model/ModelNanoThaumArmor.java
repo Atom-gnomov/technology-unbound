@@ -55,16 +55,20 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         super(scale);
 
         // --- торс: жгуты, подсумки, таум-узел ---
+        // ⚠️ Урок третьей примерки: боксы бипеда раздуты параметром scale
+        // (торс при 1.0 — до z=-3), а addBox без scale НЕ раздувает — деталь
+        // с z=-2.8 оказывается ВНУТРИ брони и не видна («пробрешины»).
+        // Все навесные детали посажены явно за раздутую поверхность.
         this.chestCableR = new ModelRenderer(this, 120, 0);
-        this.chestCableR.addBox(-3.4F, 1.5F, -2.8F, 1, 6, 1);
+        this.chestCableR.addBox(-3.4F, 1.5F, -3.55F, 1, 6, 1);
         this.chestCableL = new ModelRenderer(this, 120, 0);
-        this.chestCableL.addBox(2.4F, 1.5F, -2.8F, 1, 6, 1);
+        this.chestCableL.addBox(2.4F, 1.5F, -3.55F, 1, 6, 1);
         this.pouchR = new ModelRenderer(this, 90, 8);
-        this.pouchR.addBox(-3.2F, 8.4F, -2.8F, 2, 3, 1);
+        this.pouchR.addBox(-3.2F, 8.4F, -3.55F, 2, 3, 1);
         this.pouchL = new ModelRenderer(this, 90, 8);
-        this.pouchL.addBox(1.2F, 8.4F, -2.8F, 2, 3, 1);
+        this.pouchL.addBox(1.2F, 8.4F, -3.55F, 2, 3, 1);
         this.heartNode = new ModelRenderer(this, 120, 9);
-        this.heartNode.addBox(-0.5F, 3.0F, -3.0F, 1, 1, 1);
+        this.heartNode.addBox(-0.5F, 3.0F, -3.7F, 1, 1, 1);
         this.bipedBody.addChild(this.chestCableR);
         this.bipedBody.addChild(this.chestCableL);
         this.bipedBody.addChild(this.pouchR);
@@ -72,22 +76,25 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         this.bipedBody.addChild(this.heartNode);
 
         // --- руки: паулдроны с наклоном, кабели, лампы-терминалы ---
+        // паулдрон раздут scale-параметром: должен нависать над раздутым
+        // плечом со всех сторон, как у космодесанта
         this.pauldronR = new ModelRenderer(this, 76, 21);
-        this.pauldronR.addBox(-4.2F, -2.8F, -2.5F, 6, 4, 5);
+        this.pauldronR.addBox(-4.2F, -2.8F, -2.5F, 6, 4, 5, 0.9F);
         this.pauldronR.rotateAngleZ = PAULDRON_TILT;
         this.pauldronL = new ModelRenderer(this, 76, 21);
         this.pauldronL.mirror = true;
-        this.pauldronL.addBox(-1.8F, -2.8F, -2.5F, 6, 4, 5);
+        this.pauldronL.addBox(-1.8F, -2.8F, -2.5F, 6, 4, 5, 0.9F);
         this.pauldronL.rotateAngleZ = -PAULDRON_TILT;
+        // кабели по ВНЕШНЕЙ стороне: поверхность руки при 1.0 — x=±4
         this.armCableR = new ModelRenderer(this, 84, 8);
-        this.armCableR.addBox(-3.7F, 1.0F, -0.5F, 1, 5, 1);
+        this.armCableR.addBox(-4.55F, 1.0F, -0.5F, 1, 5, 1);
         this.armCableL = new ModelRenderer(this, 84, 8);
-        this.armCableL.addBox(2.7F, 1.0F, -0.5F, 1, 5, 1);
+        this.armCableL.addBox(3.55F, 1.0F, -0.5F, 1, 5, 1);
         // лампы на КОНЦАХ кабелей, у запястья (п.5: терминал, не наклейка)
         this.lampR = new ModelRenderer(this, 114, 8);
-        this.lampR.addBox(-3.8F, 6.4F, -0.5F, 1, 1, 1);
+        this.lampR.addBox(-4.7F, 6.4F, -0.5F, 1, 1, 1);
         this.lampL = new ModelRenderer(this, 114, 8);
-        this.lampL.addBox(2.8F, 6.4F, -0.5F, 1, 1, 1);
+        this.lampL.addBox(3.7F, 6.4F, -0.5F, 1, 1, 1);
         this.bipedRightArm.addChild(this.pauldronR);
         this.bipedRightArm.addChild(this.armCableR);
         this.bipedRightArm.addChild(this.lampR);
@@ -95,12 +102,13 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         this.bipedLeftArm.addChild(this.armCableL);
         this.bipedLeftArm.addChild(this.lampL);
 
-        // --- сабатоны ---
+        // --- сабатоны: пластины ПОВЕРХ нано-бота (нога при 1.0 — до ±3,
+        // без раздутия пластина тонула внутри и «ботинок не было») ---
         this.sabatonR = new ModelRenderer(this, 12, 39);
-        this.sabatonR.addBox(-2.5F, 8.6F, -2.6F, 5, 3, 5);
+        this.sabatonR.addBox(-2.5F, 8.6F, -2.6F, 5, 3, 5, 1.15F);
         this.sabatonL = new ModelRenderer(this, 12, 39);
         this.sabatonL.mirror = true;
-        this.sabatonL.addBox(-2.5F, 8.6F, -2.6F, 5, 3, 5);
+        this.sabatonL.addBox(-2.5F, 8.6F, -2.6F, 5, 3, 5, 1.15F);
         this.bipedRightLeg.addChild(this.sabatonR);
         this.bipedLeftLeg.addChild(this.sabatonL);
     }

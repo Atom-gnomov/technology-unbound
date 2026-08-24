@@ -214,6 +214,48 @@ def paste_alpha_scaled(canvas, src, scale, dx=0, dy=0):
                 px[dx + x, dy + y] = c
 
 
+# Бипед-зоны слоя 64x32 (юниты; в нашем файле x2). У бипеда ОДНА зона руки
+# и ОДНА зона ноги — вторая конечность зеркалится с тех же UV.
+ZONE_HEAD = (0, 0, 32, 16)
+ZONE_BODY = (16, 16, 40, 32)
+ZONE_ARM = (40, 16, 56, 32)
+ZONE_LEG = (0, 16, 16, 32)
+
+
+def weave(ux, uy):
+    """Нано-плетение: базовый тон + тень сетки + редкий блик (логика
+    текстур: заливка одним цветом читается как дыра, плетение — как ткань)."""
+    if (ux * 3 + uy * 5) % 11 == 0:
+        return NANO[3]
+    if (ux + uy) % 3 == 0:
+        return NANO[1]
+    return NANO[2]
+
+
+def fill_zone(canvas, zone):
+    """Глушит прозрачные пиксели бипед-зоны нано-плетением: броня
+    полнотелая (решение владельца), кожа сквозь неё светить не должна.
+
+    Урок третьей примерки: nano_1 IC2 — слой «шлем/торс/боты» с ОТКРЫТЫМ
+    лицом и дырявыми рукавами, а штаны вообще в отдельном nano_2; вклейка
+    одного nano_1 оставила голые бёдра и лицо."""
+    x0, y0, x1, y1 = [v * 2 for v in zone]
+    px = canvas.load()
+    for y in range(y0, y1):
+        for x in range(x0, x1):
+            if px[x, y][3] <= 128:
+                px[x, y] = weave(x // 2, y // 2) + (255,)
+
+
+def face_plate(canvas):
+    """Лицевая пластина глухого шлема: дыхательная решётка на месте рта.
+    Глаза закрывает ПНВ-маска на фортресс-очках, решётке эмиссив не нужен."""
+    px = canvas.load()
+    for y in range(26, 30):
+        for x in range(18, 30):
+            px[x, y] = (NANO[4] if (x // 2) % 2 == 0 else NANO[0]) + (255,)
+
+
 def main():
     tc = find(TC_JARS)
     ic2 = find(IC2_JARS)
@@ -222,28 +264,16 @@ def main():
         return 1
 
     fortress = load(tc, "assets/thaumcraft/textures/models/fortress_armor.png")
-    canvas = dual_recolour(fortress, NANO, TEMPER)
+    base = dual_recolour(fortress, NANO, TEMPER)
 
-    # Родной нано-костюм на бипед-зоны: nano_1 (плоскость 64x32, 1px/юнит)
-    # численно совпадает по UV с бипедом нашей плоскости → просто x2 в (0,0).
-    nano = retint_green(load(ic2, "assets/ic2/textures/armor/nano_1.png"))
-    paste_alpha_scaled(canvas, nano, 2)
-
-    # Маска ПНВ IC2 → зона фортрессовского бокса Goggles (100,18) 9x5x1:
-    # front в файле = (202,38) 18x10. Источник: пояс головы nightvision_1
-    # (128x64, 2px/юнит): front головы с маской = px(16,19)-(32,29).
+    nano1 = retint_green(load(ic2, "assets/ic2/textures/armor/nano_1.png"))
+    nano2 = retint_green(load(ic2, "assets/ic2/textures/armor/nano_2.png"))
     nv = retint_green(load(ic2, "assets/ic2/textures/armor/nightvision_1.png"))
-    mask = nv.crop((16, 19, 32, 29)).resize((18, 10), Image.NEAREST)
-    _fill(canvas, 200, 36, (1 + 9 + 1 + 9) * 2, (1 + 5) * 2, NANO[1])
-    canvas.paste(mask, (202, 38), mask)
 
-    # Тайл кованой фортресс-пластины: фрагмент плотной зоны развёртки.
-    forged_tile = canvas.crop((74, 46, 74 + 12, 46 + 8))
-
-    nl = nano.load()
+    nl = nano1.load()
     nano_tone = None
-    for y in range(nano.size[1]):
-        for x in range(nano.size[0]):
+    for y in range(nano1.size[1]):
+        for x in range(nano1.size[0]):
             c = nl[x, y]
             if c[3] > 200 and not is_green(c):
                 nano_tone = (c[0], c[1], c[2])
@@ -253,11 +283,46 @@ def main():
     if nano_tone is None:
         nano_tone = NANO[2]
 
-    paint_patches(canvas, forged_tile, nano_tone)
-
     armor_dir = os.path.join(ROOT, "textures", "models", "armor")
     os.makedirs(armor_dir, exist_ok=True)
-    canvas.save(os.path.join(armor_dir, "nano_thaum_armor.png"))
+
+    # === слой 1: шлем / торс / ботинки (ванильная логика layer_1) ===
+    canvas = base.copy()
+    # Родной нано-костюм на бипед-зоны: nano_1 (плоскость 64x32, 1px/юнит)
+    # численно совпадает по UV с бипедом нашей плоскости → просто x2 в (0,0).
+    paste_alpha_scaled(canvas, nano1, 2)
+    # Броня полнотелая: глухой шлем, сплошные торс и рукава. Зону ноги НЕ
+    # глушим — в слое 1 там ботиночная часть nano_1, бедро отдано слою 2.
+    fill_zone(canvas, ZONE_HEAD)
+    fill_zone(canvas, ZONE_BODY)
+    fill_zone(canvas, ZONE_ARM)
+    face_plate(canvas)
+
+    # Маска ПНВ IC2 → зона фортрессовского бокса Goggles (100,18) 9x5x1:
+    # front в файле = (202,38) 18x10. Источник: пояс головы nightvision_1
+    # (128x64, 2px/юнит): front головы с маской = px(16,19)-(32,29).
+    mask = nv.crop((16, 19, 32, 29)).resize((18, 10), Image.NEAREST)
+    _fill(canvas, 200, 36, (1 + 9 + 1 + 9) * 2, (1 + 5) * 2, NANO[1])
+    canvas.paste(mask, (202, 38), mask)
+
+    # Тайл кованой фортресс-пластины: фрагмент плотной зоны развёртки.
+    forged_tile = canvas.crop((74, 46, 74 + 12, 46 + 8))
+
+    paint_patches(canvas, forged_tile, nano_tone)
+    canvas.save(os.path.join(armor_dir, "nano_thaum_armor_1.png"))
+
+    # === слой 2: поножи (штаны бипеда живут в ОТДЕЛЬНОМ файле, как у
+    # ванилы и IC2 — nano_2; без него бёдра были голыми) ===
+    canvas2 = base.copy()
+    paste_alpha_scaled(canvas2, nano2, 2)
+    fill_zone(canvas2, ZONE_LEG)
+    paint_patches(canvas2, forged_tile, nano_tone)
+    canvas2.save(os.path.join(armor_dir, "nano_thaum_armor_2.png"))
+
+    # старый единый файл больше не используется
+    old = os.path.join(armor_dir, "nano_thaum_armor.png")
+    if os.path.isfile(old):
+        os.remove(old)
 
     # Иконки: РОДНЫЕ нано-иконки IC2 + кованая пластина + лампа.
     items_dir = os.path.join(ROOT, "textures", "items")
@@ -291,7 +356,8 @@ def main():
             json.dump({"parent": "item/generated",
                        "textures": {"layer0": "unboundtech:items/" + ours}}, f, indent=2)
             f.write("\n")
-    print("nano-thaum v3: нано-бипед, ПНВ-маска IC2, кованые паулдроны, лезвия/лампы")
+    print("nano-thaum v4: два слоя (1: шлем/торс/боты, 2: штаны), глухой шлем,"
+          " полнотелые зоны")
     return 0
 
 

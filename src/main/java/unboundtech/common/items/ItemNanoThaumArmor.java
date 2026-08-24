@@ -44,7 +44,11 @@ public class ItemNanoThaumArmor extends ItemArmor {
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity,
                                   EntityEquipmentSlot slot, String type) {
-        return "unboundtech:textures/models/armor/nano_thaum_armor.png";
+        // Ванильная логика слоёв: штаны бипеда живут в отдельном файле
+        // (как layer_2 у ванилы и nano_2 у IC2) — иначе бёдра голые.
+        return slot == EntityEquipmentSlot.LEGS
+                ? "unboundtech:textures/models/armor/nano_thaum_armor_2.png"
+                : "unboundtech:textures/models/armor/nano_thaum_armor_1.png";
     }
 
     @Override
@@ -57,10 +61,11 @@ public class ItemNanoThaumArmor extends ItemArmor {
         if (this.modelThin == null) {
             this.modelThin = new unboundtech.client.model.ModelNanoThaumArmor(0.5f);
         }
-        // Как у порта: торс и ботинки — толстая модель, шлем и поножи — тонкая.
-        ModelBiped model = this.armorType == EntityEquipmentSlot.CHEST
-                || this.armorType == EntityEquipmentSlot.FEET
-                ? this.modelThick : this.modelThin;
+        // Ванильная логика: тонкая (0.5) — ТОЛЬКО поножи. Шлем обязан быть
+        // толстым: слой волос скина раздут ровно на 0.5, и тонкий шлем
+        // z-файтился с ним — волосы пробивались сквозь капюшон на затылке.
+        ModelBiped model = this.armorType == EntityEquipmentSlot.LEGS
+                ? this.modelThin : this.modelThick;
         model.bipedHead.showModel = armorSlot == EntityEquipmentSlot.HEAD;
         model.bipedHeadwear.showModel = armorSlot == EntityEquipmentSlot.HEAD;
         model.bipedBody.showModel = armorSlot == EntityEquipmentSlot.CHEST
