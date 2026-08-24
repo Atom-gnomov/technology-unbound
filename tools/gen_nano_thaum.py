@@ -143,22 +143,26 @@ def box_patch(img, u, v, w, h, d, body, front=None, top=None):
 
 
 def paint_addon_patches(canvas, nano_tone):
-    """Нижняя половина 256x256 — зоны новых боксов модели."""
+    """Свободные дыры развёртки 128x64 — зоны новых боксов модели.
+
+    Координаты согласованы с ModelNanoThaumArmor и найдены сканом альфы
+    оригинала: goggles (0,0)/(8,0), bridge (43,0), chestCable (16,0),
+    armCable (120,0), pouch (22,3), pauldron (0,8), sabaton (78,12)."""
     # очки ПНВ: корпус-оправа, зелёные линзы, латунная перемычка
-    box_patch(canvas, 0, 64, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
-    box_patch(canvas, 8, 64, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
-    box_patch(canvas, 16, 64, 3, 1, 1, BRASS[1], front=BRASS[2])
+    box_patch(canvas, 0, 0, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
+    box_patch(canvas, 8, 0, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
+    box_patch(canvas, 43, 0, 3, 1, 1, BRASS[1], front=BRASS[2])
     # жгут груди и кабель руки: тёмный кожух, голубая жила
-    box_patch(canvas, 0, 70, 1, 5, 1, NANO[1], front=CYAN)
-    box_patch(canvas, 6, 70, 1, 4, 1, NANO[1], front=CYAN)
+    box_patch(canvas, 16, 0, 1, 5, 1, NANO[1], front=CYAN)
+    box_patch(canvas, 120, 0, 1, 4, 1, NANO[1], front=CYAN)
     # подсумок: карбон с латунной клипсой
-    box_patch(canvas, 12, 70, 2, 2, 1, NANO[3], front=NANO[2], top=BRASS[1])
+    box_patch(canvas, 22, 3, 2, 2, 1, NANO[3], front=NANO[2], top=BRASS[1])
     # паулдрон: таум-пластина, латунная крышка, руна-точка на морде
-    box_patch(canvas, 32, 64, 5, 3, 5, TEMPER[2], front=TEMPER[3], top=BRASS[1])
-    _fill(canvas, (32 + 5 + 2) * 2, (64 + 5 + 1) * 2, 2, 2, GLOW)
+    box_patch(canvas, 0, 8, 5, 3, 5, TEMPER[2], front=TEMPER[3], top=BRASS[1])
+    _fill(canvas, (0 + 5 + 2) * 2, (8 + 5 + 1) * 2, 2, 2, GLOW)
     # сабатон: нано-подложка (тон снят с nano_1 IC2), таум-морда, латунный носок
-    box_patch(canvas, 56, 64, 5, 3, 5, nano_tone, front=TEMPER[2], top=TEMPER[1])
-    _fill(canvas, (56 + 5) * 2, (64 + 5 + 2) * 2, 5 * 2, 1 * 2, BRASS[1])
+    box_patch(canvas, 78, 12, 5, 3, 5, nano_tone, front=TEMPER[2], top=TEMPER[1])
+    _fill(canvas, (78 + 5) * 2, (12 + 5 + 2) * 2, 5 * 2, 1 * 2, BRASS[1])
 
 
 def main():
@@ -170,9 +174,10 @@ def main():
 
     fortress = load(tc, "assets/thaumcraft/textures/models/fortress_armor.png")
     recoloured = dual_recolour(fortress, NANO, TEMPER)
-    # Холст 256x256: сверху фортресс, снизу патчи наших боксов (UV 128x128).
-    canvas = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
-    canvas.paste(recoloured, (0, 0))
+    # Файл остаётся 256x128: UV нормализованы к плоскости 128x64, менять
+    # размер холста нельзя — старые боксы растянут доли на весь файл.
+    # Патчи новых боксов кладутся в СВОБОДНЫЕ дыры развёртки (скан альфы).
+    canvas = recoloured
     nano_layer = load(ic2, "assets/ic2/textures/armor/nano_1.png")
     nl = nano_layer.load()
     nano_tone = None

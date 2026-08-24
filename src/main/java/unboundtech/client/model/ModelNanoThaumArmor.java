@@ -19,12 +19,12 @@ import thaumcraft.client.renderers.models.gear.ModelFortressArmor;
  *    у самой фортресс-брони ботинок НЕТ (шлем/торс/поножи), поэтому
  *    прежний прототип на ноги ничего не рисовал.
  *
- * Все новые боксы — children стандартных частей {@code ModelBiped}, их UV
- * лежат в НИЖНЕЙ половине текстуры: после {@code super()} расширяем
- * {@code textureHeight} 64 → 128, старые боксы фортресс уже посчитаны по
- * 128×64 и не сдвигаются, новые считаются по 128×128. Пиксельные зоны
- * патчей рисует {@code tools/gen_nano_thaum.py} — координаты согласованы
- * с константами U/V здесь.
+ * Все новые боксы — children стандартных частей {@code ModelBiped}. Их UV
+ * лежат в СВОБОДНЫХ дырах фортресс-развёртки (плоскость 128×64 не
+ * меняется — UV нормализованы, и любое изменение размера файла ломает
+ * ВСЕ старые боксы; выучено на белых руках первой примерки). Дыры найдены
+ * сканом альфы оригинала; пиксельные зоны патчей рисует
+ * {@code tools/gen_nano_thaum.py} — координаты согласованы с U/V здесь.
  *
  * Фортресс-панели ног (package-private поля порта) при слоте FEET гасятся
  * через публичный {@code childModels} — иначе ботинки рендерились бы с
@@ -49,28 +49,32 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
 
     public ModelNanoThaumArmor(float scale) {
         super(scale);
-        // Нижняя половина UV-плоскости — наша; фортресс уже разложен по 64.
-        this.textureHeight = 128;
+        // ⚠️ UV нормализованы: доли ЕДИНОЙ плоскости 128x64, а не пиксели.
+        // Прежняя версия расширяла textureHeight и сам файл вдвое — и все
+        // СТАРЫЕ боксы растянули свои доли на новый файл, читая чужие патчи
+        // (белые руки, зелёная «линза» на спине). Правильно так: плоскость
+        // не трогаем, патчи новых боксов живут в СВОБОДНЫХ дырах фортресс-
+        // развёртки (найдены сканом альфы, см. gen_nano_thaum.py).
 
         // --- очки ПНВ (UV согласованы с gen_nano_thaum.py) ---
-        this.goggleR = new ModelRenderer(this, 0, 64);
+        this.goggleR = new ModelRenderer(this, 0, 0);
         this.goggleR.addBox(-3.5F, -5.5F, -4.9F, 2, 2, 1);
-        this.goggleL = new ModelRenderer(this, 8, 64);
+        this.goggleL = new ModelRenderer(this, 8, 0);
         this.goggleL.addBox(1.5F, -5.5F, -4.9F, 2, 2, 1);
-        this.goggleBridge = new ModelRenderer(this, 16, 64);
+        this.goggleBridge = new ModelRenderer(this, 43, 0);
         this.goggleBridge.addBox(-1.5F, -5.2F, -4.8F, 3, 1, 1);
         this.bipedHead.addChild(this.goggleR);
         this.bipedHead.addChild(this.goggleL);
         this.bipedHead.addChild(this.goggleBridge);
 
         // --- жгуты на груди и подсумки пояса ---
-        this.chestCableR = new ModelRenderer(this, 0, 70);
+        this.chestCableR = new ModelRenderer(this, 16, 0);
         this.chestCableR.addBox(-3.4F, 1.5F, -2.8F, 1, 5, 1);
-        this.chestCableL = new ModelRenderer(this, 0, 70);
+        this.chestCableL = new ModelRenderer(this, 16, 0);
         this.chestCableL.addBox(2.4F, 1.5F, -2.8F, 1, 5, 1);
-        this.pouchR = new ModelRenderer(this, 12, 70);
+        this.pouchR = new ModelRenderer(this, 22, 3);
         this.pouchR.addBox(-3.2F, 8.6F, -2.8F, 2, 2, 1);
-        this.pouchL = new ModelRenderer(this, 12, 70);
+        this.pouchL = new ModelRenderer(this, 22, 3);
         this.pouchL.addBox(1.2F, 8.6F, -2.8F, 2, 2, 1);
         this.bipedBody.addChild(this.chestCableR);
         this.bipedBody.addChild(this.chestCableL);
@@ -78,14 +82,14 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         this.bipedBody.addChild(this.pouchL);
 
         // --- паулдроны и кабели рук ---
-        this.pauldronR = new ModelRenderer(this, 32, 64);
+        this.pauldronR = new ModelRenderer(this, 0, 8);
         this.pauldronR.addBox(-3.6F, -2.6F, -2.5F, 5, 3, 5);
-        this.pauldronL = new ModelRenderer(this, 32, 64);
+        this.pauldronL = new ModelRenderer(this, 0, 8);
         this.pauldronL.mirror = true;
         this.pauldronL.addBox(-1.4F, -2.6F, -2.5F, 5, 3, 5);
-        this.armCableR = new ModelRenderer(this, 6, 70);
+        this.armCableR = new ModelRenderer(this, 120, 0);
         this.armCableR.addBox(-3.7F, 1.0F, -0.5F, 1, 4, 1);
-        this.armCableL = new ModelRenderer(this, 6, 70);
+        this.armCableL = new ModelRenderer(this, 120, 0);
         this.armCableL.addBox(2.7F, 1.0F, -0.5F, 1, 4, 1);
         this.bipedRightArm.addChild(this.pauldronR);
         this.bipedRightArm.addChild(this.armCableR);
@@ -93,9 +97,9 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         this.bipedLeftArm.addChild(this.armCableL);
 
         // --- сабатоны ---
-        this.sabatonR = new ModelRenderer(this, 56, 64);
+        this.sabatonR = new ModelRenderer(this, 78, 12);
         this.sabatonR.addBox(-2.5F, 8.6F, -2.6F, 5, 3, 5);
-        this.sabatonL = new ModelRenderer(this, 56, 64);
+        this.sabatonL = new ModelRenderer(this, 78, 12);
         this.sabatonL.mirror = true;
         this.sabatonL.addBox(-2.5F, 8.6F, -2.6F, 5, 3, 5);
         this.bipedRightLeg.addChild(this.sabatonR);
