@@ -24,5 +24,5 @@ Thumbs.db
 # Деривативы из ассетов TC4/IC2 (мод приватный, решение владельца):
 # генерируются tools/gen_nano_thaum.py из установленных jar-ов при сборке
 # и в публичный репозиторий не попадают.
-src/main/resources/assets/unboundtech/textures/models/armor/nano_thaum_armor.png
+src/main/resources/assets/unboundtech/textures/models/armor/nano_thaum_armor*.png
 src/main/resources/assets/unboundtech/textures/items/nano_thaum_*.png
