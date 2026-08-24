@@ -52,12 +52,10 @@ public class ItemNanoThaumArmor extends ItemArmor {
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
                                     EntityEquipmentSlot armorSlot, ModelBiped fallback) {
         if (this.modelThick == null) {
-            this.modelThick =
-                    new thaumcraft.client.renderers.models.gear.ModelFortressArmor(1.0f);
+            this.modelThick = new unboundtech.client.model.ModelNanoThaumArmor(1.0f);
         }
         if (this.modelThin == null) {
-            this.modelThin =
-                    new thaumcraft.client.renderers.models.gear.ModelFortressArmor(0.5f);
+            this.modelThin = new unboundtech.client.model.ModelNanoThaumArmor(0.5f);
         }
         // Как у порта: торс и ботинки — толстая модель, шлем и поножи — тонкая.
         ModelBiped model = this.armorType == EntityEquipmentSlot.CHEST
@@ -76,6 +74,7 @@ public class ItemNanoThaumArmor extends ItemArmor {
         model.isSneak = entityLiving.isSneaking();
         model.isRiding = entityLiving.isRiding();
         model.isChild = entityLiving.isChild();
+        ((unboundtech.client.model.ModelNanoThaumArmor) model).prepareSlot(armorSlot);
         return model;
     }
 

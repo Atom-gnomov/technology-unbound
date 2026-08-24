@@ -39,6 +39,8 @@ TEMPER = [(0x2A, 0x22, 0x3A), (0x3C, 0x32, 0x52), (0x50, 0x44, 0x6A),
           (0x66, 0x58, 0x84), (0x7E, 0x6F, 0x9E), (0x97, 0x88, 0xB8)]
 GLOW = (0xB4, 0x7A, 0xE8)     # руны/самоцвет
 CYAN = (0x3F, 0xAE, 0xE8)     # лампы/провода
+NV_GREEN = (0x4C, 0xF2, 0x6E) # линзы ПНВ
+BRASS = [(0x50, 0x3E, 0x14), (0x96, 0x74, 0x2A), (0xD0, 0xAC, 0x52)]
 
 
 def find(paths):
@@ -116,6 +118,49 @@ def icon(base, plate_box, lamp):
     return out
 
 
+# ---- патчи UV для боксов ModelNanoThaumArmor -------------------------------
+# Координаты в UV-единицах модели (128x128); текстура вдвое плотнее (256x256),
+# поэтому при рисовании всё умножается на 2. Раскладка бокса стандартная:
+# top(u+d,v) bottom(u+d+w,v) right(u,v+d) front(u+d,v+d) left(u+d+w,v+d)
+# back(u+2d+w,v+d).
+
+def _fill(img, x, y, w, h, colour):
+    px = img.load()
+    for yy in range(y, y + h):
+        for xx in range(x, x + w):
+            px[xx, yy] = colour + (255,)
+
+
+def box_patch(img, u, v, w, h, d, body, front=None, top=None):
+    """Красит развёртку бокса: корпус + отдельные цвета морды и крышки."""
+    S = 2   # плотность текстуры к UV
+    fu, fv = (u + d) * S, (v + d) * S
+    _fill(img, u * S, v * S, 2 * (d + w) * S, (d + h) * S, body)
+    if top is not None:
+        _fill(img, (u + d) * S, v * S, w * S, d * S, top)
+    if front is not None:
+        _fill(img, fu, fv, w * S, h * S, front)
+
+
+def paint_addon_patches(canvas, nano_tone):
+    """Нижняя половина 256x256 — зоны новых боксов модели."""
+    # очки ПНВ: корпус-оправа, зелёные линзы, латунная перемычка
+    box_patch(canvas, 0, 64, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
+    box_patch(canvas, 8, 64, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
+    box_patch(canvas, 16, 64, 3, 1, 1, BRASS[1], front=BRASS[2])
+    # жгут груди и кабель руки: тёмный кожух, голубая жила
+    box_patch(canvas, 0, 70, 1, 5, 1, NANO[1], front=CYAN)
+    box_patch(canvas, 6, 70, 1, 4, 1, NANO[1], front=CYAN)
+    # подсумок: карбон с латунной клипсой
+    box_patch(canvas, 12, 70, 2, 2, 1, NANO[3], front=NANO[2], top=BRASS[1])
+    # паулдрон: таум-пластина, латунная крышка, руна-точка на морде
+    box_patch(canvas, 32, 64, 5, 3, 5, TEMPER[2], front=TEMPER[3], top=BRASS[1])
+    _fill(canvas, (32 + 5 + 2) * 2, (64 + 5 + 1) * 2, 2, 2, GLOW)
+    # сабатон: нано-подложка (тон снят с nano_1 IC2), таум-морда, латунный носок
+    box_patch(canvas, 56, 64, 5, 3, 5, nano_tone, front=TEMPER[2], top=TEMPER[1])
+    _fill(canvas, (56 + 5) * 2, (64 + 5 + 2) * 2, 5 * 2, 1 * 2, BRASS[1])
+
+
 def main():
     tc = find(TC_JARS)
     ic2 = find(IC2_JARS)
@@ -124,10 +169,27 @@ def main():
         return 1
 
     fortress = load(tc, "assets/thaumcraft/textures/models/fortress_armor.png")
-    model = dual_recolour(fortress, NANO, TEMPER)
+    recoloured = dual_recolour(fortress, NANO, TEMPER)
+    # Холст 256x256: сверху фортресс, снизу патчи наших боксов (UV 128x128).
+    canvas = Image.new("RGBA", (256, 256), (0, 0, 0, 0))
+    canvas.paste(recoloured, (0, 0))
+    nano_layer = load(ic2, "assets/ic2/textures/armor/nano_1.png")
+    nl = nano_layer.load()
+    nano_tone = None
+    for y in range(nano_layer.size[1]):
+        for x in range(nano_layer.size[0]):
+            c = nl[x, y]
+            if c[3] > 200:
+                nano_tone = (c[0], c[1], c[2])
+                break
+        if nano_tone:
+            break
+    if nano_tone is None:
+        nano_tone = NANO[2]
+    paint_addon_patches(canvas, nano_tone)
     armor_dir = os.path.join(ROOT, "textures", "models", "armor")
     os.makedirs(armor_dir, exist_ok=True)
-    model.save(os.path.join(armor_dir, "nano_thaum_armor.png"))
+    canvas.save(os.path.join(armor_dir, "nano_thaum_armor.png"))
 
     items_dir = os.path.join(ROOT, "textures", "items")
     parts = {
