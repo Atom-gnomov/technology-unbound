@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
-"""Ассеты прототипа Нано-Таум брони — композит из TC4 и IC2.
+"""Текстура Нано-Таум брони v3: реальные элементы IC2 на фортресс-основе.
 
-Решение владельца: мод приватный, ассеты обоих модов используются как
-материал. Файлы генерируются ИЗ УСТАНОВЛЕННЫХ jar-ов при сборке и стоят в
-.gitignore — в jar мода они попадают, в публичный репозиторий нет.
+Уроки двух примерок владельца, оба вшиты сюда:
+ 1. UV нормализованы — размер файла (256x128) и плоскость (128x64)
+    НЕПРИКОСНОВЕННЫ; любые правки только внутри.
+ 2. «Свободные по альфе» зоны бипеда — не свободны: бипед-части рисуют их
+    на теле (пятна на лице первой примерки). Патчи новых боксов живут
+    ТОЛЬКО вне бипед-зон (юниты 0..64 x 0..32) и вне фортресс-занятости.
 
-Состав:
-  * текстура модели на игроке — fortress_armor.png порта (развёртка той
-    самой объёмной ModelFortressArmor на ~40 деталей), перекрашенная в два
-    материала карточки §8.2: тёмные зоны → нано-подложка (матовый карбон),
-    светлые → закалённый таумий (фиолетовый металл); самые яркие пиксели
-    (руны, самоцвет) → фиолетовое свечение;
-  * иконки предметов — нано-броня IC2 с врезанной таум-пластиной и
-    голубой лампой (§8.1).
+Состав (решение владельца: ассеты обоих модов — материал, всё с образца):
+ - база: фортресс-развёртка, перекрашенная (нано-карбон + таумий);
+ - бипед-зоны: РОДНЫЕ пиксели nano_1.png IC2 — настоящий нано-костюм со
+   светящимися жилами;
+ - очки: маска nightvision_1.png IC2 в зоне фортрессовского бокса Goggles
+   (свои кривые линзы-боксы удалены);
+ - паулдроны: обтянуты фрагментом КОВАНОЙ фортресс-пластины (таум-стиль);
+ - лезвия, лампы, кабели, подсумки, сабатоны — патчи по карте дыр.
 """
 import io
 import os
@@ -31,16 +34,38 @@ IC2_JARS = [
     r"C:\Users\Game-On-Dp\AppData\Roaming\.minecraft\mods\industrialcraft-2-2.8.222-ex112.jar",
 ]
 
-# Нано-подложка: тёмный матовый карбон (§8.2 — «гладкая, без бликов»).
-NANO = [(0x0E, 0x0F, 0x12), (0x16, 0x18, 0x1C), (0x1F, 0x21, 0x26),
-        (0x28, 0x2B, 0x31), (0x32, 0x35, 0x3C), (0x3C, 0x40, 0x48)]
-# Закалённый таумий: тёмный металл с фиолетовым отливом, кованая фактура.
-TEMPER = [(0x2A, 0x22, 0x3A), (0x3C, 0x32, 0x52), (0x50, 0x44, 0x6A),
-          (0x66, 0x58, 0x84), (0x7E, 0x6F, 0x9E), (0x97, 0x88, 0xB8)]
-GLOW = (0xB4, 0x7A, 0xE8)     # руны/самоцвет
-CYAN = (0x3F, 0xAE, 0xE8)     # лампы/провода
-NV_GREEN = (0x4C, 0xF2, 0x6E) # линзы ПНВ
-BRASS = [(0x50, 0x3E, 0x14), (0x96, 0x74, 0x2A), (0xD0, 0xAC, 0x52)]
+# ==== параметры ПО ВЕРДИКТУ спора критиков (2026-08-23) ====
+# П.1: жилы и ПНВ — родной зелёный IC2, перекраска запрещена.
+IC2_GLOW_OVERRIDE = None
+# П.2: паулдроны 6x4x5 (7 не влезает в свободные UV-дыры; свес и наклон
+# ±10 градусов дают нужный силуэт, арбитр: «решает свес, не объём»).
+PAULDRON = (6, 4, 5)
+# П.3: лезвия отложены в v2 консенсусом 3:0 («разрешение, не ТЗ»).
+BLADES = False
+# П.0/П.5: голубой на костюме — ВЕТО; эмиссив только зелёный + фиолетовый.
+# ============================================================
+
+# Рампы — числа вердикта (п.4): нано-чёрный не трогать, таум вверх.
+NANO = [(0x0C, 0x0C, 0x10), (0x12, 0x12, 0x16), (0x18, 0x18, 0x20),
+        (0x1E, 0x1E, 0x24), (0x26, 0x26, 0x2E), (0x2E, 0x2E, 0x38)]
+TEMPER = [(0x4A, 0x3A, 0x66), (0x5A, 0x46, 0x79), (0x6B, 0x4F, 0x94),
+          (0x7E, 0x63, 0xA8), (0x9B, 0x7B, 0xD4), (0xC9, 0xA9, 0xF5)]
+GLOW = (0xC9, 0xA9, 0xF5)
+GREEN = (0x00, 0xFF, 0x00)
+GREEN_RIM = (0x1E, 0x6B, 0x1E)
+STEEL_BLADE = [(0x2A, 0x2D, 0x33), (0x6E, 0x74, 0x80), (0xC8, 0xCD, 0xD6)]
+BRASS = [(0x8A, 0x64, 0x28), (0xC8, 0x9B, 0x3C), (0xF2, 0xD0, 0x7A)]
+
+# Дыры вне бипеда, фортресс-занятости и зоны ПНВ-маски (скан v3).
+UV = {
+    "pauldron": (76, 21),
+    "sabaton": (12, 39),
+    "chestCable": (120, 0),
+    "armCable": (84, 8),
+    "pouch": (90, 8),
+    "lampGreen": (114, 8),
+    "heartNode": (120, 9),
+}
 
 
 def find(paths):
@@ -62,11 +87,6 @@ def luminance(c):
 
 
 def dual_recolour(img, low_ramp, high_ramp, split=0.45, glow_top=0.92):
-    """Тёмная часть образца → одна рампа, светлая → другая, пик → свечение.
-
-    Порог — доля фактического диапазона яркости, а не абсолют: развёртка
-    фортресс-брони тёмная сама по себе.
-    """
     w, h = img.size
     sp = img.load()
     lums = [luminance(sp[x, y]) for y in range(h) for x in range(w) if sp[x, y][3] > 8]
@@ -83,46 +103,34 @@ def dual_recolour(img, low_ramp, high_ramp, split=0.45, glow_top=0.92):
             if t >= glow_top:
                 op[x, y] = GLOW + (c[3],)
             elif t < split:
-                ramp = low_ramp
-                lv = int(t / split * (len(ramp) - 1) + 0.5)
-                op[x, y] = ramp[lv] + (c[3],)
+                lv = int(t / split * (len(low_ramp) - 1) + 0.5)
+                op[x, y] = low_ramp[lv] + (c[3],)
             else:
-                ramp = high_ramp
-                lv = int((t - split) / (1.0 - split) * (len(ramp) - 1) + 0.5)
-                op[x, y] = ramp[lv] + (c[3],)
+                lv = int((t - split) / (1.0 - split) * (len(high_ramp) - 1) + 0.5)
+                op[x, y] = high_ramp[lv] + (c[3],)
     return out
 
 
-def put(img, x, y, colour):
-    if 0 <= x < img.size[0] and 0 <= y < img.size[1] and img.load()[x, y][3] > 0:
-        img.load()[x, y] = colour + (255,)
+def is_green(c):
+    return c[1] > 90 and c[1] > c[0] * 1.6 and c[1] > c[2] * 1.6
 
 
-def put_any(img, x, y, colour):
-    if 0 <= x < img.size[0] and 0 <= y < img.size[1]:
-        img.load()[x, y] = colour + (255,)
+def retint_green(img):
+    """Перекраска родного зелёного свечения IC2 (по вердикту критиков)."""
+    if IC2_GLOW_OVERRIDE is None:
+        return img
+    px = img.load()
+    w, h = img.size
+    for y in range(h):
+        for x in range(w):
+            c = px[x, y]
+            if c[3] > 0 and is_green(c):
+                k = c[1] / 255.0
+                px[x, y] = (int(IC2_GLOW_OVERRIDE[0] * k),
+                            int(IC2_GLOW_OVERRIDE[1] * k),
+                            int(IC2_GLOW_OVERRIDE[2] * k), c[3])
+    return img
 
-
-def icon(base, plate_box, lamp):
-    """Иконка: нано-база IC2, таум-пластина в указанной зоне, лампа."""
-    out = dual_recolour(base, NANO, NANO, split=0.99)   # вся база — карбон
-    if plate_box:
-        x0, y0, x1, y1 = plate_box
-        for y in range(y0, y1 + 1):
-            for x in range(x0, x1 + 1):
-                edge = x in (x0, x1) or y in (y0, y1)
-                put(out, x, y, TEMPER[1] if edge else TEMPER[3 if (x + y) % 3 else 2])
-        put(out, (x0 + x1) // 2, (y0 + y1) // 2, GLOW)
-    if lamp:
-        put_any(out, lamp[0], lamp[1], CYAN)
-    return out
-
-
-# ---- патчи UV для боксов ModelNanoThaumArmor -------------------------------
-# Координаты в UV-единицах модели (128x128); текстура вдвое плотнее (256x256),
-# поэтому при рисовании всё умножается на 2. Раскладка бокса стандартная:
-# top(u+d,v) bottom(u+d+w,v) right(u,v+d) front(u+d,v+d) left(u+d+w,v+d)
-# back(u+2d+w,v+d).
 
 def _fill(img, x, y, w, h, colour):
     px = img.load()
@@ -132,37 +140,78 @@ def _fill(img, x, y, w, h, colour):
 
 
 def box_patch(img, u, v, w, h, d, body, front=None, top=None):
-    """Красит развёртку бокса: корпус + отдельные цвета морды и крышки."""
-    S = 2   # плотность текстуры к UV
-    fu, fv = (u + d) * S, (v + d) * S
+    S = 2
     _fill(img, u * S, v * S, 2 * (d + w) * S, (d + h) * S, body)
     if top is not None:
         _fill(img, (u + d) * S, v * S, w * S, d * S, top)
     if front is not None:
-        _fill(img, fu, fv, w * S, h * S, front)
+        _fill(img, (u + d) * S, (v + d) * S, w * S, h * S, front)
 
 
-def paint_addon_patches(canvas, nano_tone):
-    """Свободные дыры развёртки 128x64 — зоны новых боксов модели.
+def tile_patch(img, u, v, w, h, d, tile, top=None):
+    """Обтягивает развёртку бокса повторяющимся фрагментом-тайлом."""
+    S = 2
+    tw, th = tile.size
+    tp = tile.load()
+    px = img.load()
+    x0, y0 = u * S, v * S
+    width, height = 2 * (d + w) * S, (d + h) * S
+    for yy in range(height):
+        for xx in range(width):
+            px[x0 + xx, y0 + yy] = tp[xx % tw, yy % th]
+    if top is not None:
+        _fill(img, (u + d) * S, v * S, w * S, d * S, top)
 
-    Координаты согласованы с ModelNanoThaumArmor и найдены сканом альфы
-    оригинала: goggles (0,0)/(8,0), bridge (43,0), chestCable (16,0),
-    armCable (120,0), pouch (22,3), pauldron (0,8), sabaton (78,12)."""
-    # очки ПНВ: корпус-оправа, зелёные линзы, латунная перемычка
-    box_patch(canvas, 0, 0, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
-    box_patch(canvas, 8, 0, 2, 2, 1, NANO[1], front=NV_GREEN, top=BRASS[1])
-    box_patch(canvas, 43, 0, 3, 1, 1, BRASS[1], front=BRASS[2])
-    # жгут груди и кабель руки: тёмный кожух, голубая жила
-    box_patch(canvas, 16, 0, 1, 5, 1, NANO[1], front=CYAN)
-    box_patch(canvas, 120, 0, 1, 4, 1, NANO[1], front=CYAN)
+
+def paint_patches(canvas, forged_tile, nano_tone):
+    S = 2
+
+    # паулдрон (п.2): кованая фортресс-пластина, латунная окантовка крышки
+    pu, pv = UV["pauldron"]
+    pw, ph, pd = PAULDRON
+    tile_patch(canvas, pu, pv, pw, ph, pd, forged_tile, top=BRASS[1])
+    _fill(canvas, (pu + pd) * S, pv * S, pw * S, 1, BRASS[2])
+
+    # сабатон: нано-подложка, кованая морда, латунный носок
+    su, sv = UV["sabaton"]
+    box_patch(canvas, su, sv, 5, 3, 5, nano_tone)
+    tp = forged_tile.load()
+    px = canvas.load()
+    for yy in range(3 * S):
+        for xx in range(5 * S):
+            px[(su + 5) * S + xx, (sv + 5) * S + yy] = tp[
+                xx % forged_tile.size[0], yy % forged_tile.size[1]]
+    _fill(canvas, (su + 5) * S, (sv + 5 + 2) * S, 5 * S, 1 * S, BRASS[2])
+
+    # кабели: тёмный кожух, ЗЕЛЁНАЯ жила (п.0: голубой — вето)
+    cu, cv = UV["chestCable"]
+    box_patch(canvas, cu, cv, 1, 6, 1, NANO[1], front=GREEN)
+    au, av = UV["armCable"]
+    box_patch(canvas, au, av, 1, 5, 1, NANO[1], front=GREEN)
+
     # подсумок: карбон с латунной клипсой
-    box_patch(canvas, 22, 3, 2, 2, 1, NANO[3], front=NANO[2], top=BRASS[1])
-    # паулдрон: таум-пластина, латунная крышка, руна-точка на морде
-    box_patch(canvas, 0, 8, 5, 3, 5, TEMPER[2], front=TEMPER[3], top=BRASS[1])
-    _fill(canvas, (0 + 5 + 2) * 2, (8 + 5 + 1) * 2, 2, 2, GLOW)
-    # сабатон: нано-подложка (тон снят с nano_1 IC2), таум-морда, латунный носок
-    box_patch(canvas, 78, 12, 5, 3, 5, nano_tone, front=TEMPER[2], top=TEMPER[1])
-    _fill(canvas, (78 + 5) * 2, (12 + 5 + 2) * 2, 5 * 2, 1 * 2, BRASS[1])
+    ou, ov = UV["pouch"]
+    box_patch(canvas, ou, ov, 2, 3, 1, NANO[3], front=NANO[2], top=BRASS[1])
+
+    # лампы-терминалы (п.5): зелёное ядро, тёмно-зелёная обводка
+    gu, gv = UV["lampGreen"]
+    box_patch(canvas, gu, gv, 1, 1, 1, GREEN_RIM, front=GREEN, top=GREEN)
+
+    # нагрудный таум-узел (п.5): единственный фиолетовый эмиссив-акцент
+    hu, hv = UV["heartNode"]
+    box_patch(canvas, hu, hv, 1, 1, 1, TEMPER[1], front=GLOW, top=GLOW)
+
+
+def paste_alpha_scaled(canvas, src, scale, dx=0, dy=0):
+    """Вставка src с масштабом, только непрозрачные пиксели."""
+    big = src.resize((src.size[0] * scale, src.size[1] * scale), Image.NEAREST)
+    bp = big.load()
+    px = canvas.load()
+    for y in range(big.size[1]):
+        for x in range(big.size[0]):
+            c = bp[x, y]
+            if c[3] > 8 and dx + x < canvas.size[0] and dy + y < canvas.size[1]:
+                px[dx + x, dy + y] = c
 
 
 def main():
@@ -173,29 +222,44 @@ def main():
         return 1
 
     fortress = load(tc, "assets/thaumcraft/textures/models/fortress_armor.png")
-    recoloured = dual_recolour(fortress, NANO, TEMPER)
-    # Файл остаётся 256x128: UV нормализованы к плоскости 128x64, менять
-    # размер холста нельзя — старые боксы растянут доли на весь файл.
-    # Патчи новых боксов кладутся в СВОБОДНЫЕ дыры развёртки (скан альфы).
-    canvas = recoloured
-    nano_layer = load(ic2, "assets/ic2/textures/armor/nano_1.png")
-    nl = nano_layer.load()
+    canvas = dual_recolour(fortress, NANO, TEMPER)
+
+    # Родной нано-костюм на бипед-зоны: nano_1 (плоскость 64x32, 1px/юнит)
+    # численно совпадает по UV с бипедом нашей плоскости → просто x2 в (0,0).
+    nano = retint_green(load(ic2, "assets/ic2/textures/armor/nano_1.png"))
+    paste_alpha_scaled(canvas, nano, 2)
+
+    # Маска ПНВ IC2 → зона фортрессовского бокса Goggles (100,18) 9x5x1:
+    # front в файле = (202,38) 18x10. Источник: пояс головы nightvision_1
+    # (128x64, 2px/юнит): front головы с маской = px(16,19)-(32,29).
+    nv = retint_green(load(ic2, "assets/ic2/textures/armor/nightvision_1.png"))
+    mask = nv.crop((16, 19, 32, 29)).resize((18, 10), Image.NEAREST)
+    _fill(canvas, 200, 36, (1 + 9 + 1 + 9) * 2, (1 + 5) * 2, NANO[1])
+    canvas.paste(mask, (202, 38), mask)
+
+    # Тайл кованой фортресс-пластины: фрагмент плотной зоны развёртки.
+    forged_tile = canvas.crop((74, 46, 74 + 12, 46 + 8))
+
+    nl = nano.load()
     nano_tone = None
-    for y in range(nano_layer.size[1]):
-        for x in range(nano_layer.size[0]):
+    for y in range(nano.size[1]):
+        for x in range(nano.size[0]):
             c = nl[x, y]
-            if c[3] > 200:
+            if c[3] > 200 and not is_green(c):
                 nano_tone = (c[0], c[1], c[2])
                 break
         if nano_tone:
             break
     if nano_tone is None:
         nano_tone = NANO[2]
-    paint_addon_patches(canvas, nano_tone)
+
+    paint_patches(canvas, forged_tile, nano_tone)
+
     armor_dir = os.path.join(ROOT, "textures", "models", "armor")
     os.makedirs(armor_dir, exist_ok=True)
     canvas.save(os.path.join(armor_dir, "nano_thaum_armor.png"))
 
+    # Иконки: РОДНЫЕ нано-иконки IC2 + кованая пластина + лампа.
     items_dir = os.path.join(ROOT, "textures", "items")
     parts = {
         "nano_thaum_helmet": ("nano_helmet", (4, 6, 11, 8), (12, 5)),
@@ -203,9 +267,22 @@ def main():
         "nano_thaum_leggings": ("nano_leggings", (4, 4, 11, 6), None),
         "nano_thaum_boots": ("nano_boots", (3, 9, 6, 11), (12, 10)),
     }
+    ft = forged_tile.load()
     for ours, (theirs, box, lamp) in parts.items():
-        base = load(ic2, "assets/ic2/textures/items/armor/%s.png" % theirs)
-        icon(base, box, lamp).save(os.path.join(items_dir, ours + ".png"))
+        icon = retint_green(load(ic2, "assets/ic2/textures/items/armor/%s.png" % theirs))
+        px = icon.load()
+        x0, y0, x1, y1 = box
+        for y in range(y0, y1 + 1):
+            for x in range(x0, x1 + 1):
+                if px[x, y][3] > 0:
+                    edge = x in (x0, x1) or y in (y0, y1)
+                    px[x, y] = (TEMPER[1] + (255,)) if edge else ft[
+                        (x - x0) % forged_tile.size[0],
+                        (y - y0) % forged_tile.size[1]]
+        if lamp:
+            # П.0 вердикта: голубой на костюме — вето, лампы зелёные
+            px[lamp[0], lamp[1]] = GREEN + (255,)
+        icon.save(os.path.join(items_dir, ours + ".png"))
 
     import json
     for ours in parts:
@@ -214,7 +291,7 @@ def main():
             json.dump({"parent": "item/generated",
                        "textures": {"layer0": "unboundtech:items/" + ours}}, f, indent=2)
             f.write("\n")
-    print("nano-thaum: модельная текстура (fortress x nano) + 4 иконки + модели")
+    print("nano-thaum v3: нано-бипед, ПНВ-маска IC2, кованые паулдроны, лезвия/лампы")
     return 0
 
 
