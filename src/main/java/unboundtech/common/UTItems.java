@@ -13,6 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import unboundtech.UnboundTech;
 import unboundtech.common.items.ItemElectricScribingTools;
 import unboundtech.common.items.ItemFluxCharge;
+import unboundtech.common.items.ItemNanoThaumArmor;
 import unboundtech.common.items.ItemTemperedArmor;
 import unboundtech.common.items.ItemThaumicOverclocker;
 import unboundtech.common.items.ItemTemperedTools;
@@ -45,6 +46,11 @@ public final class UTItems {
     public static final String FLUX_CHARGE = "flux_charge";
     /** T3: апгрейд машин IC2 — скорость за эссенцию (`thaumic_overclocker.md`). */
     public static final String THAUMIC_OVERCLOCKER = "thaumic_overclocker";
+    /** ПРОТОТИП T4 (только внешний вид, решение владельца). */
+    public static final String NANO_THAUM_HELMET = "nano_thaum_helmet";
+    public static final String NANO_THAUM_CHESTPLATE = "nano_thaum_chestplate";
+    public static final String NANO_THAUM_LEGGINGS = "nano_thaum_leggings";
+    public static final String NANO_THAUM_BOOTS = "nano_thaum_boots";
 
     /** Оредикт материала (`tempered_thaumium.md`). */
     public static final String ORE_INGOT = "ingotTemperedThaumium";
@@ -83,6 +89,19 @@ public final class UTItems {
     public static Item electricScribingTools;
     public static Item fluxCharge;
     public static Item thaumicOverclocker;
+    public static Item nanoThaumHelmet;
+    public static Item nanoThaumChestplate;
+    public static Item nanoThaumLeggings;
+    public static Item nanoThaumBoots;
+
+    /**
+     * ПРОТОТИП: заглушка уровня примерки. Полоска 4/9/7/4 — из карточки
+     * (`getArmorDisplay` при заряде); настоящая защита T4 будет через
+     * ISpecialArmor с зарядом, не через этот материал.
+     */
+    public static final ItemArmor.ArmorMaterial NANO_THAUM_PROTO = EnumHelper.addArmorMaterial(
+            "NANO_THAUM_PROTO", UnboundTech.MODID + ":nano_thaum", 40,
+            new int[]{4, 7, 9, 4}, 30, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.5F);
 
     private UTItems() {
     }
@@ -111,6 +130,14 @@ public final class UTItems {
         electricScribingTools = make(new ItemElectricScribingTools(), ELECTRIC_SCRIBING);
         fluxCharge = make(new ItemFluxCharge(), FLUX_CHARGE);
         thaumicOverclocker = make(new ItemThaumicOverclocker(), THAUMIC_OVERCLOCKER);
+        nanoThaumHelmet = make(new ItemNanoThaumArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.HEAD), NANO_THAUM_HELMET);
+        nanoThaumChestplate = make(new ItemNanoThaumArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.CHEST), NANO_THAUM_CHESTPLATE);
+        nanoThaumLeggings = make(new ItemNanoThaumArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.LEGS), NANO_THAUM_LEGGINGS);
+        nanoThaumBoots = make(new ItemNanoThaumArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.FEET), NANO_THAUM_BOOTS);
 
         event.getRegistry().registerAll(all());
     }
@@ -144,6 +171,7 @@ public final class UTItems {
                 temperedHelmet, temperedChestplate, temperedLeggings, temperedBoots,
                 temperedSword, temperedPickaxe, temperedAxe, temperedShovel, temperedHoe,
                 thaumiumWrench, electricScribingTools, fluxCharge, thaumicOverclocker,
+                nanoThaumHelmet, nanoThaumChestplate, nanoThaumLeggings, nanoThaumBoots,
         };
     }
 }

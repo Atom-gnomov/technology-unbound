@@ -158,3 +158,10 @@ tc.research_text.RESONANT_SPLITTER=Both quarrellers walk away whole
 unboundtech.research_page.RESONANT_SPLITTER.1=A compound aspect is not a blend but a quarrel: two meanings stuck together out of weariness. The centrifuge parts them by brawling, and the loser perishes. Resonance is politer — it gives each quarreller a note of its own, and both walk away whole.<BR><BR>The notes, admittedly, must be bought with electricity.
 unboundtech.research_page.RESONANT_SPLITTER.2=The ledger against the old centrifuge, drawn up over an evening at both.<BR><BR>The centrifuge takes a unit of compound and returns one component — whichever wins; the other dies in the scuffle. Free, but half goes nowhere.<BR><BR>The splitter takes the same unit and returns BOTH components, always and predictably — at six thousand units of the engineers' power per parting. The pace is identical: thirty-nine heartbeats to the unit.<BR><BR>From ten units of Metallum the old machine makes ten random halves; resonance makes ten Terra and ten Vitreus, exactly.
 unboundtech.research_page.RESONANT_SPLITTER.3=Notes on handling.<BR><BR>It will not take the primal essences at all: there is nothing in them to part, and no suction is declared for them. A pipe of Ignis passes by without noticing it.<BR><BR>The output holds eight measures of each component; when there is nowhere to put even one of them, the work does not begin at all. This is deliberate: to begin and discard the second component would be to become that very centrifuge.<BR><BR>An empty phial pressed to the casing carries off eight measures of whichever component has gathered more. A vein of redstone mutes the resonance — same as with the old machine.
+
+# --- T4 PROTOTYPE: Nano-Thaum armour (looks only) ---
+item.unboundtech.nano_thaum_helmet.name=Nano-Thaum Helmet (prototype)
+item.unboundtech.nano_thaum_chestplate.name=Nano-Thaum Chestplate (prototype)
+item.unboundtech.nano_thaum_leggings.name=Nano-Thaum Leggings (prototype)
+item.unboundtech.nano_thaum_boots.name=Nano-Thaum Boots (prototype)
+unboundtech.tooltip.nano_thaum_proto=Appearance prototype: T4 mechanics come later
