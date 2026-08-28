@@ -158,26 +158,26 @@ def revolver_3d():
         "textures": {"particle": "unboundtech:items/flux_revolver"},
         "display": {
             "thirdperson_righthand": {
-                "rotation": [0, 90, 0], "translation": [0, 3.5, 1.5],
-                "scale": [0.9, 0.9, 0.9]},
-            "thirdperson_lefthand": {
-                "rotation": [0, -90, 0], "translation": [0, 3.5, 1.5],
-                "scale": [0.9, 0.9, 0.9]},
-            "firstperson_righthand": {
-                "rotation": [0, 80, 0], "translation": [2, 2.5, 1],
-                "scale": [0.8, 0.8, 0.8]},
-            "firstperson_lefthand": {
-                "rotation": [0, -80, 0], "translation": [2, 2.5, 1],
-                "scale": [0.8, 0.8, 0.8]},
-            "gui": {
-                "rotation": [15, -100, 15], "translation": [0, 0.5, 0],
-                "scale": [0.9, 0.9, 0.9]},
-            "ground": {
-                "rotation": [0, 0, 0], "translation": [0, 3, 0],
+                "rotation": [0, 90, 0], "translation": [0, 2.5, 1],
                 "scale": [0.55, 0.55, 0.55]},
+            "thirdperson_lefthand": {
+                "rotation": [0, -90, 0], "translation": [0, 2.5, 1],
+                "scale": [0.55, 0.55, 0.55]},
+            "firstperson_righthand": {
+                "rotation": [0, 95, 0], "translation": [1, 1.5, 0],
+                "scale": [0.5, 0.5, 0.5]},
+            "firstperson_lefthand": {
+                "rotation": [0, -95, 0], "translation": [1, 1.5, 0],
+                "scale": [0.5, 0.5, 0.5]},
+            "gui": {
+                "rotation": [0, 0, 0], "translation": [1, 0.5, 0],
+                "scale": [0.8, 0.8, 0.8]},
+            "ground": {
+                "rotation": [0, 0, 0], "translation": [0, 2, 0],
+                "scale": [0.4, 0.4, 0.4]},
             "fixed": {
-                "rotation": [0, -90, 0], "translation": [0, 0, 0],
-                "scale": [1.1, 1.1, 1.1]},
+                "rotation": [0, 0, 0], "translation": [0, 0, 0],
+                "scale": [0.9, 0.9, 0.9]},
         },
     })
 

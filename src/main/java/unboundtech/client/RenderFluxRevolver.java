@@ -36,8 +36,9 @@ public class RenderFluxRevolver extends TileEntityItemStackRenderer {
         Minecraft.getMinecraft().getTextureManager().bindTexture(TEXTURE);
         GlStateManager.pushMatrix();
         GlStateManager.translate(0.5F, 0.45F, 0.5F);
-        // ModelRenderer растёт вниз по Y — переворот, как у любых моделей
-        GlStateManager.scale(1.0F, -1.0F, -1.0F);
+        // ⚠️ Урок примерки: НИКАКИХ переворотов осей. Модель авторована
+        // в Y-вверх, и сырое GL-пространство предмета тоже Y-вверх —
+        // флип scale(1,-1,-1) ставил револьвер рукоятью кверху.
         GlStateManager.enableCull();
         // модель построена в удвоенных юнитах — масштаб вдвое мельче
         this.model.renderGun(1.0F / 32.0F);
