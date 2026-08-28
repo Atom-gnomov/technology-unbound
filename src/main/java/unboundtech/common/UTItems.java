@@ -14,6 +14,7 @@ import unboundtech.UnboundTech;
 import unboundtech.common.items.ItemCartridge;
 import unboundtech.common.items.ItemElectricScribingTools;
 import unboundtech.common.items.ItemFluxRevolver;
+import unboundtech.common.items.ItemChargedSpark;
 import unboundtech.common.items.ItemFocusCharge;
 import unboundtech.common.items.ItemSchemaRing;
 import unboundtech.common.items.ItemFluxCharge;
@@ -56,6 +57,7 @@ public final class UTItems {
     public static final String CARTRIDGE_ILLUMINATING = "cartridge_illuminating";
     public static final String FLUX_REVOLVER = "flux_revolver";
     public static final String FOCUS_CHARGE = "focus_charge";
+    public static final String CHARGED_SPARK = "charged_spark";
     public static final String RING_FRAME = "ring_frame";
     public static final String RING_DRIVE = "ring_drive";
     public static final String RING_STRIDE = "ring_stride";
@@ -112,6 +114,7 @@ public final class UTItems {
     public static Item cartridgeIlluminating;
     public static Item fluxRevolver;
     public static Item focusCharge;
+    public static Item chargedSpark;
     public static Item ringFrame;
     public static Item ringDrive;
     public static Item ringStride;
@@ -171,6 +174,7 @@ public final class UTItems {
                 "unboundtech.tooltip.cartridge_illuminating"), CARTRIDGE_ILLUMINATING);
         fluxRevolver = make(new ItemFluxRevolver(), FLUX_REVOLVER);
         focusCharge = make(new ItemFocusCharge(), FOCUS_CHARGE);
+        chargedSpark = make(new ItemChargedSpark(), CHARGED_SPARK);
         ringFrame = make(new ItemSchemaRing(ItemSchemaRing.Variant.FRAME), RING_FRAME);
         ringDrive = make(new ItemSchemaRing(ItemSchemaRing.Variant.DRIVE), RING_DRIVE);
         ringStride = make(new ItemSchemaRing(ItemSchemaRing.Variant.STRIDE), RING_STRIDE);
@@ -195,6 +199,15 @@ public final class UTItems {
         // Профиль аспектов револьвера — ручной (`flux_revolver.md` §7):
         // Telum движок сам не припишет, наши стволы не наследуют
         // ItemSword/ItemBow, а компоненты рецепта его не содержат.
+        // Техно-дух сканируется таумометром (`techno_spirit.md` §7):
+        // у сущности нет рецепта, аспекты назначаются вручную.
+        thaumcraft.api.ThaumcraftApi.registerEntityTag(
+                "unboundtech.techno_spirit",
+                new thaumcraft.api.aspects.AspectList()
+                        .add(thaumcraft.api.aspects.Aspect.BEAST, 5)
+                        .add(thaumcraft.api.aspects.Aspect.ENERGY, 4)
+                        .add(thaumcraft.api.aspects.Aspect.MECHANISM, 3)
+                        .add(thaumcraft.api.aspects.Aspect.MAGIC, 2));
         thaumcraft.api.ThaumcraftApi.registerObjectTag(new ItemStack(fluxRevolver),
                 new thaumcraft.api.aspects.AspectList()
                         .add(thaumcraft.api.aspects.Aspect.METAL, 8)
@@ -219,7 +232,7 @@ public final class UTItems {
                 thaumiumWrench, electricScribingTools, fluxCharge, thaumicOverclocker,
                 nanoThaumHelmet, nanoThaumChestplate, nanoThaumLeggings, nanoThaumBoots,
                 casing, cartridgeIncendiary, cartridgeIlluminating, fluxRevolver,
-                focusCharge, ringFrame, ringDrive, ringStride, ringBrace,
+                focusCharge, chargedSpark, ringFrame, ringDrive, ringStride, ringBrace,
         };
     }
 }

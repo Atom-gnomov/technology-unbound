@@ -70,6 +70,9 @@ public final class UTResearch {
     /** Флюкс-Револьвер: вход в оружейную ветку, с гильзой и патронами T3. */
     public static final String FLUX_REVOLVER = "FLUX_REVOLVER";
 
+    /** Техно-духи: лорная запись о реакции мира (T3, вилка T2 — §2.2). */
+    public static final String TECHNO_SPIRITS = "TECHNO_SPIRITS";
+
     /** Фокус Заряда: жезл как переносная розетка. */
     public static final String FOCUS_CHARGE = "FOCUS_CHARGE";
 
@@ -469,6 +472,22 @@ public final class UTResearch {
                         recipePage(unboundtech.common.UTCrafting.casingRecipe),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIncendiary),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIlluminating)))
+                .registerResearchItem();
+
+        // Техно-духи: Bestia 8, Potentia 8, Praecantatio 6 = 22; лорная
+        // запись complexity 1 — ниже вилки T3 намеренно (§6: исключение
+        // §2.2, запись без предмета меряется на тир ниже).
+        new ResearchItem(
+                TECHNO_SPIRITS, CATEGORY,
+                new AspectList().add(Aspect.BEAST, 8).add(Aspect.ENERGY, 8)
+                        .add(Aspect.MAGIC, 6),
+                6, -3, 1,
+                new ItemStack(unboundtech.common.UTItems.chargedSpark))
+                .setParents(VIS_TO_EU_GENERATOR)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.TECHNO_SPIRITS.1"),
+                        new ResearchPage("unboundtech.research_page.TECHNO_SPIRITS.2"),
+                        new ResearchPage("unboundtech.research_page.TECHNO_SPIRITS.3")))
                 .registerResearchItem();
 
         // Фокус Заряда: Praecantatio 12, Potentia 12, Machina 8 = 32 (§6).

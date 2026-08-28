@@ -35,6 +35,10 @@ public final class UTModels {
                                 manager, UTItems.cartridgeIncendiary,
                                 net.minecraft.client.Minecraft.getMinecraft()
                                         .getRenderItem()));
+        net.minecraftforge.fml.client.registry.RenderingRegistry
+                .registerEntityRenderingHandler(
+                        unboundtech.common.entities.EntityTechnoSpirit.class,
+                        RenderTechnoSpirit::new);
         for (Block block : UTBlocks.all()) {
             Item item = Item.getItemFromBlock(block);
             ModelLoader.setCustomModelResourceLocation(item, 0,

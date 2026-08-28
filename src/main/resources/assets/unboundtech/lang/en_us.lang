@@ -232,3 +232,13 @@ tc.research_name.FOCUS_CHARGE=Focus of Charge
 tc.research_text.FOCUS_CHARGE=A portable socket of dubious provenance
 unboundtech.research_page.FOCUS_CHARGE.1=The first thaumaturge to point a wand at a machine expected it to get angry. The machine ate its fill.<BR><BR>Ever since, shop ledgers list the wand as "a portable socket of dubious provenance", and the Guild's ledgers list it as "a disgrace".
 unboundtech.research_page.FOCUS_CHARGE.2=The focus pours the wand's vis into engineering power: a thousand units per measure of vis, Order and Fire in equal parts. Twice worse than the Aetheric Generator — the price of fieldwork, not a power plant.<BR><BR>Point it at a machine and the machine feeds; hold a chargeable thing in the other hand and the thing feeds. Whatever takes no charge will say so.<BR><BR>The focus never takes back: a socket, not a pump.
+
+# --- Techno-Spirit and Charged Spark (T3) ---
+entity.unboundtech.techno_spirit.name=Techno-Spirit
+item.unboundtech.charged_spark.name=Charged Spark
+unboundtech.tooltip.charged_spark=Keeps while carried; dropped, it slowly fades
+tc.research_name.TECHNO_SPIRITS=Techno-Spirits
+tc.research_text.TECHNO_SPIRITS=Mechanists insist it is not yet life
+unboundtech.research_page.TECHNO_SPIRITS.1=Where current runs for years past a node, the air begins to imitate. First it is just a spark out of rhythm, then a spark that hangs in the air longer than it should — and then it is looking at you.<BR><BR>Mechanists insist it is not yet life. Thaumaturges say nothing — they have seen such things before.
+unboundtech.research_page.TECHNO_SPIRITS.2=The spirit is not wicked — it is hungry. It drifts to a working machine and feeds on its rhythm; strike it and it snaps back with a discharge and flees.<BR><BR>But do not suffer them out of politeness: an unpunished spirit calls a second, the second a third, up to five in a yard. A walk through the shop every few minutes with anything in hand is enough — a chased spirit forgets to call its kin.<BR><BR>The owner of a full nano-thaumic suit will know no peace: to a spirit he is himself a great walking machine by a node.
+unboundtech.research_page.TECHNO_SPIRITS.3=A slain spirit always sheds a Charged Spark — a clot of current locked in a film of vis. No hand holds more than eight, and dropped on the ground one melts away in minutes.<BR><BR>There is nowhere to spend Sparks yet. But Guild records mention gates that open to nothing else — do not throw them away.
