@@ -175,6 +175,23 @@ public class ConverterCanonStaticGuardTest {
         assertTrue("расщепитель: буферы по 8", splitter.contains("BUFFER = 8;"));
         assertTrue("примордиалы не принимаются",
                 splitter.contains("aspect.isPrimal()"));
+
+        // Индукционный Тигель (`induction_crucible.md` §5): числа карточки
+        // и снятые наказания родного тигля.
+        String crucible = read(
+                "src/main/java/unboundtech/common/tiles/TileInductionCrucible.java");
+        assertTrue("тигель: буфер 10 000 EU", crucible.contains("CAPACITY = 10_000.0;"));
+        assertTrue("тигель: 20 EU/t пока горячий", crucible.contains("EU_PER_TICK = 20;"));
+        assertTrue("тигель: 100 аспектов, как у родного",
+                crucible.contains("MAX_TAGS = 100;"));
+        assertTrue("тигель: бак 1 000 мБ", crucible.contains("TANK_CAPACITY = 1000;"));
+        assertTrue("тигель: 50 мБ на рецепт", crucible.contains("WATER_PER_CRAFT = 50;"));
+        assertTrue("тигель: рецепты — общий реестр ТК, своих нет",
+                crucible.contains("findMatchingCrucibleRecipe"));
+        // Ищем именно ВЫЗОВ (".spill("), а не слово: комментарии тайла
+        // легитимно поминают spill() родного тигля, объясняя отличие.
+        assertTrue("главное обещание: никакого spill() — флюкса нет",
+                !crucible.contains(".spill("));
     }
 
     /**

@@ -25,6 +25,7 @@ public final class UTRecipesT3 {
     public static ShapedArcaneRecipe fluxCondenser;
     public static ShapedArcaneRecipe thaumicOverclocker;
     public static ShapedArcaneRecipe resonantSplitter;
+    public static ShapedArcaneRecipe inductionCrucible;
 
     private UTRecipesT3() {
     }
@@ -33,6 +34,34 @@ public final class UTRecipesT3 {
         fluxCondenser = registerFluxCondenser();
         thaumicOverclocker = registerThaumicOverclocker();
         resonantSplitter = registerResonantSplitter();
+        inductionCrucible = registerInductionCrucible();
+    }
+
+    /**
+     * Индукционный Тигель (`induction_crucible.md` §6): тигель ТК между
+     * двух нагревательных спиралей IC2, снизу корпус машины в оправе
+     * закалённого таумия. Аспекты — Ignis 12, Ordo 8, Aqua 4 (пересчитаны
+     * карточкой по recipe_calibration.md §4). Тигель порта — blockMetalDevice
+     * мета 0 (сверено по BlockMetalDevice: TYPE=0 — crucible).
+     */
+    private static ShapedArcaneRecipe registerInductionCrucible() {
+        ItemStack casing = IC2Handles.item("resource", "machine");
+        ItemStack coil = IC2Handles.item("crafting", "coil");
+        if (casing.isEmpty() || coil.isEmpty()) {
+            UTLog.warn("Induction Crucible recipe skipped: IC2 parts not found");
+            return null;
+        }
+        return ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.INDUCTION_CRUCIBLE,
+                new ItemStack(UTBlocks.inductionCrucible),
+                new AspectList().add(Aspect.FIRE, 12).add(Aspect.ORDER, 8)
+                        .add(Aspect.WATER, 4),
+                "KCK",
+                "TMT",
+                'K', coil,
+                'C', new ItemStack(ConfigBlocks.blockMetalDevice, 1, 0),
+                'T', new ItemStack(UTItems.temperedIngot),
+                'M', casing);
     }
 
     /**

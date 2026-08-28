@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "unboundtech:blocks/induction_crucible_side_active",
+    "down": "unboundtech:blocks/machine_bottom",
+    "up": "unboundtech:blocks/induction_crucible_top_active",
+    "north": "unboundtech:blocks/induction_crucible_side_active",
+    "south": "unboundtech:blocks/induction_crucible_side_active",
+    "east": "unboundtech:blocks/induction_crucible_side_active",
+    "west": "unboundtech:blocks/induction_crucible_side_active"
+  }
+}

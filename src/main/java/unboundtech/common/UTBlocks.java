@@ -13,10 +13,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import unboundtech.UnboundTech;
 import unboundtech.common.blocks.BlockAethericEngine;
 import unboundtech.common.blocks.BlockFluxCondenser;
+import unboundtech.common.blocks.BlockInductionCrucible;
 import unboundtech.common.blocks.BlockResonantSplitter;
 import unboundtech.common.blocks.BlockThaumGenerator;
 import unboundtech.common.tiles.TileAethericEngine;
 import unboundtech.common.tiles.TileFluxCondenser;
+import unboundtech.common.tiles.TileInductionCrucible;
 import unboundtech.common.tiles.TileResonantSplitter;
 import unboundtech.common.tiles.TileThaumGenerator;
 
@@ -35,11 +37,13 @@ public final class UTBlocks {
     public static final String AETHERIC_ENGINE = "aetheric_engine";
     public static final String FLUX_CONDENSER = "flux_condenser";
     public static final String RESONANT_SPLITTER = "resonant_splitter";
+    public static final String INDUCTION_CRUCIBLE = "induction_crucible";
 
     public static Block thaumGenerator;
     public static Block aethericEngine;
     public static Block fluxCondenser;
     public static Block resonantSplitter;
+    public static Block inductionCrucible;
 
     /** Вкладка креатива мода; иконка — Таум-Генератор. */
     public static final CreativeTabs TAB = new CreativeTabs(UnboundTech.MODID) {
@@ -60,6 +64,7 @@ public final class UTBlocks {
         aethericEngine = make(new BlockAethericEngine(), AETHERIC_ENGINE);
         fluxCondenser = make(new BlockFluxCondenser(), FLUX_CONDENSER);
         resonantSplitter = make(new BlockResonantSplitter(), RESONANT_SPLITTER);
+        inductionCrucible = make(new BlockInductionCrucible(), INDUCTION_CRUCIBLE);
         event.getRegistry().registerAll(all());
 
         GameRegistry.registerTileEntity(TileThaumGenerator.class,
@@ -70,6 +75,8 @@ public final class UTBlocks {
                 new ResourceLocation(UnboundTech.MODID, FLUX_CONDENSER));
         GameRegistry.registerTileEntity(TileResonantSplitter.class,
                 new ResourceLocation(UnboundTech.MODID, RESONANT_SPLITTER));
+        GameRegistry.registerTileEntity(TileInductionCrucible.class,
+                new ResourceLocation(UnboundTech.MODID, INDUCTION_CRUCIBLE));
     }
 
     @SubscribeEvent
@@ -94,6 +101,7 @@ public final class UTBlocks {
 
     /** Все блоки мода — для регистрации и для моделей на клиенте. */
     public static Block[] all() {
-        return new Block[]{thaumGenerator, aethericEngine, fluxCondenser, resonantSplitter};
+        return new Block[]{thaumGenerator, aethericEngine, fluxCondenser,
+                resonantSplitter, inductionCrucible};
     }
 }

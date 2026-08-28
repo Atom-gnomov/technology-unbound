@@ -63,6 +63,9 @@ public final class UTResearch {
     public static final String THAUMIC_OVERCLOCKER = "THAUMIC_OVERCLOCKER";
     /** Тир T3: расщепление без потерь (`resonant_splitter.md`). */
     public static final String RESONANT_SPLITTER = "RESONANT_SPLITTER";
+
+    /** Индукционный Тигель — T3, алхимическая ветка. */
+    public static final String INDUCTION_CRUCIBLE = "INDUCTION_CRUCIBLE";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -396,18 +399,33 @@ public final class UTResearch {
                                 : new ResearchPage(unboundtech.common.UTRecipesT3.fluxCondenser)))
                 .registerResearchItem();
 
+        // Тигель: Ignis 12, Machina 10, Praecantatio 8, Aqua 4 = 34 (§6).
+        new ResearchItem(
+                INDUCTION_CRUCIBLE, CATEGORY,
+                new AspectList().add(Aspect.FIRE, 12).add(Aspect.MECHANISM, 10)
+                        .add(Aspect.MAGIC, 8).add(Aspect.WATER, 4),
+                -2, -4, 3,
+                new ItemStack(unboundtech.common.UTBlocks.inductionCrucible))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.INDUCTION_CRUCIBLE.1"),
+                        new ResearchPage("unboundtech.research_page.INDUCTION_CRUCIBLE.2"),
+                        new ResearchPage("unboundtech.research_page.INDUCTION_CRUCIBLE.3"),
+                        unboundtech.common.UTRecipesT3.inductionCrucible == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.inductionCrucible)))
+                .registerResearchItem();
+
         // Расщепитель: Permutatio 12, Ordo 10, Machina 8, Praecantatio 4 = 34.
-        // ⚠️ Родитель по канону — INDUCTION_CRUCIBLE, которого в коде ещё
-        // нет; временно висит на TEMPERED_THAUMIUM (алхимическая ветка),
-        // перевесить при реализации тигля — тот же приём, что был у
-        // конвертеров до T2 (А-7).
+        // Родитель — Индукционный Тигель, как велит канон (§2 карточки:
+        // «расщепитель забирает у него составные аспекты»); TODO А-7 закрыт.
         new ResearchItem(
                 RESONANT_SPLITTER, CATEGORY,
                 new AspectList().add(Aspect.EXCHANGE, 12).add(Aspect.ORDER, 10)
                         .add(Aspect.MECHANISM, 8).add(Aspect.MAGIC, 4),
                 0, -6, 3,
                 new ItemStack(unboundtech.common.UTBlocks.resonantSplitter))
-                .setParents(TEMPERED_THAUMIUM)
+                .setParents(INDUCTION_CRUCIBLE)
                 .setPages(pages(
                         new ResearchPage("unboundtech.research_page.RESONANT_SPLITTER.1"),
                         new ResearchPage("unboundtech.research_page.RESONANT_SPLITTER.2"),
@@ -417,7 +435,7 @@ public final class UTResearch {
                                         unboundtech.common.UTRecipesT3.resonantSplitter)))
                 .registerResearchItem();
 
-        UTLog.info("Tier T3 research registered (overclocker, condenser, splitter)");
+        UTLog.info("Tier T3 research registered (overclocker, condenser, splitter, crucible)");
     }
 
 

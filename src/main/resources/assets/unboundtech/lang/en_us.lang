@@ -165,3 +165,11 @@ item.unboundtech.nano_thaum_chestplate.name=Nano-Thaum Chestplate (prototype)
 item.unboundtech.nano_thaum_leggings.name=Nano-Thaum Leggings (prototype)
 item.unboundtech.nano_thaum_boots.name=Nano-Thaum Boots (prototype)
 unboundtech.tooltip.nano_thaum_proto=Appearance prototype: T4 mechanics come later
+
+# --- Induction Crucible (T3) ---
+tile.unboundtech.induction_crucible.name=Induction Crucible
+tc.research_name.INDUCTION_CRUCIBLE=Induction Crucible
+tc.research_text.INDUCTION_CRUCIBLE=A crucible that holds no grudge
+unboundtech.research_page.INDUCTION_CRUCIBLE.1=Fire argues with water, and in that argument everything in the pot falls apart: iron forgets it was a sword. Every hundred heartbeats the old crucible chews up a grain of what it holds, and devours primal essences outright — sometimes belching flux. It is not a store; it is a slow grinder.<BR><BR>An induction rim does not argue — it heats the water itself, evenly and silently. In such water meanings keep as long as you like, and nothing boils out into the world.
+unboundtech.research_page.INDUCTION_CRUCIBLE.2=Four punishments of the old crucible lifted — for twenty units of engineering power per heartbeat.<BR><BR>First: no fire beneath; the rim heats itself, a hundred heartbeats from cold to boil.<BR><BR>Second: nothing decays in storage. What you put in stays put, compound meanings included — which is why the Splitter drinks from it so gladly.<BR><BR>Third: an overfull basin does not spit flux — it politely bounces offerings back.<BR><BR>Fourth: leftovers can be DRAINED — into tubes, jars, to golems, always in alphabetical order of meanings.
+unboundtech.research_page.INDUCTION_CRUCIBLE.3=Notes on handling.<BR><BR>It brews everything the old crucible brews, by the same recipes: the basin is the same, only the frame differs. A craft costs fifty measures of water from a thousand-measure tank; a bucket pressed to the frame tops it up or takes it back.<BR><BR>An empty phial carries away eight measures of the first meaning, alphabetically, that has enough to spare.<BR><BR>A redstone vein silences the rim and the basin cools — the contents stay intact. A wrench takes the frame apart with everything inside; a pickaxe spills it on the floor, though at least without flux.

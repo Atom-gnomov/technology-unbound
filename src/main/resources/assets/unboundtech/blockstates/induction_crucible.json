@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "active=false,facing=north": {
+      "model": "unboundtech:induction_crucible"
+    },
+    "active=false,facing=east": {
+      "model": "unboundtech:induction_crucible",
+      "y": 90
+    },
+    "active=false,facing=south": {
+      "model": "unboundtech:induction_crucible",
+      "y": 180
+    },
+    "active=false,facing=west": {
+      "model": "unboundtech:induction_crucible",
+      "y": 270
+    },
+    "active=true,facing=north": {
+      "model": "unboundtech:induction_crucible_active"
+    },
+    "active=true,facing=east": {
+      "model": "unboundtech:induction_crucible_active",
+      "y": 90
+    },
+    "active=true,facing=south": {
+      "model": "unboundtech:induction_crucible_active",
+      "y": 180
+    },
+    "active=true,facing=west": {
+      "model": "unboundtech:induction_crucible_active",
+      "y": 270
+    }
+  }
+}

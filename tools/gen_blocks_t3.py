@@ -269,6 +269,86 @@ def splitter_top(machine_top, active):
     return top
 
 
+# Вода тигля: тёмная, читаемая как жидкость ТК.
+WATER = [(0x14, 0x24, 0x40), (0x1C, 0x33, 0x58), (0x27, 0x45, 0x72),
+         (0x33, 0x58, 0x8C)]
+
+
+def crucible_side(furnace, active):
+    """Станина: корпус печи в стали + болты + индикаторная полоса
+    (`machine_feedback.md` §2): зелёная в работе, красная в простое."""
+    face = recolour(furnace, STEEL)
+    for (bx, by) in ((1, 3), (13, 3), (1, 13), (13, 13)):
+        brass_bolt(face, bx, by)
+    # латунный обод чаши по верхней кромке
+    for x in range(16):
+        put(face, x, 0, BRASS[3 if x % 3 else 4])
+        put(face, x, 1, BRASS[1])
+    band = (0x3E, 0xC8, 0x52) if active else (0xB0, 0x30, 0x30)
+    for x in range(3, 13):
+        put(face, x, 7, band)
+    put(face, 2, 7, STEEL[1])
+    put(face, 13, 7, STEEL[1])
+    return face
+
+
+def crucible_top(machine_top, active):
+    """Чаша сверху: латунный обод, индукционная спираль, внутри вода —
+    силуэт «тигель в станине» (§8 карточки)."""
+    top = machine_top.copy()
+    cx, cy = 7.5, 7.5
+    for y in range(16):
+        for x in range(16):
+            d2 = (x - cx) ** 2 + (y - cy) ** 2
+            if d2 > 6.5 ** 2:
+                continue   # углы — родная крышка машины
+            if d2 >= 5.2 ** 2:
+                put(top, x, y, BRASS[4] if (x + y) % 3 else BRASS[2])
+            elif d2 >= 4.0 ** 2:
+                # индукционная спираль: сегменты, в работе — светятся
+                lit = (x * 3 + y * 5) % 4 != 0
+                if active:
+                    put(top, x, y, MURK[6] if lit else MURK[3])
+                else:
+                    put(top, x, y, STEEL[2] if lit else STEEL[1])
+            else:
+                w = WATER[(x * 7 + y * 13) % 3]
+                if active and (x * 5 + y * 3) % 7 == 0:
+                    w = MURK[5]   # цветной пар над варевом
+                put(top, x, y, w)
+    return top
+
+
+def crucible_assets():
+    """Блокстейт и модели тигля: морды нет — станина одинакова со всех
+    сторон, читается по чаше сверху."""
+    variants = {}
+    for active in ("false", "true"):
+        model = "unboundtech:induction_crucible" + ("_active" if active == "true" else "")
+        for facing, rot in (("north", None), ("east", 90), ("south", 180), ("west", 270)):
+            entry = {"model": model}
+            if rot:
+                entry["y"] = rot
+            variants["active=%s,facing=%s" % (active, facing)] = entry
+    write_json(os.path.join(ROOT, "blockstates", "induction_crucible.json"),
+               {"variants": variants})
+    for active in (False, True):
+        suffix = "_active" if active else ""
+        side = "unboundtech:blocks/induction_crucible_side" + suffix
+        write_json(os.path.join(ROOT, "models", "block",
+                                "induction_crucible" + suffix + ".json"), {
+            "parent": "block/cube",
+            "textures": {
+                "particle": side,
+                "down": "unboundtech:blocks/machine_bottom",
+                "up": "unboundtech:blocks/induction_crucible_top" + suffix,
+                "north": side, "south": side, "east": side, "west": side,
+            },
+        })
+    write_json(os.path.join(ROOT, "models", "item", "induction_crucible.json"),
+               {"parent": "unboundtech:block/induction_crucible"})
+
+
 def write_json(path, data):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
@@ -350,7 +430,16 @@ def main():
     splitter_top(machine_top, True).save(
         os.path.join(blocks, "resonant_splitter_top_active.png"))
     overclocker().save(os.path.join(items, "thaumic_overclocker.png"))
+    crucible_side(furnace.copy(), False).save(
+        os.path.join(blocks, "induction_crucible_side.png"))
+    crucible_side(furnace.copy(), True).save(
+        os.path.join(blocks, "induction_crucible_side_active.png"))
+    crucible_top(machine_top, False).save(
+        os.path.join(blocks, "induction_crucible_top.png"))
+    crucible_top(machine_top, True).save(
+        os.path.join(blocks, "induction_crucible_top_active.png"))
     blockstate_and_models()
+    crucible_assets()
     print("T3: морды из furnace_front, заряд из ender_pearl, плата оверклокера")
     return 0
 
