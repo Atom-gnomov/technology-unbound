@@ -59,6 +59,13 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
     private final ModelRenderer lampL;
     private final ModelRenderer sabatonR;
     private final ModelRenderer sabatonL;
+    private final ModelRenderer visor;
+    private final ModelRenderer strapR;
+    private final ModelRenderer strapL;
+    private final ModelRenderer toeCapR;
+    private final ModelRenderer toeCapL;
+    private final ModelRenderer shinR;
+    private final ModelRenderer shinL;
 
     public ModelNanoThaumArmor(float scale) {
         super(scale);
@@ -151,6 +158,38 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         unhideFortress(this.bipedLeftArm, false, true);
         unhideFortress(this.bipedRightLeg, false, false);
         unhideFortress(this.bipedLeftLeg, false, false);
+
+        // --- очки ПНВ: свои боксы, пиксели nightvision_1 IC2 один-к-одному
+        // (растяжка на чужой фортресс-бокс мазала маску — он скрыт выше).
+        // ⚠️ добавлять СТРОГО после unhideFortress: визор с z1=-4.6 иначе
+        // попал бы под правило скрытия лицевых масок. UV — развёртки
+        // скрытых фортресс-масок и очков, они больше никем не читаются.
+        this.visor = new ModelRenderer(this, 100, 18);
+        this.visor.addBox(-4.0F, -6.0F, -4.6F, 8, 4, 1);
+        this.bipedHead.addChild(this.visor);
+        this.strapR = new ModelRenderer(this, 52, 2);
+        this.strapR.addBox(-4.35F, -5.5F, -2.0F, 1, 2, 4);
+        this.bipedHead.addChild(this.strapR);
+        this.strapL = new ModelRenderer(this, 52, 2);
+        this.strapL.mirror = true;
+        this.strapL.addBox(3.35F, -5.5F, -2.0F, 1, 2, 4);
+        this.bipedHead.addChild(this.strapL);
+
+        // --- детали сабатонов: носовой кап и наголенник (просьба владельца)
+        this.toeCapR = new ModelRenderer(this, 76, 2);
+        this.toeCapR.addBox(-1.5F, 9.6F, -3.9F, 3, 2, 1);
+        this.bipedRightLeg.addChild(this.toeCapR);
+        this.shinR = new ModelRenderer(this, 85, 2);
+        this.shinR.addBox(-1.5F, 6.6F, -3.6F, 3, 2, 1);
+        this.bipedRightLeg.addChild(this.shinR);
+        this.toeCapL = new ModelRenderer(this, 76, 2);
+        this.toeCapL.mirror = true;
+        this.toeCapL.addBox(-1.5F, 9.6F, -3.9F, 3, 2, 1);
+        this.bipedLeftLeg.addChild(this.toeCapL);
+        this.shinL = new ModelRenderer(this, 85, 2);
+        this.shinL.mirror = true;
+        this.shinL.addBox(-1.5F, 6.6F, -3.6F, 3, 2, 1);
+        this.bipedLeftLeg.addChild(this.shinL);
     }
 
     /**
@@ -169,7 +208,9 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
                 continue;
             }
             ModelBox box = (ModelBox) child.cubeList.get(0);
-            boolean mask = head && box.posZ1 < -4.5F && box.posZ1 > -4.7F;
+            // z1=-4.6 — лицевые маски, z1=-4.25 — фортресс-Goggles: всё
+            // скрыто, их место занял наш визор ПНВ
+            boolean mask = head && box.posZ1 < -4.2F && box.posZ1 > -4.7F;
             // строго 7.0: наш паулдрон при раздутии 0.9 имеет глубину 6.8
             boolean plate = arm && box.posZ2 - box.posZ1 > 6.9F;
             child.isHidden = mask || plate;
@@ -204,6 +245,12 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
             GlStateManager.popMatrix();
         } else {
             GlStateManager.pushMatrix();
+            // ванильный ModelBiped.render при приседании сдвигает броню на
+            // 0.2 вниз — без этого на шифте она «всплывала» (баг примерки)
+            if (entity != null && entity.isSneaking()) {
+                GlStateManager.translate(0.0F, 0.2F, 0.0F);
+            }
+            GlStateManager.pushMatrix();
             GlStateManager.scale(1.01F, 1.01F, 1.01F);
             this.bipedHead.render(scale);
             GlStateManager.popMatrix();
@@ -213,6 +260,7 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
             this.bipedRightLeg.render(scale);
             this.bipedLeftLeg.render(scale);
             this.bipedHeadwear.render(scale);
+            GlStateManager.popMatrix();
         }
     }
 
@@ -238,24 +286,35 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         this.suitArmR.showModel = chest;
         this.suitArmL.showModel = chest;
 
-        this.sabatonR.showModel = feet;
-        this.sabatonL.showModel = feet;
-        this.limbChildren(this.bipedRightLeg, this.sabatonR, this.suitLegR, feet);
-        this.limbChildren(this.bipedLeftLeg, this.sabatonL, this.suitLegL, feet);
+        this.limbChildren(this.bipedRightLeg, feet, this.suitLegR,
+                this.sabatonR, this.toeCapR, this.shinR);
+        this.limbChildren(this.bipedLeftLeg, feet, this.suitLegL,
+                this.sabatonL, this.toeCapL, this.shinL);
     }
 
-    /** При FEET на ноге видны только нано-бот и сабатон; иначе — всё, кроме сабатона. */
-    private void limbChildren(ModelRenderer limb, ModelRenderer plate,
-                              ModelRenderer boot, boolean feet) {
+    /**
+     * При FEET на ноге видны нано-бот и детали сабатона, фортресс-панели
+     * гаснут; при других слотах — наоборот.
+     */
+    private void limbChildren(ModelRenderer limb, boolean feet,
+                              ModelRenderer boot, ModelRenderer... ours) {
         if (limb.childModels == null) {
             return;
         }
+        outer:
         for (Object raw : limb.childModels) {
             ModelRenderer child = (ModelRenderer) raw;
-            if (child == plate) {
+            if (child == boot) {
+                child.showModel = true;
                 continue;
             }
-            child.showModel = child == boot || !feet;
+            for (ModelRenderer o : ours) {
+                if (child == o) {
+                    child.showModel = feet;
+                    continue outer;
+                }
+            }
+            child.showModel = !feet;
         }
     }
 }

@@ -166,20 +166,13 @@ def tile_patch(img, u, v, w, h, d, tile, top=None):
 def paint_patches(canvas, forged_tile, nano_tone):
     S = 2
 
-    # паулдрон (п.2): кованая фортресс-пластина; крышка — тот же тайл с
-    # латунной ОКАНТОВКОЙ 1px по периметру (сплошная латунь на примерке
-    # читалась как «плечи без текстуры»)
+    # паулдрон (п.2): кованая фортресс-пластина целиком, БЕЗ латунной
+    # оправы — на примерке она читалась как золотая рама («убери оправу»)
     pu, pv = UV["pauldron"]
     pw, ph, pd = PAULDRON
     tile_patch(canvas, pu, pv, pw, ph, pd, forged_tile)
-    tx, ty, tw, th = (pu + pd) * S, pv * S, pw * S, pd * S
-    _fill(canvas, tx, ty, tw, S, BRASS[1])
-    _fill(canvas, tx, ty + th - S, tw, S, BRASS[1])
-    _fill(canvas, tx, ty, S, th, BRASS[1])
-    _fill(canvas, tx + tw - S, ty, S, th, BRASS[1])
-    _fill(canvas, tx, ty, tw, 1, BRASS[2])
 
-    # сабатон: нано-подложка, кованая морда, латунный носок
+    # сабатон: нано-подложка, кованая морда с заклёпками, латунный носок
     su, sv = UV["sabaton"]
     box_patch(canvas, su, sv, 5, 3, 5, nano_tone)
     tp = forged_tile.load()
@@ -189,6 +182,21 @@ def paint_patches(canvas, forged_tile, nano_tone):
             px[(su + 5) * S + xx, (sv + 5) * S + yy] = tp[
                 xx % forged_tile.size[0], yy % forged_tile.size[1]]
     _fill(canvas, (su + 5) * S, (sv + 5 + 2) * S, 5 * S, 1 * S, BRASS[2])
+    _fill(canvas, (su + 5) * S + 1, (sv + 5) * S + 1, 1, 1, BRASS[0])
+    _fill(canvas, (su + 5 + 4) * S, (sv + 5) * S + 1, 1, 1, BRASS[0])
+
+    # детали сабатона (просьба владельца): носовой кап и наголенник —
+    # кованые пластины с таумиевой кромкой; UV — развёртка скрытой
+    # фортресс-маски Mask[1] (76,2), она больше никем не читается
+    for du, dv in ((76, 2), (85, 2)):
+        tile_patch(canvas, du, dv, 3, 2, 1, forged_tile)
+        _fill(canvas, (du + 1) * S, (dv + 1) * S, 3 * S, 1, TEMPER[4])
+
+    # ремешок ПНВ на висках: тёмный, зелёный глазок сбоку — UV развёртки
+    # скрытой фортресс-маски Mask[0] (52,2)
+    ru, rv = 52, 2
+    _fill(canvas, ru * S, rv * S, (2 * (4 + 1)) * S, (4 + 2) * S, NANO[1])
+    _fill(canvas, ru * S + 3, (rv + 4) * S + 1, 2, 2, GREEN)
 
     # кабели: тёмный кожух, ЗЕЛЁНАЯ жила (п.0: голубой — вето)
     cu, cv = UV["chestCable"]
@@ -322,12 +330,17 @@ def main():
     face_plate(canvas)
     boot_trim(canvas)
 
-    # Маска ПНВ IC2 → зона фортрессовского бокса Goggles (100,18) 9x5x1:
-    # front в файле = (202,38) 18x10. Источник: пояс головы nightvision_1
-    # (128x64, 2px/юнит): front головы с маской = px(16,19)-(32,29).
-    mask = nv.crop((16, 19, 32, 29)).resize((18, 10), Image.NEAREST)
-    _fill(canvas, 200, 36, (1 + 9 + 1 + 9) * 2, (1 + 5) * 2, NANO[1])
+    # Визор ПНВ: наш бокс 8x4x1 на UV(100,18) — развёртке СКРЫТОГО
+    # фортресс-бокса Goggles. Пиксели nightvision_1 IC2 (128x64, 2px/юнит,
+    # как наш файл) ложатся ОДИН-К-ОДНОМУ: front визора = px(202,38) 16x8 ←
+    # глазная полоса front головы nv px(16,20)-(32,28). Прежняя растяжка
+    # 16→18px на чужой бокс и мазала маску («исправь качество очков»).
+    mask = nv.crop((16, 20, 32, 28))
+    _fill(canvas, 200, 36, (1 + 8 + 1 + 8) * 2, (1 + 4) * 2, NANO[1])
     canvas.paste(mask, (202, 38), mask)
+    # зелёные глазки на торцах визора (боковые грани развёртки)
+    _fill(canvas, 200, 40, 2, 2, GREEN_RIM)
+    _fill(canvas, 218, 40, 2, 2, GREEN_RIM)
 
     # Тайл кованой фортресс-пластины: фрагмент плотной зоны развёртки.
     forged_tile = canvas.crop((74, 46, 74 + 12, 46 + 8))
