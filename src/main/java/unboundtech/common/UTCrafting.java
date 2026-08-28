@@ -51,6 +51,7 @@ public final class UTCrafting {
 
     public static IRecipe wrench;
     public static IRecipe scribingTools;
+    public static IRecipe vaultCasing;
 
     private UTCrafting() {
     }
@@ -87,9 +88,29 @@ public final class UTCrafting {
         wrench = shaped(event, UTItems.THAUMIUM_WRENCH, UTItems.thaumiumWrench,
                 "T T", "TTT", " T ", 'T', UTItems.ORE_THAUMIUM);
 
+        // --- Корпус Накопителя (`essentia_vault.md` §6): 4 закалённых
+        // таумия + корпус машины IC2 -> 4 шт. Обычный верстак: корпуса —
+        // массовый стройматериал, арканный вис тратится на контроллер. ---
+        vaultCasing = registerVaultCasing(event);
+
         // --- Электрочернильница: чернильница ТК + слиток + RE-батарея (§6).
         // Сетка в карточке не задана — значит бесформенный рецепт. ---
         scribingTools = registerScribingTools(event);
+    }
+
+    private static IRecipe registerVaultCasing(RegistryEvent.Register<IRecipe> event) {
+        ItemStack casing = IC2Handles.item("resource", "machine");
+        if (casing.isEmpty()) {
+            UTLog.warn("Vault casing recipe skipped: IC2 machine casing not found");
+            return null;
+        }
+        ShapedOreRecipe shaped = new ShapedOreRecipe(group(),
+                new ItemStack(unboundtech.common.UTBlocks.vaultCasing, 4),
+                "T T", " M ", "T T",
+                'T', new ItemStack(UTItems.temperedIngot), 'M', casing);
+        shaped.setRegistryName(unboundtech.UnboundTech.MODID, "essentia_vault_casing");
+        event.getRegistry().register(shaped);
+        return shaped;
     }
 
     private static IRecipe registerScribingTools(RegistryEvent.Register<IRecipe> event) {

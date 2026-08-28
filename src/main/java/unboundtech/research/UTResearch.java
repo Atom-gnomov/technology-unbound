@@ -66,6 +66,12 @@ public final class UTResearch {
 
     /** Индукционный Тигель — T3, алхимическая ветка. */
     public static final String INDUCTION_CRUCIBLE = "INDUCTION_CRUCIBLE";
+
+    /** Шина эссенции: узел и кабели одной записью (кабель — расходник). */
+    public static final String ESSENTIA_BUS = "ESSENTIA_BUS";
+
+    /** Эссентиальный Накопитель — вершина логистической ветки T3. */
+    public static final String ESSENTIA_VAULT = "ESSENTIA_VAULT";
     /** Модуль asp: солнечная алхимия (саннариум в тигле). */
     public static final String SOLAR_SUNNARIUM = "SOLAR_SUNNARIUM";
     /** Модуль mets: техно-материалы под таумометром. */
@@ -435,7 +441,46 @@ public final class UTResearch {
                                         unboundtech.common.UTRecipesT3.resonantSplitter)))
                 .registerResearchItem();
 
-        UTLog.info("Tier T3 research registered (overclocker, condenser, splitter, crucible)");
+        // Шина: Permutatio 10, Machina 10, Ordo 8, Praecantatio 4 = 32 (§6).
+        new ResearchItem(
+                ESSENTIA_BUS, CATEGORY,
+                new AspectList().add(Aspect.EXCHANGE, 10).add(Aspect.MECHANISM, 10)
+                        .add(Aspect.ORDER, 8).add(Aspect.MAGIC, 4),
+                -2, -7, 3,
+                new ItemStack(unboundtech.common.UTBlocks.busNode))
+                .setParents(TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_BUS.1"),
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_BUS.2"),
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_BUS.3"),
+                        unboundtech.common.UTRecipesT3.busNode == null ? null
+                                : new ResearchPage(unboundtech.common.UTRecipesT3.busNode),
+                        unboundtech.common.UTRecipesT3.conduitI == null ? null
+                                : new ResearchPage(unboundtech.common.UTRecipesT3.conduitI)))
+                .registerResearchItem();
+
+        // Накопитель: Vacuos 12, Ordo 10, Machina 8, Praecantatio 4 = 34 (§6).
+        new ResearchItem(
+                ESSENTIA_VAULT, CATEGORY,
+                new AspectList().add(Aspect.VOID, 12).add(Aspect.ORDER, 10)
+                        .add(Aspect.MECHANISM, 8).add(Aspect.MAGIC, 4),
+                -4, -6, 3,
+                new ItemStack(unboundtech.common.UTBlocks.vaultController))
+                .setParents(ESSENTIA_BUS)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_VAULT.1"),
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_VAULT.2"),
+                        new ResearchPage("unboundtech.research_page.ESSENTIA_VAULT.3"),
+                        unboundtech.common.UTRecipesT3.vaultController == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.vaultController),
+                        unboundtech.common.UTRecipesT3.vaultGolemPort == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.vaultGolemPort)))
+                .registerResearchItem();
+
+        UTLog.info("Tier T3 research registered (overclocker, condenser, splitter,"
+                + " crucible, bus, vault)");
     }
 
 

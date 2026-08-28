@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "active=false,facing=north": {
+      "model": "unboundtech:bus_node"
+    },
+    "active=false,facing=east": {
+      "model": "unboundtech:bus_node"
+    },
+    "active=false,facing=south": {
+      "model": "unboundtech:bus_node"
+    },
+    "active=false,facing=west": {
+      "model": "unboundtech:bus_node"
+    },
+    "active=true,facing=north": {
+      "model": "unboundtech:bus_node_active"
+    },
+    "active=true,facing=east": {
+      "model": "unboundtech:bus_node_active"
+    },
+    "active=true,facing=south": {
+      "model": "unboundtech:bus_node_active"
+    },
+    "active=true,facing=west": {
+      "model": "unboundtech:bus_node_active"
+    }
+  }
+}

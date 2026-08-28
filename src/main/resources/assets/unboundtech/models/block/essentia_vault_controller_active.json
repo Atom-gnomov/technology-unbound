@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "unboundtech:blocks/essentia_vault_casing",
+    "north": "unboundtech:blocks/essentia_vault_controller_front_active",
+    "south": "unboundtech:blocks/essentia_vault_casing",
+    "east": "unboundtech:blocks/essentia_vault_casing",
+    "west": "unboundtech:blocks/essentia_vault_casing",
+    "up": "unboundtech:blocks/essentia_vault_casing",
+    "down": "unboundtech:blocks/essentia_vault_casing"
+  }
+}

@@ -26,6 +26,12 @@ public final class UTRecipesT3 {
     public static ShapedArcaneRecipe thaumicOverclocker;
     public static ShapedArcaneRecipe resonantSplitter;
     public static ShapedArcaneRecipe inductionCrucible;
+    public static ShapedArcaneRecipe busNode;
+    public static ShapedArcaneRecipe conduitI;
+    public static thaumcraft.api.crafting.ShapelessArcaneRecipe conduitII;
+    public static thaumcraft.api.crafting.ShapelessArcaneRecipe conduitIII;
+    public static ShapedArcaneRecipe vaultController;
+    public static ShapedArcaneRecipe vaultGolemPort;
 
     private UTRecipesT3() {
     }
@@ -35,6 +41,78 @@ public final class UTRecipesT3 {
         thaumicOverclocker = registerThaumicOverclocker();
         resonantSplitter = registerResonantSplitter();
         inductionCrucible = registerInductionCrucible();
+        registerBus();
+    }
+
+    /**
+     * Шина эссенции: узел (`bus_node.md` §6), кабели трёх тиров
+     * (`essentia_conduit.md` §6: I — 4 сегмента за 4 вис, «1 вис за
+     * сегмент — ровно банка»; II = I + вис-кристалл, III = II +
+     * углеволокно IC2), контроллер и голем-порт накопителя
+     * (`essentia_vault.md` §6, нижняя граница T3 — 27 блоков корпуса
+     * уже цена). Корпус накопителя — ванильный верстак, см. UTCrafting.
+     */
+    private static void registerBus() {
+        busNode = ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.ESSENTIA_BUS,
+                new ItemStack(UTBlocks.busNode),
+                new AspectList().add(Aspect.ORDER, 9).add(Aspect.AIR, 7)
+                        .add(Aspect.WATER, 4),
+                " T ",
+                "TUT",
+                " G ",
+                'T', new ItemStack(UTItems.temperedIngot),
+                'U', new ItemStack(ConfigBlocks.blockTube, 1, 0),
+                'G', new ItemStack(net.minecraft.init.Blocks.GLASS));
+        conduitI = ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.ESSENTIA_BUS,
+                new ItemStack(UTBlocks.conduitI, 4),
+                new AspectList().add(Aspect.ORDER, 2).add(Aspect.AIR, 2),
+                "GTG",
+                'G', new ItemStack(net.minecraft.init.Blocks.GLASS),
+                'T', new ItemStack(UTItems.temperedIngot));
+        conduitII = ThaumcraftApi.addShapelessArcaneCraftingRecipe(
+                UTResearch.ESSENTIA_BUS,
+                new ItemStack(UTBlocks.conduitII),
+                new AspectList().add(Aspect.ORDER, 4).add(Aspect.AIR, 4),
+                new ItemStack(UTBlocks.conduitI),
+                new ItemStack(ConfigItems.itemShard, 1, 32767));
+        ItemStack fibre = IC2Handles.item("crafting", "carbon_fibre");
+        if (fibre.isEmpty()) {
+            UTLog.warn("Conduit III recipe skipped: IC2 carbon fibre not found");
+        } else {
+            conduitIII = ThaumcraftApi.addShapelessArcaneCraftingRecipe(
+                    UTResearch.ESSENTIA_BUS,
+                    new ItemStack(UTBlocks.conduitIII),
+                    new AspectList().add(Aspect.ORDER, 6).add(Aspect.AIR, 5)
+                            .add(Aspect.ENTROPY, 3),
+                    new ItemStack(UTBlocks.conduitII),
+                    fibre);
+        }
+        ItemStack circuit = IC2Handles.item("crafting", "advanced_circuit");
+        if (circuit.isEmpty()) {
+            UTLog.warn("Vault controller recipe skipped: IC2 circuit not found");
+        } else {
+            vaultController = ThaumcraftApi.addArcaneCraftingRecipe(
+                    UTResearch.ESSENTIA_VAULT,
+                    new ItemStack(UTBlocks.vaultController),
+                    new AspectList().add(Aspect.ORDER, 9).add(Aspect.WATER, 7)
+                            .add(Aspect.EARTH, 4),
+                    " S ",
+                    " C ",
+                    " M ",
+                    'S', new ItemStack(ConfigItems.itemShard, 1, 32767),
+                    'C', circuit,
+                    'M', new ItemStack(UTBlocks.vaultCasing));
+        }
+        vaultGolemPort = ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.ESSENTIA_VAULT,
+                new ItemStack(UTBlocks.vaultGolemPort),
+                new AspectList().add(Aspect.ORDER, 7).add(Aspect.AIR, 5),
+                " U ",
+                " M ",
+                'U', new ItemStack(ConfigBlocks.blockTube, 1, 0),
+                'M', new ItemStack(UTBlocks.vaultCasing));
     }
 
     /**

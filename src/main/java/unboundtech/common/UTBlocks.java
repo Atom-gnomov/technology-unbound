@@ -13,12 +13,20 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import unboundtech.UnboundTech;
 import unboundtech.common.blocks.BlockAethericEngine;
 import unboundtech.common.blocks.BlockFluxCondenser;
+import unboundtech.common.blocks.BlockBusNode;
+import unboundtech.common.blocks.BlockEssentiaConduit;
 import unboundtech.common.blocks.BlockInductionCrucible;
+import unboundtech.common.blocks.BlockVaultCasing;
+import unboundtech.common.blocks.BlockVaultController;
+import unboundtech.common.blocks.BlockVaultGolemPort;
 import unboundtech.common.blocks.BlockResonantSplitter;
 import unboundtech.common.blocks.BlockThaumGenerator;
 import unboundtech.common.tiles.TileAethericEngine;
 import unboundtech.common.tiles.TileFluxCondenser;
+import unboundtech.common.tiles.TileBusNode;
+import unboundtech.common.tiles.TileEssentiaVaultController;
 import unboundtech.common.tiles.TileInductionCrucible;
+import unboundtech.common.tiles.TileVaultGolemPort;
 import unboundtech.common.tiles.TileResonantSplitter;
 import unboundtech.common.tiles.TileThaumGenerator;
 
@@ -38,12 +46,26 @@ public final class UTBlocks {
     public static final String FLUX_CONDENSER = "flux_condenser";
     public static final String RESONANT_SPLITTER = "resonant_splitter";
     public static final String INDUCTION_CRUCIBLE = "induction_crucible";
+    public static final String BUS_NODE = "bus_node";
+    public static final String CONDUIT_I = "essentia_conduit_i";
+    public static final String CONDUIT_II = "essentia_conduit_ii";
+    public static final String CONDUIT_III = "essentia_conduit_iii";
+    public static final String VAULT_CASING = "essentia_vault_casing";
+    public static final String VAULT_CONTROLLER = "essentia_vault_controller";
+    public static final String VAULT_GOLEM_PORT = "essentia_vault_golem_port";
 
     public static Block thaumGenerator;
     public static Block aethericEngine;
     public static Block fluxCondenser;
     public static Block resonantSplitter;
     public static Block inductionCrucible;
+    public static Block busNode;
+    public static Block conduitI;
+    public static Block conduitII;
+    public static Block conduitIII;
+    public static Block vaultCasing;
+    public static Block vaultController;
+    public static Block vaultGolemPort;
 
     /** Вкладка креатива мода; иконка — Таум-Генератор. */
     public static final CreativeTabs TAB = new CreativeTabs(UnboundTech.MODID) {
@@ -65,6 +87,13 @@ public final class UTBlocks {
         fluxCondenser = make(new BlockFluxCondenser(), FLUX_CONDENSER);
         resonantSplitter = make(new BlockResonantSplitter(), RESONANT_SPLITTER);
         inductionCrucible = make(new BlockInductionCrucible(), INDUCTION_CRUCIBLE);
+        busNode = make(new BlockBusNode(), BUS_NODE);
+        conduitI = make(new BlockEssentiaConduit(2), CONDUIT_I);
+        conduitII = make(new BlockEssentiaConduit(4), CONDUIT_II);
+        conduitIII = make(new BlockEssentiaConduit(8), CONDUIT_III);
+        vaultCasing = make(new BlockVaultCasing(), VAULT_CASING);
+        vaultController = make(new BlockVaultController(), VAULT_CONTROLLER);
+        vaultGolemPort = make(new BlockVaultGolemPort(), VAULT_GOLEM_PORT);
         event.getRegistry().registerAll(all());
 
         GameRegistry.registerTileEntity(TileThaumGenerator.class,
@@ -77,6 +106,12 @@ public final class UTBlocks {
                 new ResourceLocation(UnboundTech.MODID, RESONANT_SPLITTER));
         GameRegistry.registerTileEntity(TileInductionCrucible.class,
                 new ResourceLocation(UnboundTech.MODID, INDUCTION_CRUCIBLE));
+        GameRegistry.registerTileEntity(TileBusNode.class,
+                new ResourceLocation(UnboundTech.MODID, BUS_NODE));
+        GameRegistry.registerTileEntity(TileEssentiaVaultController.class,
+                new ResourceLocation(UnboundTech.MODID, VAULT_CONTROLLER));
+        GameRegistry.registerTileEntity(TileVaultGolemPort.class,
+                new ResourceLocation(UnboundTech.MODID, VAULT_GOLEM_PORT));
     }
 
     @SubscribeEvent
@@ -102,6 +137,7 @@ public final class UTBlocks {
     /** Все блоки мода — для регистрации и для моделей на клиенте. */
     public static Block[] all() {
         return new Block[]{thaumGenerator, aethericEngine, fluxCondenser,
-                resonantSplitter, inductionCrucible};
+                resonantSplitter, inductionCrucible, busNode, conduitI, conduitII,
+                conduitIII, vaultCasing, vaultController, vaultGolemPort};
     }
 }
