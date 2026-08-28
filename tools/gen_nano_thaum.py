@@ -166,11 +166,18 @@ def tile_patch(img, u, v, w, h, d, tile, top=None):
 def paint_patches(canvas, forged_tile, nano_tone):
     S = 2
 
-    # паулдрон (п.2): кованая фортресс-пластина, латунная окантовка крышки
+    # паулдрон (п.2): кованая фортресс-пластина; крышка — тот же тайл с
+    # латунной ОКАНТОВКОЙ 1px по периметру (сплошная латунь на примерке
+    # читалась как «плечи без текстуры»)
     pu, pv = UV["pauldron"]
     pw, ph, pd = PAULDRON
-    tile_patch(canvas, pu, pv, pw, ph, pd, forged_tile, top=BRASS[1])
-    _fill(canvas, (pu + pd) * S, pv * S, pw * S, 1, BRASS[2])
+    tile_patch(canvas, pu, pv, pw, ph, pd, forged_tile)
+    tx, ty, tw, th = (pu + pd) * S, pv * S, pw * S, pd * S
+    _fill(canvas, tx, ty, tw, S, BRASS[1])
+    _fill(canvas, tx, ty + th - S, tw, S, BRASS[1])
+    _fill(canvas, tx, ty, S, th, BRASS[1])
+    _fill(canvas, tx + tw - S, ty, S, th, BRASS[1])
+    _fill(canvas, tx, ty, tw, 1, BRASS[2])
 
     # сабатон: нано-подложка, кованая морда, латунный носок
     su, sv = UV["sabaton"]
@@ -247,6 +254,22 @@ def fill_zone(canvas, zone):
                 px[x, y] = weave(x // 2, y // 2) + (255,)
 
 
+def boot_trim(canvas):
+    """Таумиевая окантовка верхнего края нано-бота в зоне ноги слоя 1:
+    вместе со ступенью раздутий (штанина 0.35 → бот 0.55 → пластины 0.85)
+    даёт плавный переход от поножей к ботинкам."""
+    x0, y0, x1, y1 = [v * 2 for v in ZONE_LEG]
+    y0 += 4 * 2   # верхние строки развёртки — подошва/верх бокса, не бока
+    px = canvas.load()
+    for x in range(x0, x1):
+        for y in range(y0, y1):
+            if px[x, y][3] > 128:
+                px[x, y] = TEMPER[2] + (255,)
+                if y + 1 < y1:
+                    px[x, y + 1] = TEMPER[0] + (255,)
+                break
+
+
 def face_plate(canvas):
     """Лицевая пластина глухого шлема: дыхательная решётка на месте рта.
     Глаза закрывает ПНВ-маска на фортресс-очках, решётке эмиссив не нужен."""
@@ -297,6 +320,7 @@ def main():
     fill_zone(canvas, ZONE_BODY)
     fill_zone(canvas, ZONE_ARM)
     face_plate(canvas)
+    boot_trim(canvas)
 
     # Маска ПНВ IC2 → зона фортрессовского бокса Goggles (100,18) 9x5x1:
     # front в файле = (202,38) 18x10. Источник: пояс головы nightvision_1
