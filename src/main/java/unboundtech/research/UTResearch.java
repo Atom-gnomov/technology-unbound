@@ -67,6 +67,9 @@ public final class UTResearch {
     /** Индукционный Тигель — T3, алхимическая ветка. */
     public static final String INDUCTION_CRUCIBLE = "INDUCTION_CRUCIBLE";
 
+    /** Флюкс-Револьвер: вход в оружейную ветку, с гильзой и патронами T3. */
+    public static final String FLUX_REVOLVER = "FLUX_REVOLVER";
+
     /** Шина эссенции: узел и кабели одной записью (кабель — расходник). */
     public static final String ESSENTIA_BUS = "ESSENTIA_BUS";
 
@@ -439,6 +442,27 @@ public final class UTResearch {
                         unboundtech.common.UTRecipesT3.resonantSplitter == null ? null
                                 : new ResearchPage(
                                         unboundtech.common.UTRecipesT3.resonantSplitter)))
+                .registerResearchItem();
+
+        // Револьвер: Telum 12, Ignis 10, Machina 8 = 30; complexity 2 (§6).
+        // Эта же запись выдаёт гильзу и оба патрона T3.
+        new ResearchItem(
+                FLUX_REVOLVER, CATEGORY,
+                new AspectList().add(Aspect.WEAPON, 12).add(Aspect.FIRE, 10)
+                        .add(Aspect.MECHANISM, 8),
+                8, -6, 2,
+                new ItemStack(unboundtech.common.UTItems.fluxRevolver))
+                .setParents(FLUX_CONDENSER)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.FLUX_REVOLVER.1"),
+                        new ResearchPage("unboundtech.research_page.FLUX_REVOLVER.2"),
+                        new ResearchPage("unboundtech.research_page.FLUX_REVOLVER.3"),
+                        unboundtech.common.UTRecipesT3.fluxRevolver == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.fluxRevolver),
+                        recipePage(unboundtech.common.UTCrafting.casingRecipe),
+                        recipePage(unboundtech.common.UTCrafting.cartridgeIncendiary),
+                        recipePage(unboundtech.common.UTCrafting.cartridgeIlluminating)))
                 .registerResearchItem();
 
         // Шина: Permutatio 10, Machina 10, Ordo 8, Praecantatio 4 = 32 (§6).

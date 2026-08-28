@@ -192,3 +192,20 @@ tc.research_text.ESSENTIA_VAULT=A library sorted into shelves
 unboundtech.research_page.ESSENTIA_VAULT.1=Twenty-seven plates, and inside — a silence sorted into shelves. Every meaning lies apart, labelled, arguing with no neighbour.<BR><BR>Golems run here as to a library: take, carry, return. The library, however, goes dark the moment the wire is pulled — and then nobody takes anything.
 unboundtech.research_page.ESSENTIA_VAULT.2=Stack a cube three by three by three: twenty-five blind casings, a controller in the middle of one face looking outward, and exactly one golem alcove on any side.<BR><BR>It holds three hundred eighty-four sips, but no more than ninety-six of one meaning: a store of many-a-little, not a bucket for one. The old Reservoir is still better when you need two hundred fifty-six measures of the same thing — and it asks for no current, either.
 unboundtech.research_page.ESSENTIA_VAULT.3=Notes on handling.<BR><BR>Every occupied shelf costs one unit of power per heartbeat; every sip in or out costs twenty. Current gone — the library goes dark entirely: nothing in, nothing out.<BR><BR>One meaning clogged — the rest flow on; everything clogged — the controller glows red.<BR><BR>An empty phial at the controller carries away eight sips of the first meaning alphabetically. A wrench lifts the controller with all its contents; a pickaxe loses them.
+
+# --- Flux Revolver and ammunition (T3) ---
+item.unboundtech.casing.name=Casing
+item.unboundtech.cartridge_incendiary.name=Incendiary Cartridge
+item.unboundtech.cartridge_illuminating.name=Illuminating Cartridge
+item.unboundtech.flux_revolver.name=Flux Revolver
+tile.unboundtech.photon_light.name=Light
+unboundtech.tooltip.casing=Empty. Decides exactly when the flash happens
+unboundtech.tooltip.cartridge_incendiary=Alumentum in a casing: sets the target alight for five seconds
+unboundtech.tooltip.cartridge_illuminating=Nitor in a casing: a minute of light at the point of impact, half damage
+unboundtech.tooltip.revolver_empty=Drum empty — Sneak-use to reload
+unboundtech.tooltip.revolver_damage=Base damage
+tc.research_name.FLUX_REVOLVER=Flux Revolver
+tc.research_text.FLUX_REVOLVER=Not powerful. Predictable
+unboundtech.research_page.FLUX_REVOLVER.1=The first thing an apprentice does upon earning the right to handle alumentum is put it in a tube and see what happens. The second is learning from a master how to do that and keep the hand.<BR><BR>The revolver stands exactly between the first and the second: it is not powerful, it is PREDICTABLE — and for a first barrel that matters more.<BR><BR>The first mechanists loaded barrels with raw alumentum, and the first mechanists did not live long. The casing is not about convenience: it decides exactly when the flash happens.
+unboundtech.research_page.FLUX_REVOLVER.2=The drum holds six charges of one kind — it refuses to mix. Changing kinds means emptying the drum entirely; seating each charge takes time, and a dozen-odd heartbeats for a full drum are felt.<BR><BR>The projectile flies, and it can be seen: alchemy, not lightning. Half the casings fall at your feet — bend down and gather them, a tempered ingot yields only eight.
+unboundtech.research_page.FLUX_REVOLVER.3=Two kinds of charge for now.<BR><BR>Incendiary — alumentum in a casing: full force, and five seconds of fire.<BR><BR>Illuminating — nitor in a casing: half force, but it leaves a minute of light where it lands. Shoot into the dark — and the dark ends.<BR><BR>The grip will do for a knock — but that is courtesy, not fencing.

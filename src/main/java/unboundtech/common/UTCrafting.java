@@ -52,6 +52,9 @@ public final class UTCrafting {
     public static IRecipe wrench;
     public static IRecipe scribingTools;
     public static IRecipe vaultCasing;
+    public static IRecipe casingRecipe;
+    public static IRecipe cartridgeIncendiary;
+    public static IRecipe cartridgeIlluminating;
 
     private UTCrafting() {
     }
@@ -93,9 +96,42 @@ public final class UTCrafting {
         // массовый стройматериал, арканный вис тратится на контроллер. ---
         vaultCasing = registerVaultCasing(event);
 
+        // --- Боеприпас T3 (`cartridges.md` §4.1, §6): гильза 8 шт из
+        // слитка закалённого таумия; патрон = гильза + сырьё, обычный
+        // верстак — «медленно и ровно настолько неудобно, чтобы захотеть
+        // автоматизацию». ---
+        casingRecipe = shapedStack(event, "casing_x8",
+                new ItemStack(UTItems.casing, 8), "T", 'T',
+                new ItemStack(UTItems.temperedIngot));
+        cartridgeIncendiary = shapelessStack(event, "cartridge_incendiary",
+                new ItemStack(UTItems.cartridgeIncendiary),
+                new ItemStack(UTItems.casing),
+                new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1, 0));
+        cartridgeIlluminating = shapelessStack(event, "cartridge_illuminating",
+                new ItemStack(UTItems.cartridgeIlluminating),
+                new ItemStack(UTItems.casing),
+                new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1, 1));
+
         // --- Электрочернильница: чернильница ТК + слиток + RE-батарея (§6).
         // Сетка в карточке не задана — значит бесформенный рецепт. ---
         scribingTools = registerScribingTools(event);
+    }
+
+    private static IRecipe shapedStack(RegistryEvent.Register<IRecipe> event,
+                                       String name, ItemStack result, Object... recipe) {
+        ShapedOreRecipe shaped = new ShapedOreRecipe(group(), result, recipe);
+        shaped.setRegistryName(unboundtech.UnboundTech.MODID, name);
+        event.getRegistry().register(shaped);
+        return shaped;
+    }
+
+    private static IRecipe shapelessStack(RegistryEvent.Register<IRecipe> event,
+                                          String name, ItemStack result, Object... parts) {
+        net.minecraftforge.oredict.ShapelessOreRecipe shapeless =
+                new net.minecraftforge.oredict.ShapelessOreRecipe(group(), result, parts);
+        shapeless.setRegistryName(unboundtech.UnboundTech.MODID, name);
+        event.getRegistry().register(shapeless);
+        return shapeless;
     }
 
     private static IRecipe registerVaultCasing(RegistryEvent.Register<IRecipe> event) {

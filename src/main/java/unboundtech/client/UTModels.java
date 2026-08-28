@@ -27,6 +27,14 @@ public final class UTModels {
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void registerModels(ModelRegistryEvent event) {
+        // Снаряд револьвера: рендер вращающейся иконки патрона.
+        net.minecraftforge.fml.client.registry.RenderingRegistry
+                .registerEntityRenderingHandler(
+                        unboundtech.common.entities.EntityFluxBullet.class,
+                        manager -> new net.minecraft.client.renderer.entity.RenderSnowball<>(
+                                manager, UTItems.cartridgeIncendiary,
+                                net.minecraft.client.Minecraft.getMinecraft()
+                                        .getRenderItem()));
         for (Block block : UTBlocks.all()) {
             Item item = Item.getItemFromBlock(block);
             ModelLoader.setCustomModelResourceLocation(item, 0,

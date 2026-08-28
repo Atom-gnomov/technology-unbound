@@ -16,6 +16,7 @@ import unboundtech.common.blocks.BlockFluxCondenser;
 import unboundtech.common.blocks.BlockBusNode;
 import unboundtech.common.blocks.BlockEssentiaConduit;
 import unboundtech.common.blocks.BlockInductionCrucible;
+import unboundtech.common.blocks.BlockPhotonLight;
 import unboundtech.common.blocks.BlockVaultCasing;
 import unboundtech.common.blocks.BlockVaultController;
 import unboundtech.common.blocks.BlockVaultGolemPort;
@@ -66,6 +67,8 @@ public final class UTBlocks {
     public static Block vaultCasing;
     public static Block vaultController;
     public static Block vaultGolemPort;
+    /** Свет осветительного патрона: без предмета, ставится только снарядом. */
+    public static Block photonLight;
 
     /** Вкладка креатива мода; иконка — Таум-Генератор. */
     public static final CreativeTabs TAB = new CreativeTabs(UnboundTech.MODID) {
@@ -94,6 +97,10 @@ public final class UTBlocks {
         vaultCasing = make(new BlockVaultCasing(), VAULT_CASING);
         vaultController = make(new BlockVaultController(), VAULT_CONTROLLER);
         vaultGolemPort = make(new BlockVaultGolemPort(), VAULT_GOLEM_PORT);
+        photonLight = new BlockPhotonLight()
+                .setRegistryName(UnboundTech.MODID, "photon_light")
+                .setTranslationKey(UnboundTech.MODID + ".photon_light");
+        event.getRegistry().register(photonLight);
         event.getRegistry().registerAll(all());
 
         GameRegistry.registerTileEntity(TileThaumGenerator.class,

@@ -42,6 +42,7 @@ public class UnboundTech {
         UTLog.info("{} {} pre-init", NAME, VERSION);
         UTConfig.load(event.getSuggestedConfigurationFile());
         ModuleManager.preInit();
+        unboundtech.common.UTEntities.register();
         MinecraftForge.EVENT_BUS.register(this);
     }
 

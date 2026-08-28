@@ -32,6 +32,7 @@ public final class UTRecipesT3 {
     public static thaumcraft.api.crafting.ShapelessArcaneRecipe conduitIII;
     public static ShapedArcaneRecipe vaultController;
     public static ShapedArcaneRecipe vaultGolemPort;
+    public static ShapedArcaneRecipe fluxRevolver;
 
     private UTRecipesT3() {
     }
@@ -42,6 +43,33 @@ public final class UTRecipesT3 {
         resonantSplitter = registerResonantSplitter();
         inductionCrucible = registerInductionCrucible();
         registerBus();
+        fluxRevolver = registerFluxRevolver();
+    }
+
+    /**
+     * Флюкс-Револьвер (`flux_revolver.md` §6): слиток над бронзовой
+     * оправой на деревянной рукояти. Аспекты — Ignis 10, Ordo 7,
+     * Perditio 5 (пересчитаны по recipe_calibration.md §4). Ручной
+     * профиль аспектов ствола живёт в UTItems.init (§7) — этот файл
+     * сторожится тестом «в арканных стоимостях только прималы».
+     */
+    private static ShapedArcaneRecipe registerFluxRevolver() {
+        ItemStack bronze = IC2Handles.item("ingot", "bronze");
+        if (bronze.isEmpty()) {
+            UTLog.warn("Flux Revolver recipe skipped: IC2 bronze not found");
+            return null;
+        }
+        return ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.FLUX_REVOLVER,
+                new ItemStack(UTItems.fluxRevolver),
+                new AspectList().add(Aspect.FIRE, 10).add(Aspect.ORDER, 7)
+                        .add(Aspect.ENTROPY, 5),
+                " T ",
+                "BTB",
+                " W ",
+                'T', new ItemStack(UTItems.temperedIngot),
+                'B', bronze,
+                'W', new ItemStack(net.minecraft.init.Items.STICK));
     }
 
     /**

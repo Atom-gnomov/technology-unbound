@@ -11,7 +11,9 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import unboundtech.UnboundTech;
+import unboundtech.common.items.ItemCartridge;
 import unboundtech.common.items.ItemElectricScribingTools;
+import unboundtech.common.items.ItemFluxRevolver;
 import unboundtech.common.items.ItemFluxCharge;
 import unboundtech.common.items.ItemNanoThaumArmor;
 import unboundtech.common.items.ItemTemperedArmor;
@@ -47,6 +49,11 @@ public final class UTItems {
     /** T3: апгрейд машин IC2 — скорость за эссенцию (`thaumic_overclocker.md`). */
     public static final String THAUMIC_OVERCLOCKER = "thaumic_overclocker";
     /** ПРОТОТИП T4 (только внешний вид, решение владельца). */
+    public static final String CASING = "casing";
+    public static final String CARTRIDGE_INCENDIARY = "cartridge_incendiary";
+    public static final String CARTRIDGE_ILLUMINATING = "cartridge_illuminating";
+    public static final String FLUX_REVOLVER = "flux_revolver";
+
     public static final String NANO_THAUM_HELMET = "nano_thaum_helmet";
     public static final String NANO_THAUM_CHESTPLATE = "nano_thaum_chestplate";
     public static final String NANO_THAUM_LEGGINGS = "nano_thaum_leggings";
@@ -93,6 +100,10 @@ public final class UTItems {
     public static Item nanoThaumChestplate;
     public static Item nanoThaumLeggings;
     public static Item nanoThaumBoots;
+    public static Item casing;
+    public static Item cartridgeIncendiary;
+    public static Item cartridgeIlluminating;
+    public static Item fluxRevolver;
 
     /**
      * ПРОТОТИП: заглушка уровня примерки. Полоска 4/9/7/4 — из карточки
@@ -139,6 +150,15 @@ public final class UTItems {
         nanoThaumBoots = make(new ItemNanoThaumArmor(NANO_THAUM_PROTO,
                 EntityEquipmentSlot.FEET), NANO_THAUM_BOOTS);
 
+        casing = make(new ItemUTResource("unboundtech.tooltip.casing"), CASING);
+        cartridgeIncendiary = make(new ItemCartridge(
+                unboundtech.common.entities.EntityFluxBullet.TYPE_INCENDIARY,
+                "unboundtech.tooltip.cartridge_incendiary"), CARTRIDGE_INCENDIARY);
+        cartridgeIlluminating = make(new ItemCartridge(
+                unboundtech.common.entities.EntityFluxBullet.TYPE_ILLUMINATING,
+                "unboundtech.tooltip.cartridge_illuminating"), CARTRIDGE_ILLUMINATING);
+        fluxRevolver = make(new ItemFluxRevolver(), FLUX_REVOLVER);
+
         event.getRegistry().registerAll(all());
     }
 
@@ -155,6 +175,15 @@ public final class UTItems {
         // Регистр апгрейдов IC2 — только подсказки в GUI машин (§12.1
         // карточки: побочной валидации у него нет, безопасно).
         ic2.api.upgrade.UpgradeRegistry.register(new ItemStack(thaumicOverclocker));
+        // Профиль аспектов револьвера — ручной (`flux_revolver.md` §7):
+        // Telum движок сам не припишет, наши стволы не наследуют
+        // ItemSword/ItemBow, а компоненты рецепта его не содержат.
+        thaumcraft.api.ThaumcraftApi.registerObjectTag(new ItemStack(fluxRevolver),
+                new thaumcraft.api.aspects.AspectList()
+                        .add(thaumcraft.api.aspects.Aspect.METAL, 8)
+                        .add(thaumcraft.api.aspects.Aspect.WEAPON, 6)
+                        .add(thaumcraft.api.aspects.Aspect.TOOL, 4)
+                        .add(thaumcraft.api.aspects.Aspect.MAGIC, 3));
     }
 
     private static Item make(Item item, String name) {
@@ -172,6 +201,7 @@ public final class UTItems {
                 temperedSword, temperedPickaxe, temperedAxe, temperedShovel, temperedHoe,
                 thaumiumWrench, electricScribingTools, fluxCharge, thaumicOverclocker,
                 nanoThaumHelmet, nanoThaumChestplate, nanoThaumLeggings, nanoThaumBoots,
+                casing, cartridgeIncendiary, cartridgeIlluminating, fluxRevolver,
         };
     }
 }
