@@ -39,6 +39,10 @@ public final class UTModels {
                 .registerEntityRenderingHandler(
                         unboundtech.common.entities.EntityTechnoSpirit.class,
                         RenderTechnoSpirit::new);
+        // Револьвер: Java-модель через TEISR (школа Flan's Mod) — json
+        // builtin/entity даёт только display-повороты.
+        UTItems.fluxRevolver.setTileEntityItemStackRenderer(
+                new RenderFluxRevolver());
         for (Block block : UTBlocks.all()) {
             Item item = Item.getItemFromBlock(block);
             ModelLoader.setCustomModelResourceLocation(item, 0,

@@ -111,105 +111,73 @@ def write_json(path, data):
         f.write("\n")
 
 
-def revolver_plate():
-    """Палитра-текстура для 3D-модели: зоны 4x4 по материалам."""
-    img = canvas()
-    zones = [
-        (0, 0, STEEL[1]), (4, 0, STEEL[3]), (8, 0, STEEL[4]), (12, 0, BRASS[3]),
-        (0, 4, WOOD[0]), (4, 4, WOOD[1]), (8, 4, WOOD[2]), (12, 4, MURK[2]),
-        (0, 8, STEEL[2]), (4, 8, STEEL[0] if len(STEEL) > 5 else STEEL[1]),
-        (8, 8, BRASS[1]), (12, 8, MURK[1]),
-    ]
-    for (zx, zy, c) in zones:
-        for y in range(4):
-            for x in range(4):
-                # лёгкий шум, чтобы грани не были заливкой
-                cc = c
+def revolver_map():
+    """Текстурная карта 128x64 для Java-модели (школа Flan's Mod):
+    полосы материалов, развёртки боксов ложатся в свою полосу.
+      y 0..30  — сталь (шум панелей)
+      y 32..46 — дерево рукояти
+      y 48..56 — латунь
+      y 58..64 — свечение флюкса"""
+    img = Image.new("RGBA", (128, 64), (0, 0, 0, 0))
+    px = img.load()
+    for y in range(64):
+        for x in range(128):
+            if y < 31:
+                c = STEEL[2]
+                if (x * 7 + y * 13) % 11 == 0:
+                    c = STEEL[3]
+                if (x + y) % 9 == 0:
+                    c = STEEL[1]
+                if y % 10 == 9:
+                    c = STEEL[0]
+            elif y < 47:
+                c = WOOD[1]
+                if (x * 3 + y) % 5 == 0:
+                    c = WOOD[2]
+                if (x + y * 2) % 11 == 0:
+                    c = WOOD[0]
+            elif y < 57:
+                c = BRASS[3]
+                if (x + y) % 4 == 0:
+                    c = BRASS[4]
+                if (x * 5 + y) % 13 == 0:
+                    c = BRASS[1]
+            else:
+                c = MURK[2]
                 if (x + y) % 3 == 0:
-                    cc = tuple(max(0, v - 12) for v in c)
-                put(img, zx + x, zy + y, cc)
+                    c = MURK[1]
+            px[x, y] = (c[0] & 255, c[1] & 255, c[2] & 255, 255)
     return img
 
 
-# зоны палитры для faces: uv = [x0, y0, x1, y1]
-UV_STEEL_D = [0, 0, 4, 4]
-UV_STEEL_M = [4, 0, 8, 4]
-UV_STEEL_L = [8, 0, 12, 4]
-UV_BRASS = [12, 0, 16, 4]
-UV_WOOD_D = [0, 4, 4, 8]
-UV_WOOD_M = [4, 4, 8, 8]
-UV_WOOD_L = [8, 4, 12, 8]
-UV_GLOW = [12, 4, 16, 8]
-UV_STEEL_F = [0, 8, 4, 12]
-
-
-def _box(fr, to, uv, uv_ends=None, rotation=None):
-    faces = {}
-    for f in ("north", "south", "east", "west", "up", "down"):
-        faces[f] = {"texture": "#plate",
-                    "uv": uv_ends if uv_ends and f in ("east", "west") else uv}
-    el = {"from": fr, "to": to, "faces": faces}
-    if rotation:
-        el["rotation"] = rotation
-    return el
-
-
 def revolver_3d():
-    """3D-модель (`flux_revolver.md` §8 — решение владельца): короткий
-    ствол, крупный барабан со светящимися гнёздами, деревянная рукоять.
-    Ствол лежит вдоль X, дуло к нулю; display поворачивает в руках."""
-    elements = [
-        # ствол
-        _box([1, 8, 7], [8, 10, 9], UV_STEEL_M, uv_ends=UV_STEEL_D),
-        # мушка
-        _box([1, 10, 7.6], [2, 10.7, 8.4], UV_STEEL_L),
-        # рама над барабаном и казённик
-        _box([7, 9.7, 6.9], [13.2, 10.6, 9.1], UV_STEEL_M),
-        # барабан
-        _box([7.6, 6.2, 6.2], [11.6, 10.2, 9.8], UV_STEEL_D),
-        # светящиеся гнёзда патронов по бокам барабана
-        _box([8.4, 7.2, 5.9], [10.8, 9.2, 6.2], UV_GLOW),
-        _box([8.4, 7.2, 9.8], [10.8, 9.2, 10.1], UV_GLOW),
-        # латунная ось барабана
-        _box([7.2, 7.8, 7.6], [12, 8.6, 8.4], UV_BRASS),
-        # курок
-        _box([13, 10.2, 7.5], [14, 11.4, 8.5], UV_STEEL_F,
-             rotation={"origin": [13, 10.2, 8], "axis": "z", "angle": -22.5}),
-        # рукоять под углом
-        _box([11.8, 2.8, 7.1], [14.2, 8.2, 8.9], UV_WOOD_M,
-             rotation={"origin": [13, 8, 8], "axis": "z", "angle": -22.5}),
-        # латунный тыльник рукояти
-        _box([13.1, 2.2, 7.2], [14.4, 3.4, 8.8], UV_BRASS,
-             rotation={"origin": [13, 8, 8], "axis": "z", "angle": -22.5}),
-        # спусковая скоба
-        _box([9.8, 5.4, 7.7], [12.4, 6.1, 8.3], UV_BRASS),
-    ]
+    """Модель — Java (ModelFluxRevolver) через TEISR; json даёт только
+    display-повороты. parent builtin/entity — как щит и сундук ванилы."""
     write_json(os.path.join(ROOT, "models", "item", "flux_revolver.json"), {
-        "textures": {"particle": "unboundtech:items/flux_revolver_plate",
-                     "plate": "unboundtech:items/flux_revolver_plate"},
-        "elements": elements,
+        "parent": "builtin/entity",
+        "textures": {"particle": "unboundtech:items/flux_revolver"},
         "display": {
             "thirdperson_righthand": {
-                "rotation": [0, 90, 0], "translation": [0, 3, 1],
-                "scale": [0.8, 0.8, 0.8]},
+                "rotation": [0, 90, 0], "translation": [0, 3.5, 1.5],
+                "scale": [0.9, 0.9, 0.9]},
             "thirdperson_lefthand": {
-                "rotation": [0, -90, 0], "translation": [0, 3, 1],
-                "scale": [0.8, 0.8, 0.8]},
+                "rotation": [0, -90, 0], "translation": [0, 3.5, 1.5],
+                "scale": [0.9, 0.9, 0.9]},
             "firstperson_righthand": {
-                "rotation": [0, 85, 0], "translation": [1.5, 1.5, 0],
-                "scale": [0.7, 0.7, 0.7]},
+                "rotation": [0, 80, 0], "translation": [2, 2.5, 1],
+                "scale": [0.8, 0.8, 0.8]},
             "firstperson_lefthand": {
-                "rotation": [0, -85, 0], "translation": [1.5, 1.5, 0],
-                "scale": [0.7, 0.7, 0.7]},
+                "rotation": [0, -80, 0], "translation": [2, 2.5, 1],
+                "scale": [0.8, 0.8, 0.8]},
             "gui": {
-                "rotation": [10, -95, 10], "translation": [0, 0, 0],
-                "scale": [0.95, 0.95, 0.95]},
+                "rotation": [15, -100, 15], "translation": [0, 0.5, 0],
+                "scale": [0.9, 0.9, 0.9]},
             "ground": {
-                "rotation": [0, 0, 0], "translation": [0, 2, 0],
-                "scale": [0.5, 0.5, 0.5]},
+                "rotation": [0, 0, 0], "translation": [0, 3, 0],
+                "scale": [0.55, 0.55, 0.55]},
             "fixed": {
                 "rotation": [0, -90, 0], "translation": [0, 0, 0],
-                "scale": [1.0, 1.0, 1.0]},
+                "scale": [1.1, 1.1, 1.1]},
         },
     })
 
@@ -221,7 +189,9 @@ def main():
     cartridge([(0xC9, 0xC2, 0xA8), (0xFF, 0xFC, 0xEE), (0xF2, 0xEC, 0xD5)]).save(
         os.path.join(items, "cartridge_illuminating.png"))
     revolver().save(os.path.join(items, "flux_revolver.png"))
-    revolver_plate().save(os.path.join(items, "flux_revolver_plate.png"))
+    models_dir = os.path.join(ROOT, "textures", "models")
+    os.makedirs(models_dir, exist_ok=True)
+    revolver_map().save(os.path.join(models_dir, "flux_revolver.png"))
 
     for name in ("casing", "cartridge_incendiary", "cartridge_illuminating"):
         write_json(os.path.join(ROOT, "models", "item", name + ".json"),
