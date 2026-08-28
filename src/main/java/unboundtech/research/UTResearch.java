@@ -70,6 +70,9 @@ public final class UTResearch {
     /** Флюкс-Револьвер: вход в оружейную ветку, с гильзой и патронами T3. */
     public static final String FLUX_REVOLVER = "FLUX_REVOLVER";
 
+    /** Фокус Заряда: жезл как переносная розетка. */
+    public static final String FOCUS_CHARGE = "FOCUS_CHARGE";
+
     /** Кольца Схемы: атрибуты игрока за 2 EU/t на кольцо. */
     public static final String SCHEMA_RINGS = "SCHEMA_RINGS";
 
@@ -466,6 +469,22 @@ public final class UTResearch {
                         recipePage(unboundtech.common.UTCrafting.casingRecipe),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIncendiary),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIlluminating)))
+                .registerResearchItem();
+
+        // Фокус Заряда: Praecantatio 12, Potentia 12, Machina 8 = 32 (§6).
+        new ResearchItem(
+                FOCUS_CHARGE, CATEGORY,
+                new AspectList().add(Aspect.MAGIC, 12).add(Aspect.ENERGY, 12)
+                        .add(Aspect.MECHANISM, 8),
+                8, -4, 2,
+                new ItemStack(unboundtech.common.UTItems.focusCharge))
+                .setParents(VIS_TO_EU_GENERATOR)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.FOCUS_CHARGE.1"),
+                        new ResearchPage("unboundtech.research_page.FOCUS_CHARGE.2"),
+                        unboundtech.common.UTRecipesT3.focusCharge == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.focusCharge)))
                 .registerResearchItem();
 
         // Кольца: Corpus 12, Machina 12, Praecantatio 10 = 34; complexity 2.
