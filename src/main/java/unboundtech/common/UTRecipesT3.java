@@ -33,6 +33,10 @@ public final class UTRecipesT3 {
     public static ShapedArcaneRecipe vaultController;
     public static ShapedArcaneRecipe vaultGolemPort;
     public static ShapedArcaneRecipe fluxRevolver;
+    public static ShapedArcaneRecipe ringFrame;
+    public static ShapedArcaneRecipe ringDrive;
+    public static ShapedArcaneRecipe ringStride;
+    public static ShapedArcaneRecipe ringBrace;
 
     private UTRecipesT3() {
     }
@@ -44,6 +48,40 @@ public final class UTRecipesT3 {
         inductionCrucible = registerInductionCrucible();
         registerBus();
         fluxRevolver = registerFluxRevolver();
+        registerRings();
+    }
+
+    /**
+     * Кольца Схемы (`schema_rings.md` §6): закалённый таумий сверху и
+     * снизу, по бокам углеволокно IC2, в центре вис-кристалл СВОЕГО
+     * примала: Остова — Terra, Привода — Ignis, Хода — Aer, Упора —
+     * Ordo. Аспекты — Ordo 9, Terra 7, Aer 4 (пересчитаны §4).
+     */
+    private static void registerRings() {
+        ItemStack fibre = IC2Handles.item("crafting", "carbon_fibre");
+        if (fibre.isEmpty()) {
+            UTLog.warn("Schema rings recipes skipped: IC2 carbon fibre not found");
+            return;
+        }
+        ringFrame = ring(UTItems.ringFrame, fibre, 3);
+        ringDrive = ring(UTItems.ringDrive, fibre, 1);
+        ringStride = ring(UTItems.ringStride, fibre, 0);
+        ringBrace = ring(UTItems.ringBrace, fibre, 4);
+    }
+
+    private static ShapedArcaneRecipe ring(net.minecraft.item.Item result,
+                                           ItemStack fibre, int shardMeta) {
+        return ThaumcraftApi.addArcaneCraftingRecipe(
+                UTResearch.SCHEMA_RINGS,
+                new ItemStack(result),
+                new AspectList().add(Aspect.ORDER, 9).add(Aspect.EARTH, 7)
+                        .add(Aspect.AIR, 4),
+                " T ",
+                "CVC",
+                " T ",
+                'T', new ItemStack(UTItems.temperedIngot),
+                'C', fibre,
+                'V', new ItemStack(ConfigItems.itemShard, 1, shardMeta));
     }
 
     /**

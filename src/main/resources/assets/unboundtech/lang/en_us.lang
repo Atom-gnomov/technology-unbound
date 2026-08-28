@@ -209,3 +209,19 @@ tc.research_text.FLUX_REVOLVER=Not powerful. Predictable
 unboundtech.research_page.FLUX_REVOLVER.1=The first thing an apprentice does upon earning the right to handle alumentum is put it in a tube and see what happens. The second is learning from a master how to do that and keep the hand.<BR><BR>The revolver stands exactly between the first and the second: it is not powerful, it is PREDICTABLE — and for a first barrel that matters more.<BR><BR>The first mechanists loaded barrels with raw alumentum, and the first mechanists did not live long. The casing is not about convenience: it decides exactly when the flash happens.
 unboundtech.research_page.FLUX_REVOLVER.2=The drum holds six charges of one kind — it refuses to mix. Changing kinds means emptying the drum entirely; seating each charge takes time, and a dozen-odd heartbeats for a full drum are felt.<BR><BR>The projectile flies, and it can be seen: alchemy, not lightning. Half the casings fall at your feet — bend down and gather them, a tempered ingot yields only eight.
 unboundtech.research_page.FLUX_REVOLVER.3=Two kinds of charge for now.<BR><BR>Incendiary — alumentum in a casing: full force, and five seconds of fire.<BR><BR>Illuminating — nitor in a casing: half force, but it leaves a minute of light where it lands. Shoot into the dark — and the dark ends.<BR><BR>The grip will do for a knock — but that is courtesy, not fencing.
+
+# --- Schema Rings (T3) ---
+item.unboundtech.ring_frame.name=Ring of Frame
+item.unboundtech.ring_drive.name=Ring of Drive
+item.unboundtech.ring_stride.name=Ring of Stride
+item.unboundtech.ring_brace.name=Ring of Brace
+unboundtech.tooltip.ring_frame=Reminds the body of soundness: two hearts and toughness against piercing
+unboundtech.tooltip.ring_drive=Reminds the hands of speed: a faster, one-heavier strike
+unboundtech.tooltip.ring_stride=Reminds the legs of lightness: an eighth over each step
+unboundtech.tooltip.ring_brace=Reminds the feet of roots: half the shoves miss, two measures of armour
+unboundtech.tooltip.ring_upkeep=Eats two units of power per heartbeat; drained — silent, but whole
+tc.research_name.SCHEMA_RINGS=Schema Rings
+tc.research_text.SCHEMA_RINGS=The body agrees — while there is something to remind it with
+unboundtech.research_page.SCHEMA_RINGS.1=A ring does not conjure. A ring REMINDS the body of what it could have been, had it been built to a blueprint rather than as it happened. The body, strangely, agrees — while the ring has something to remind it with.<BR><BR>Four blueprints: Frame holds life, Drive holds the strike, Stride holds the step, Brace holds the line. The stone in the setting tells you which one you hold.
+unboundtech.research_page.SCHEMA_RINGS.2=The price is two units of engineering power per heartbeat from each ring. A pair eats more than the Aetheric Generator gives at a steady pace: your own converter will not feed them — you need a grid or a reserve. Any low-tier charger fills a ring.<BR><BR>Drained — the body forgets the reminder at once, but the ring is whole: power returns, and so does the memory.
+unboundtech.research_page.SCHEMA_RINGS.3=Notes on handling.<BR><BR>Two identical rings do not argue with the body twice: the second stays silent.<BR><BR>These rings grant no runic shield at all — that is their price. The old runic rings give a shield; these give the body itself. Two slots — choose.<BR><BR>Taking off the Ring of Frame, the body honestly returns the extra hearts — but never what you live by.

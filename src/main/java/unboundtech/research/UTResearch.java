@@ -70,6 +70,9 @@ public final class UTResearch {
     /** Флюкс-Револьвер: вход в оружейную ветку, с гильзой и патронами T3. */
     public static final String FLUX_REVOLVER = "FLUX_REVOLVER";
 
+    /** Кольца Схемы: атрибуты игрока за 2 EU/t на кольцо. */
+    public static final String SCHEMA_RINGS = "SCHEMA_RINGS";
+
     /** Шина эссенции: узел и кабели одной записью (кабель — расходник). */
     public static final String ESSENTIA_BUS = "ESSENTIA_BUS";
 
@@ -463,6 +466,29 @@ public final class UTResearch {
                         recipePage(unboundtech.common.UTCrafting.casingRecipe),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIncendiary),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIlluminating)))
+                .registerResearchItem();
+
+        // Кольца: Corpus 12, Machina 12, Praecantatio 10 = 34; complexity 2.
+        // Одна запись выдаёт все четыре кольца (§6).
+        new ResearchItem(
+                SCHEMA_RINGS, CATEGORY,
+                new AspectList().add(Aspect.FLESH, 12).add(Aspect.MECHANISM, 12)
+                        .add(Aspect.MAGIC, 10),
+                6, -7, 2,
+                new ItemStack(unboundtech.common.UTItems.ringFrame))
+                .setParents(EU_TO_VIS_ENGINE)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.SCHEMA_RINGS.1"),
+                        new ResearchPage("unboundtech.research_page.SCHEMA_RINGS.2"),
+                        new ResearchPage("unboundtech.research_page.SCHEMA_RINGS.3"),
+                        unboundtech.common.UTRecipesT3.ringFrame == null ? null
+                                : new ResearchPage(unboundtech.common.UTRecipesT3.ringFrame),
+                        unboundtech.common.UTRecipesT3.ringDrive == null ? null
+                                : new ResearchPage(unboundtech.common.UTRecipesT3.ringDrive),
+                        unboundtech.common.UTRecipesT3.ringStride == null ? null
+                                : new ResearchPage(unboundtech.common.UTRecipesT3.ringStride),
+                        unboundtech.common.UTRecipesT3.ringBrace == null ? null
+                                : new ResearchPage(unboundtech.common.UTRecipesT3.ringBrace)))
                 .registerResearchItem();
 
         // Шина: Permutatio 10, Machina 10, Ordo 8, Praecantatio 4 = 32 (§6).
