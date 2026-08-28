@@ -43,6 +43,9 @@ public class UnboundTech {
         UTConfig.load(event.getSuggestedConfigurationFile());
         ModuleManager.preInit();
         unboundtech.common.UTEntities.register();
+        unboundtech.common.entities.UTVillagers.register();
+        net.minecraftforge.fml.common.registry.GameRegistry.registerWorldGenerator(
+                new unboundtech.common.world.WorldGenExileHut(), 100);
         MinecraftForge.EVENT_BUS.register(this);
     }
 

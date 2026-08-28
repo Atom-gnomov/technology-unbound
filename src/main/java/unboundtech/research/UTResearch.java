@@ -70,6 +70,9 @@ public final class UTResearch {
     /** Флюкс-Револьвер: вход в оружейную ветку, с гильзой и патронами T3. */
     public static final String FLUX_REVOLVER = "FLUX_REVOLVER";
 
+    /** Техномаг: лорная запись об изгнаннике двух школ (§3.1). */
+    public static final String TECHNOMANCER = "TECHNOMANCER";
+
     /** Техно-духи: лорная запись о реакции мира (T3, вилка T2 — §2.2). */
     public static final String TECHNO_SPIRITS = "TECHNO_SPIRITS";
 
@@ -472,6 +475,20 @@ public final class UTResearch {
                         recipePage(unboundtech.common.UTCrafting.casingRecipe),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIncendiary),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIlluminating)))
+                .registerResearchItem();
+
+        // Техномаг: лорная запись, объясняющая, почему мод существует
+        // (§3.1: если бы школы разговаривали, мост построили бы без игрока).
+        new ResearchItem(
+                TECHNOMANCER, CATEGORY,
+                new AspectList().add(Aspect.MAN, 8).add(Aspect.EXCHANGE, 8)
+                        .add(Aspect.MIND, 6),
+                8, -2, 1,
+                new ItemStack(net.minecraft.init.Items.EMERALD))
+                .setParents(INTRO)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.TECHNOMANCER.1"),
+                        new ResearchPage("unboundtech.research_page.TECHNOMANCER.2")))
                 .registerResearchItem();
 
         // Техно-духи: Bestia 8, Potentia 8, Praecantatio 6 = 22; лорная
