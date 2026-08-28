@@ -66,6 +66,10 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
     private final ModelRenderer toeCapL;
     private final ModelRenderer shinR;
     private final ModelRenderer shinL;
+    private final ModelRenderer sideR;
+    private final ModelRenderer sideL;
+    private final ModelRenderer heelR;
+    private final ModelRenderer heelL;
 
     public ModelNanoThaumArmor(float scale) {
         super(scale);
@@ -190,6 +194,24 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         this.shinL.mirror = true;
         this.shinL.addBox(-1.5F, 6.6F, -3.6F, 3, 2, 1);
         this.bipedLeftLeg.addChild(this.shinL);
+
+        // --- v8: пластины «как на поножах/груди» — боковая накладка на
+        // внешней стороне бота и пяточная сзади; сабатон раздут на 0.85,
+        // пластины стоят явно за его поверхностью. UV — Mask[2] (100,2).
+        this.sideR = new ModelRenderer(this, 100, 2);
+        this.sideR.addBox(-3.7F, 8.4F, -1.5F, 1, 2, 3);
+        this.bipedRightLeg.addChild(this.sideR);
+        this.sideL = new ModelRenderer(this, 100, 2);
+        this.sideL.mirror = true;
+        this.sideL.addBox(2.7F, 8.4F, -1.5F, 1, 2, 3);
+        this.bipedLeftLeg.addChild(this.sideL);
+        this.heelR = new ModelRenderer(this, 109, 2);
+        this.heelR.addBox(-1.5F, 9.2F, 3.35F, 3, 2, 1);
+        this.bipedRightLeg.addChild(this.heelR);
+        this.heelL = new ModelRenderer(this, 109, 2);
+        this.heelL.mirror = true;
+        this.heelL.addBox(-1.5F, 9.2F, 3.35F, 3, 2, 1);
+        this.bipedLeftLeg.addChild(this.heelL);
     }
 
     /**
@@ -287,9 +309,9 @@ public class ModelNanoThaumArmor extends ModelFortressArmor {
         this.suitArmL.showModel = chest;
 
         this.limbChildren(this.bipedRightLeg, feet, this.suitLegR,
-                this.sabatonR, this.toeCapR, this.shinR);
+                this.sabatonR, this.toeCapR, this.shinR, this.sideR, this.heelR);
         this.limbChildren(this.bipedLeftLeg, feet, this.suitLegL,
-                this.sabatonL, this.toeCapL, this.shinL);
+                this.sabatonL, this.toeCapL, this.shinL, this.sideL, this.heelL);
     }
 
     /**
