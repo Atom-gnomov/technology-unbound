@@ -63,16 +63,23 @@ public class ItemFluxRevolver extends Item {
 
     // ================= стрельба =================
 
+    /**
+     * ⚠️ Урок примерки: NBT-изменения предмета ТОЛЬКО на сервере в
+     * КРЕАТИВЕ затираются авторитетным клиентским инвентарём — барабан
+     * «не заряжался». Поэтому вся логика барабана выполняется на ОБЕИХ
+     * сторонах симметрично (детерминированно), а мир-эффекты — снаряд,
+     * звук, гильза — только на сервере. Темп держит ванильный кулдаун
+     * предмета: пока он тикает, повторный клик не проходит.
+     */
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player,
                                                     EnumHand hand) {
         ItemStack stack = player.getHeldItem(hand);
         if (player.isSneaking()) {
-            if (!world.isRemote) {
-                this.reload(stack, player);
-            }
+            this.reload(stack, player);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
+        this.fire(stack, player);
         // Удержание ПКМ — очередь по барабану через onUsingTick.
         player.setActiveHand(hand);
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
@@ -80,27 +87,36 @@ public class ItemFluxRevolver extends Item {
 
     @Override
     public void onUsingTick(ItemStack stack, EntityLivingBase living, int count) {
-        if (!(living instanceof EntityPlayer) || living.world.isRemote) {
-            return;
+        if (living instanceof EntityPlayer) {
+            this.fire(stack, (EntityPlayer) living);
         }
-        EntityPlayer player = (EntityPlayer) living;
-        if (player.getCooldownTracker().hasCooldown(this)) {
-            return;
-        }
-        this.fire(stack, player);
     }
 
     private void fire(ItemStack stack, EntityPlayer player) {
+        if (player.getCooldownTracker().hasCooldown(this)) {
+            return;
+        }
         World world = player.world;
         int count = ammoCount(stack);
         if (count <= 0) {
             // §4: щелчок бойка, выстрела нет
-            world.playSound(null, player.posX, player.posY, player.posZ,
-                    SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 0.4f, 1.6f);
+            if (!world.isRemote) {
+                world.playSound(null, player.posX, player.posY, player.posZ,
+                        SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.PLAYERS, 0.4f, 1.6f);
+                player.sendStatusMessage(new TextComponentString(
+                        "§7Барабан пуст — Shift-ПКМ с патронами в инвентаре"), true);
+            }
             player.getCooldownTracker().setCooldown(this, SHOT_COOLDOWN_TICKS);
             return;
         }
         int type = ammoType(stack);
+        // барабан — на обеих сторонах (креатив!), мир — только сервер
+        setAmmo(stack, type, count - 1);
+        stack.damageItem(1, player);
+        player.getCooldownTracker().setCooldown(this, SHOT_COOLDOWN_TICKS);
+        if (world.isRemote) {
+            return;
+        }
         EntityFluxBullet bullet = new EntityFluxBullet(world, player, type);
         // §4: дальность ~32 блока, разброс 2°
         bullet.shoot(player, player.rotationPitch, player.rotationYaw,
@@ -108,11 +124,6 @@ public class ItemFluxRevolver extends Item {
         world.spawnEntity(bullet);
         world.playSound(null, player.posX, player.posY, player.posZ,
                 SoundEvents.ENTITY_BLAZE_HURT, SoundCategory.PLAYERS, 0.5f, 1.5f);
-
-        setAmmo(stack, type, count - 1);
-        stack.damageItem(1, player);
-        player.getCooldownTracker().setCooldown(this, SHOT_COOLDOWN_TICKS);
-
         // §4.1: с шансом 50 % гильза выпадает под ноги
         if (world.rand.nextBoolean()) {
             world.spawnEntity(new EntityItem(world,
@@ -129,6 +140,7 @@ public class ItemFluxRevolver extends Item {
      * оплачивается кулдауном: 15 тиков за патрон (§5).
      */
     private void reload(ItemStack stack, EntityPlayer player) {
+        boolean server = !player.world.isRemote;
         int have = ammoCount(stack);
         int type = ammoType(stack);
 
@@ -169,9 +181,11 @@ public class ItemFluxRevolver extends Item {
             setAmmo(stack, foundType, have + loaded);
             player.getCooldownTracker().setCooldown(this,
                     RELOAD_TICKS_PER_ROUND * loaded);
-            player.world.playSound(null, player.posX, player.posY, player.posZ,
-                    SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE,
-                    SoundCategory.PLAYERS, 0.5f, 1.4f);
+            if (server) {
+                player.world.playSound(null, player.posX, player.posY, player.posZ,
+                        SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE,
+                        SoundCategory.PLAYERS, 0.5f, 1.4f);
+            }
         }
     }
 
