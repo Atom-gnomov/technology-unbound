@@ -13,6 +13,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import unboundtech.UnboundTech;
 import unboundtech.common.items.ItemCartridge;
 import unboundtech.common.items.ItemElectricScribingTools;
+import unboundtech.common.items.ItemFluxArquebus;
 import unboundtech.common.items.ItemFluxRevolver;
 import unboundtech.common.items.ItemChargedSpark;
 import unboundtech.common.items.ItemFocusCharge;
@@ -56,6 +57,9 @@ public final class UTItems {
     public static final String CARTRIDGE_INCENDIARY = "cartridge_incendiary";
     public static final String CARTRIDGE_ILLUMINATING = "cartridge_illuminating";
     public static final String FLUX_REVOLVER = "flux_revolver";
+    public static final String FLUX_ARQUEBUS = "flux_arquebus";
+    public static final String CARTRIDGE_VIS = "cartridge_vis";
+    public static final String CARTRIDGE_FLUX = "cartridge_flux";
     public static final String FOCUS_CHARGE = "focus_charge";
     public static final String CHARGED_SPARK = "charged_spark";
     public static final String RING_FRAME = "ring_frame";
@@ -113,6 +117,9 @@ public final class UTItems {
     public static Item cartridgeIncendiary;
     public static Item cartridgeIlluminating;
     public static Item fluxRevolver;
+    public static Item fluxArquebus;
+    public static Item cartridgeVis;
+    public static Item cartridgeFlux;
     public static Item focusCharge;
     public static Item chargedSpark;
     public static Item ringFrame;
@@ -173,6 +180,13 @@ public final class UTItems {
                 unboundtech.common.entities.EntityFluxBullet.TYPE_ILLUMINATING,
                 "unboundtech.tooltip.cartridge_illuminating"), CARTRIDGE_ILLUMINATING);
         fluxRevolver = make(new ItemFluxRevolver(), FLUX_REVOLVER);
+        fluxArquebus = make(new ItemFluxArquebus(), FLUX_ARQUEBUS);
+        cartridgeVis = make(new ItemCartridge(
+                unboundtech.common.entities.EntityFluxBullet.TYPE_VIS,
+                "unboundtech.tooltip.cartridge_vis"), CARTRIDGE_VIS);
+        cartridgeFlux = make(new ItemCartridge(
+                unboundtech.common.entities.EntityFluxBullet.TYPE_FLUX,
+                "unboundtech.tooltip.cartridge_flux"), CARTRIDGE_FLUX);
         focusCharge = make(new ItemFocusCharge(), FOCUS_CHARGE);
         chargedSpark = make(new ItemChargedSpark(), CHARGED_SPARK);
         ringFrame = make(new ItemSchemaRing(ItemSchemaRing.Variant.FRAME), RING_FRAME);
@@ -208,6 +222,12 @@ public final class UTItems {
                         .add(thaumcraft.api.aspects.Aspect.ENERGY, 4)
                         .add(thaumcraft.api.aspects.Aspect.MECHANISM, 3)
                         .add(thaumcraft.api.aspects.Aspect.MAGIC, 2));
+        thaumcraft.api.ThaumcraftApi.registerObjectTag(new ItemStack(fluxArquebus),
+                new thaumcraft.api.aspects.AspectList()
+                        .add(thaumcraft.api.aspects.Aspect.WEAPON, 12)
+                        .add(thaumcraft.api.aspects.Aspect.METAL, 10)
+                        .add(thaumcraft.api.aspects.Aspect.MECHANISM, 6)
+                        .add(thaumcraft.api.aspects.Aspect.MAGIC, 5));
         thaumcraft.api.ThaumcraftApi.registerObjectTag(new ItemStack(fluxRevolver),
                 new thaumcraft.api.aspects.AspectList()
                         .add(thaumcraft.api.aspects.Aspect.METAL, 8)
@@ -232,6 +252,7 @@ public final class UTItems {
                 thaumiumWrench, electricScribingTools, fluxCharge, thaumicOverclocker,
                 nanoThaumHelmet, nanoThaumChestplate, nanoThaumLeggings, nanoThaumBoots,
                 casing, cartridgeIncendiary, cartridgeIlluminating, fluxRevolver,
+                fluxArquebus, cartridgeVis, cartridgeFlux,
                 focusCharge, chargedSpark, ringFrame, ringDrive, ringStride, ringBrace,
         };
     }

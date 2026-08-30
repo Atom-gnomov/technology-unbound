@@ -24,6 +24,22 @@ public final class UTModels {
     private UTModels() {
     }
 
+    /**
+     * Аркебуза: обёртка модели пишет TransformType до TEISR-рендера —
+     * анимации отдачи/шомпола положены только в руках (ТЗ п.1).
+     */
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public static void onModelBake(net.minecraftforge.client.event.ModelBakeEvent event) {
+        ModelResourceLocation key = new ModelResourceLocation(
+                UTItems.fluxArquebus.getRegistryName(), "inventory");
+        net.minecraft.client.renderer.block.model.IBakedModel base =
+                event.getModelRegistry().getObject(key);
+        if (base != null) {
+            event.getModelRegistry().putObject(key, new PerspectiveCapture(base));
+        }
+    }
+
     @SubscribeEvent
     @SideOnly(Side.CLIENT)
     public static void registerModels(ModelRegistryEvent event) {
@@ -43,6 +59,8 @@ public final class UTModels {
         // builtin/entity даёт только display-повороты.
         UTItems.fluxRevolver.setTileEntityItemStackRenderer(
                 new RenderFluxRevolver());
+        UTItems.fluxArquebus.setTileEntityItemStackRenderer(
+                new RenderFluxArquebus());
         for (Block block : UTBlocks.all()) {
             Item item = Item.getItemFromBlock(block);
             ModelLoader.setCustomModelResourceLocation(item, 0,

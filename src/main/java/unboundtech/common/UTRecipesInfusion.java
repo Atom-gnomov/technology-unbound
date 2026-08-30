@@ -22,6 +22,33 @@ public final class UTRecipesInfusion {
     }
 
     /**
+     * Флюкс-Аркебуза (`flux_arquebus.md` §6): первый ствол, требующий
+     * алтаря. Центр — Флюкс-Револьвер (расходуется), нестабильность 5
+     * (нижняя граница вилки T4 после калибровки).
+     */
+    public static InfusionRecipe registerFluxArquebus() {
+        ItemStack fibre = IC2Handles.item("crafting", "carbon_fibre");
+        if (fibre.isEmpty()) {
+            UTLog.warn("Flux Arquebus recipe skipped: IC2 carbon fibre not found");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.FLUX_ARQUEBUS,
+                new ItemStack(UTItems.fluxArquebus),
+                5,
+                new AspectList().add(Aspect.WEAPON, 32).add(Aspect.FIRE, 24)
+                        .add(Aspect.MECHANISM, 16).add(Aspect.MAGIC, 16),
+                new ItemStack(UTItems.fluxRevolver),
+                new ItemStack[]{
+                        new ItemStack(UTItems.temperedIngot),
+                        new ItemStack(ConfigItems.itemShard, 1, 1),
+                        new ItemStack(UTItems.temperedIngot),
+                        new ItemStack(ConfigItems.itemShard, 1, 4),
+                        fibre,
+                });
+    }
+
+    /**
      * Фокус Заряда (`techno_foci.md` §6): матрица инфузии, нестабильность
      * 3. Центр по карточке — «пустой фокус ТК», которого в TC4 не
      * существует (второй такой случай после «флюкса конденсатора») —

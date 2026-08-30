@@ -55,6 +55,8 @@ public final class UTCrafting {
     public static IRecipe casingRecipe;
     public static IRecipe cartridgeIncendiary;
     public static IRecipe cartridgeIlluminating;
+    public static IRecipe cartridgeVis;
+    public static IRecipe cartridgeFlux;
 
     private UTCrafting() {
     }
@@ -111,6 +113,16 @@ public final class UTCrafting {
                 new ItemStack(UTItems.cartridgeIlluminating),
                 new ItemStack(UTItems.casing),
                 new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1, 1));
+        // T4 (cartridges.md 4.2): вис-патрон — полный фиал любого
+        // примала; флюкс-патрон — Флюкс-Заряд конденсатора.
+        cartridgeVis = shapelessStack(event, "cartridge_vis",
+                new ItemStack(UTItems.cartridgeVis),
+                new ItemStack(UTItems.casing),
+                new ItemStack(thaumcraft.common.config.ConfigItems.itemEssence, 1, 1));
+        cartridgeFlux = shapelessStack(event, "cartridge_flux",
+                new ItemStack(UTItems.cartridgeFlux),
+                new ItemStack(UTItems.casing),
+                new ItemStack(UTItems.fluxCharge));
 
         // --- Электрочернильница: чернильница ТК + слиток + RE-батарея (§6).
         // Сетка в карточке не задана — значит бесформенный рецепт. ---

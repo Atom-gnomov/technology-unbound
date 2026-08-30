@@ -70,6 +70,9 @@ public final class UTResearch {
     /** Флюкс-Револьвер: вход в оружейную ветку, с гильзой и патронами T3. */
     public static final String FLUX_REVOLVER = "FLUX_REVOLVER";
 
+    /** Флюкс-Аркебуза: T4-ствол, открывает вис- и флюкс-патроны. */
+    public static final String FLUX_ARQUEBUS = "FLUX_ARQUEBUS";
+
     /** Техномаг: лорная запись об изгнаннике двух школ (§3.1). */
     public static final String TECHNOMANCER = "TECHNOMANCER";
 
@@ -475,6 +478,26 @@ public final class UTResearch {
                         recipePage(unboundtech.common.UTCrafting.casingRecipe),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIncendiary),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIlluminating)))
+                .registerResearchItem();
+
+        // Аркебуза: Telum 16, Ignis 12, Machina 10, Praecantatio 8 = 46;
+        // complexity 3, родитель — револьвер. Выдаёт вис- и флюкс-патроны.
+        new ResearchItem(
+                FLUX_ARQUEBUS, CATEGORY,
+                new AspectList().add(Aspect.WEAPON, 16).add(Aspect.FIRE, 12)
+                        .add(Aspect.MECHANISM, 10).add(Aspect.MAGIC, 8),
+                10, -7, 3,
+                new ItemStack(unboundtech.common.UTItems.fluxArquebus))
+                .setParents(FLUX_REVOLVER)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.FLUX_ARQUEBUS.1"),
+                        new ResearchPage("unboundtech.research_page.FLUX_ARQUEBUS.2"),
+                        new ResearchPage("unboundtech.research_page.FLUX_ARQUEBUS.3"),
+                        unboundtech.common.UTRecipesT3.fluxArquebus == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.fluxArquebus),
+                        recipePage(unboundtech.common.UTCrafting.cartridgeVis),
+                        recipePage(unboundtech.common.UTCrafting.cartridgeFlux)))
                 .registerResearchItem();
 
         // Техномаг: лорная запись, объясняющая, почему мод существует

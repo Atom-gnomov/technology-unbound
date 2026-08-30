@@ -249,3 +249,17 @@ tc.research_name.TECHNOMANCER=Exile of Two Schools
 tc.research_text.TECHNOMANCER=Curses both sides equally
 unboundtech.research_page.TECHNOMANCER.1=The tower threw him out for measuring vis with an ammeter. The workshop — because a machine spoke in his presence. Now he lives on the outskirts, in a shed under a tin roof, mending for both schools what they broke in each other. He takes emeralds and curses both sides equally.
 unboundtech.research_page.TECHNOMANCER.2=Thaumaturges reject science: the measurable denies revelation, and calculation cheapens years given to the knowing of meanings. Mechanists pay in kind: what cannot be taken apart does not, for them, exist.<BR><BR>The technomancer is the one who refused to choose, and so is needed by neither. Had the schools spoken to each other, the bridge between them would have been built without you.<BR><BR>He gladly buys up Charged Sparks — he of all people knows their worth. He will sell them to no one, at any price.
+
+# --- Flux Arquebus and T4 cartridges ---
+item.unboundtech.flux_arquebus.name=Flux Arquebus
+item.unboundtech.cartridge_vis.name=Vis Cartridge
+item.unboundtech.cartridge_flux.name=Flux Cartridge
+unboundtech.tooltip.cartridge_vis=A phial of vis in a casing: half the blow passes any armour
+unboundtech.tooltip.cartridge_flux=A Flux Charge in a casing: a cloud of murk at the point of impact, friend or foe
+unboundtech.tooltip.arquebus_loaded=Chambered
+unboundtech.tooltip.arquebus_empty=Barrel empty — Sneak-use with a cartridge in inventory
+tc.research_name.FLUX_ARQUEBUS=Flux Arquebus
+tc.research_text.FLUX_ARQUEBUS=One shot that decides
+unboundtech.research_page.FLUX_ARQUEBUS.1=The revolver forgives: six tries, and one will land. The arquebus does not forgive and does not ask forgiveness. One charge, a long faceted barrel, and forty heartbeats to seat the next — shoot as if the shot were your last, because it is.<BR><BR>In return it strikes twice as far, four times as true, and through: the first taker gets the full blow, the second behind him — half. No mechanist barrel can do that.
+unboundtech.research_page.FLUX_ARQUEBUS.2=It cannot be assembled on a bench: this is a work, not a trinket. The infusion altar takes your revolver whole — polite predictability and all — and draws it out into a cubit and a half of faceted barrel on a greatwood stock.<BR><BR>The recoil shoves in earnest: mind the cliff edge. Casings still fall at your feet — bend down.
+unboundtech.research_page.FLUX_ARQUEBUS.3=Two new charges for the long barrel.<BR><BR>The vis cartridge — a full phial in a casing: half the blow passes any armour, as vis itself does.<BR><BR>The flux cartridge — thickened murk: a cloud of flux gas rises at the point of impact, and it does not care who stands in it. Do not shoot at your own feet. Seriously.

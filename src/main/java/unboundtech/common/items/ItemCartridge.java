@@ -19,6 +19,16 @@ public class ItemCartridge extends Item {
     public final int bulletType;
     private final String effectKey;
 
+    /** Ключ типа для ланг-строк и текстур. */
+    public static String key(int bulletType) {
+        switch (bulletType) {
+            case 1: return "illuminating";
+            case 2: return "vis";
+            case 3: return "flux";
+            default: return "incendiary";
+        }
+    }
+
     public ItemCartridge(int bulletType, String effectKey) {
         this.bulletType = bulletType;
         this.effectKey = effectKey;
