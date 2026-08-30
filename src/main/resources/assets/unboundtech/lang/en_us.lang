@@ -263,3 +263,15 @@ tc.research_text.FLUX_ARQUEBUS=One shot that decides
 unboundtech.research_page.FLUX_ARQUEBUS.1=The revolver forgives: six tries, and one will land. The arquebus does not forgive and does not ask forgiveness. One charge, a long faceted barrel, and forty heartbeats to seat the next — shoot as if the shot were your last, because it is.<BR><BR>In return it strikes twice as far, four times as true, and through: the first taker gets the full blow, the second behind him — half. No mechanist barrel can do that.
 unboundtech.research_page.FLUX_ARQUEBUS.2=It cannot be assembled on a bench: this is a work, not a trinket. The infusion altar takes your revolver whole — polite predictability and all — and draws it out into a cubit and a half of faceted barrel on a greatwood stock.<BR><BR>The recoil shoves in earnest: mind the cliff edge. Casings still fall at your feet — bend down.
 unboundtech.research_page.FLUX_ARQUEBUS.3=Two new charges for the long barrel.<BR><BR>The vis cartridge — a full phial in a casing: half the blow passes any armour, as vis itself does.<BR><BR>The flux cartridge — thickened murk: a cloud of flux gas rises at the point of impact, and it does not care who stands in it. Do not shoot at your own feet. Seriously.
+
+# --- Quantum Hybrid armour (prototype, both paths) ---
+item.unboundtech.quant_void_helmet.name=Quantum-Void Helmet
+item.unboundtech.quant_void_chestplate.name=Quantum-Void Chestplate
+item.unboundtech.quant_void_leggings.name=Quantum-Void Leggings
+item.unboundtech.quant_void_boots.name=Quantum-Void Boots
+item.unboundtech.quant_ichor_helmet.name=Quantum-Ichor Helmet
+item.unboundtech.quant_ichor_chestplate.name=Quantum-Ichor Chestplate
+item.unboundtech.quant_ichor_leggings.name=Quantum-Ichor Leggings
+item.unboundtech.quant_ichor_boots.name=Quantum-Ichor Boots
+unboundtech.tooltip.quant_void=Darkness that glows only when breached
+unboundtech.tooltip.quant_ichor=Gold whose pulse never fades

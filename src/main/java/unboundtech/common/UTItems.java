@@ -20,6 +20,7 @@ import unboundtech.common.items.ItemFocusCharge;
 import unboundtech.common.items.ItemSchemaRing;
 import unboundtech.common.items.ItemFluxCharge;
 import unboundtech.common.items.ItemNanoThaumArmor;
+import unboundtech.common.items.ItemQuantumHybridArmor;
 import unboundtech.common.items.ItemTemperedArmor;
 import unboundtech.common.items.ItemThaumicOverclocker;
 import unboundtech.common.items.ItemTemperedTools;
@@ -67,6 +68,15 @@ public final class UTItems {
     public static final String RING_STRIDE = "ring_stride";
     public static final String RING_BRACE = "ring_brace";
 
+    public static final String QUANT_VOID_HELMET = "quant_void_helmet";
+    public static final String QUANT_VOID_CHESTPLATE = "quant_void_chestplate";
+    public static final String QUANT_VOID_LEGGINGS = "quant_void_leggings";
+    public static final String QUANT_VOID_BOOTS = "quant_void_boots";
+    public static final String QUANT_ICHOR_HELMET = "quant_ichor_helmet";
+    public static final String QUANT_ICHOR_CHESTPLATE = "quant_ichor_chestplate";
+    public static final String QUANT_ICHOR_LEGGINGS = "quant_ichor_leggings";
+    public static final String QUANT_ICHOR_BOOTS = "quant_ichor_boots";
+
     public static final String NANO_THAUM_HELMET = "nano_thaum_helmet";
     public static final String NANO_THAUM_CHESTPLATE = "nano_thaum_chestplate";
     public static final String NANO_THAUM_LEGGINGS = "nano_thaum_leggings";
@@ -113,6 +123,14 @@ public final class UTItems {
     public static Item nanoThaumChestplate;
     public static Item nanoThaumLeggings;
     public static Item nanoThaumBoots;
+    public static Item quantVoidHelmet;
+    public static Item quantVoidChestplate;
+    public static Item quantVoidLeggings;
+    public static Item quantVoidBoots;
+    public static Item quantIchorHelmet;
+    public static Item quantIchorChestplate;
+    public static Item quantIchorLeggings;
+    public static Item quantIchorBoots;
     public static Item casing;
     public static Item cartridgeIncendiary;
     public static Item cartridgeIlluminating;
@@ -163,6 +181,22 @@ public final class UTItems {
         electricScribingTools = make(new ItemElectricScribingTools(), ELECTRIC_SCRIBING);
         fluxCharge = make(new ItemFluxCharge(), FLUX_CHARGE);
         thaumicOverclocker = make(new ItemThaumicOverclocker(), THAUMIC_OVERCLOCKER);
+        quantVoidHelmet = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.HEAD, 0), QUANT_VOID_HELMET);
+        quantVoidChestplate = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.CHEST, 0), QUANT_VOID_CHESTPLATE);
+        quantVoidLeggings = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.LEGS, 0), QUANT_VOID_LEGGINGS);
+        quantVoidBoots = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.FEET, 0), QUANT_VOID_BOOTS);
+        quantIchorHelmet = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.HEAD, 1), QUANT_ICHOR_HELMET);
+        quantIchorChestplate = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.CHEST, 1), QUANT_ICHOR_CHESTPLATE);
+        quantIchorLeggings = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.LEGS, 1), QUANT_ICHOR_LEGGINGS);
+        quantIchorBoots = make(new ItemQuantumHybridArmor(NANO_THAUM_PROTO,
+                EntityEquipmentSlot.FEET, 1), QUANT_ICHOR_BOOTS);
         nanoThaumHelmet = make(new ItemNanoThaumArmor(NANO_THAUM_PROTO,
                 EntityEquipmentSlot.HEAD), NANO_THAUM_HELMET);
         nanoThaumChestplate = make(new ItemNanoThaumArmor(NANO_THAUM_PROTO,
@@ -251,6 +285,8 @@ public final class UTItems {
                 temperedSword, temperedPickaxe, temperedAxe, temperedShovel, temperedHoe,
                 thaumiumWrench, electricScribingTools, fluxCharge, thaumicOverclocker,
                 nanoThaumHelmet, nanoThaumChestplate, nanoThaumLeggings, nanoThaumBoots,
+                quantVoidHelmet, quantVoidChestplate, quantVoidLeggings, quantVoidBoots,
+                quantIchorHelmet, quantIchorChestplate, quantIchorLeggings, quantIchorBoots,
                 casing, cartridgeIncendiary, cartridgeIlluminating, fluxRevolver,
                 fluxArquebus, cartridgeVis, cartridgeFlux,
                 focusCharge, chargedSpark, ringFrame, ringDrive, ringStride, ringBrace,
