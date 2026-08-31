@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-"""Текстуры Квант-Гибридной брони v2 — после разноса владельца
-(«лишена стиля, детали не заметны, контрастов нет»):
+"""Текстуры Квант-Гибридной брони v3 — «слияние 1+1=3» по вердикту
+спора художников (wf_717f1cef-3a6, арбитраж):
 
- - ПОФЕЙСОВАЯ отрисовка каждого бокса: рамка-кант, заливка, фаска-блик
-   сверху-слева, тень снизу-справа, заклёпки на пластинах — а не плоский
-   шум по всей развёртке;
- - КОНТРАСТ трёх уровней: тёмный поддоспешник (узкая нижняя рампа) ↔
-   пластины (широкая рампа со светлыми фасками) ↔ яркие акценты
-   (латунь у Пустотного, сталь у Ихорного);
- - спецдетали руками: фасеточный самоцвет, читаемые руны-глифы,
-   пломбы ТК с строками, гримуар с корешком и застёжкой, плащ со
-   складками и рваным краем;
- - бипед-зоны — реальные quantum_1/quantum_2 IC2 в ТЁМНОЙ рампе
-   поддоспешника (структура тени сохраняется перекраской по яркости).
+ФОРМУЛА: единица слияния — НЕПРЕРЫВНАЯ СЕТЬ КАНАЛОВ, материал —
+ЯЧЕИСТЫЙ КВАНТ-КОМПОЗИТ. Каналы стартуют в РОДНЫХ жилах quantum_1/2
+(жилы сохраняются, не глушатся тинтом), переползают на пластины и
+кончаются узлами (самоцвет/лампа/сопло/эмблема). Каждый дэш — рунный
+микро-глиф («сломанный угол»). Пластины — решётка IC2, ячейки залиты
+металлом ТК. Латунь/сталь — только 1px муфты у узлов. Пути различаются
+СУДЬБОЙ одной сети: Пустота выпила каналы (тёмные борозды с призрачным
+ободком, свет только в узлах + 2-3 затухающих дэша-затравки), Ихор
+ТЕЧЁТ по ним (бегущие золотые дэши покадрово, капли с кромок).
+
+Тест нано-таума: ни про одну деталь нельзя сказать «это IC2» или
+«это ТК». Ровно 2 эмиссива на путь. Геометрия модели не тронута.
 """
 import io
 import json
@@ -28,26 +29,31 @@ IC2_JAR = r"C:\Users\Game-On-Dp\AppData\Roaming\.minecraft\mods\industrialcraft-
 
 S = 2   # 2 px на юнит: файл 256x128, плоскость 128x64
 
-# --- рампы: поддоспешник НАМЕРЕННО тёмный, пластины — широкие ---
-VOID_SUIT = [(0x0E, 0x0A, 0x16), (0x16, 0x10, 0x20), (0x20, 0x16, 0x2E),
-             (0x2A, 0x1E, 0x3C)]
-VOID_PLATE = [(0x1A, 0x0F, 0x28), (0x2C, 0x18, 0x44), (0x41, 0x22, 0x60),
-              (0x57, 0x33, 0x7E), (0x75, 0x48, 0xA4), (0x9A, 0x6C, 0xCB)]
-ICHOR_SUIT = [(0x1A, 0x13, 0x0C), (0x28, 0x1E, 0x12), (0x3A, 0x2C, 0x1A),
-              (0x4C, 0x3A, 0x24)]
-GOLD = [(0x6E, 0x50, 0x16), (0x96, 0x74, 0x2A), (0xB4, 0x8E, 0x3C),
-        (0xD0, 0xAC, 0x52), (0xE8, 0xC0, 0x60), (0xF0, 0xDF, 0xA0)]
-BRASS = [(0x2E, 0x24, 0x0C), (0x50, 0x3E, 0x14), (0x74, 0x59, 0x1E),
-         (0x96, 0x74, 0x2A), (0xB4, 0x8E, 0x3C), (0xD0, 0xAC, 0x52)]
-STEEL = [(0x14, 0x13, 0x1A), (0x24, 0x22, 0x2C), (0x3A, 0x38, 0x46),
-         (0x52, 0x50, 0x60), (0x70, 0x6D, 0x7E), (0x92, 0x8F, 0xA0)]
-CLOTH_VOID = [(0x0E, 0x0A, 0x18), (0x18, 0x11, 0x28), (0x24, 0x1A, 0x3A),
-              (0x30, 0x24, 0x4C)]
-CLOTH_GOLD = [(0x4A, 0x36, 0x14), (0x64, 0x4A, 0x1E), (0x80, 0x60, 0x2A),
-              (0x9C, 0x78, 0x38)]
-BOOK_VOID = [(0x2E, 0x20, 0x42), (0x42, 0x2E, 0x5C), (0x58, 0x40, 0x78)]
-BOOK_GOLD = [(0x4E, 0x36, 0x1E), (0x64, 0x46, 0x28), (0x7A, 0x57, 0x33)]
+# === палитры вердикта (§2) ===
+VOID_SUIT = [(0x14, 0x10, 0x1C), (0x1C, 0x16, 0x26), (0x26, 0x1D, 0x34),
+             (0x2A, 0x21, 0x36)]
+VOID_CELL = [(0x3A, 0x24, 0x50), (0x4E, 0x33, 0x70), (0x6B, 0x4A, 0x94),
+             (0x9B, 0x7B, 0xD4)]
+VOID_TRENCH = (0x0A, 0x07, 0x14)
+VOID_RIM = (0x3E, 0x2E, 0x58)
+CLOTH_VOID = [(0x10, 0x0C, 0x18), (0x16, 0x10, 0x1F), (0x1A, 0x14, 0x28)]
+DEAD_THREAD = (0x0B, 0x08, 0x12)
+
+ICHOR_SUIT = [(0x1E, 0x15, 0x0C), (0x2A, 0x1E, 0x10), (0x38, 0x28, 0x1A),
+              (0x46, 0x33, 0x1E)]
+ICHOR_CELL = [(0xB4, 0x8E, 0x3C), (0xD0, 0xAC, 0x52), (0xE8, 0xC0, 0x60),
+              (0xF0, 0xDF, 0xA0)]
+ICHOR_BED = (0x6E, 0x50, 0x16)
+ICHOR_DASH = (0xD0, 0xAC, 0x52)
+GILD = (0x96, 0x74, 0x2A)
+
+BRASS = [(0x50, 0x3E, 0x14), (0x74, 0x59, 0x1E), (0x96, 0x74, 0x2A),
+         (0xB4, 0x8E, 0x3C), (0xD0, 0xAC, 0x52)]
+STEEL = [(0x24, 0x22, 0x2C), (0x3A, 0x38, 0x46), (0x52, 0x50, 0x60),
+         (0x70, 0x6D, 0x7E), (0x92, 0x8F, 0xA0)]
 DARK_HOUSING = [(0x0C, 0x0A, 0x10), (0x16, 0x13, 0x1C), (0x22, 0x1E, 0x2C)]
+COMPOSITE = {True: (0x1C, 0x16, 0x26), False: (0x2A, 0x1E, 0x10)}
+
 LILAC = (0xC4, 0x92, 0xE8)
 BLUE = (0x7F, 0xD4, 0xFF)
 GOLD_GLOW = (0xFF, 0xD8, 0x73)
@@ -91,14 +97,11 @@ UV = {
     "cape_l":     (88, 36, 6, 5, 1, "cape"),
 }
 
-GLOW_PARTS = {
-    "gem": "both", "medallion": "both", "lamp": "both", "slit": "both",
-    "crystal": "both", "hipmed": "both", "nozzle": "ichor",
-}
+# узлы, светящиеся у ОБОИХ путей (маски в glow-кадрах)
+NODE_GLOW = ("gem", "medallion", "hipmed", "crystal", "slit")
 
 
-def faces_px(u, v, w, h, d):
-    """Шесть граней развёртки бокса, в пикселях файла."""
+def faces(u, v, w, h, d):
     def r(a, b, c, e):
         return (a * S, b * S, c * S, e * S)
     return {
@@ -122,7 +125,159 @@ def lum(c):
     return (c[0] * 299 + c[1] * 587 + c[2] * 114) // 1000
 
 
-def tint(img, ramp):
+# ==================== сеть каналов ====================
+
+class Channels:
+    """Реестр полилиний (§0.1): база рисует русла, glow — дэши/узлы."""
+
+    def __init__(self):
+        self.lines = []    # (points, end_type)
+        self.nodes = []    # (x, y, type)
+        self.drips = []    # (x, y) кончики капель (Ихор)
+
+    def add(self, points, end="node"):
+        self.lines.append((points, end))
+        if end != "edge":
+            ex, ey = points[-1]
+            self.nodes.append((ex, ey, end))
+
+
+def polyline_pixels(points):
+    """Пиксели вдоль ломаной (сегменты орто/диагональ)."""
+    out = []
+    for i in range(len(points) - 1):
+        x0, y0 = points[i]
+        x1, y1 = points[i + 1]
+        steps = max(abs(x1 - x0), abs(y1 - y0))
+        for s in range(steps + 1):
+            x = x0 + (x1 - x0) * s // max(1, steps)
+            y = y0 + (y1 - y0) * s // max(1, steps)
+            if not out or out[-1] != (x, y):
+                out.append((x, y))
+    return out
+
+
+def dash_runes(px, points, colour, phase=0, gap=1, dash=3, broken=True,
+               fade=None):
+    """Пунктир-руны вдоль ломаной (§0.2): дэш 2-3px, разрыв 1px, у дэша
+    один пиксель смещён перпендикулярно («сломанный угол» = глиф)."""
+    pix = polyline_pixels(points)
+    period = dash + gap
+    for i, (x, y) in enumerate(pix):
+        k = (i + phase) % period
+        if k >= dash:
+            continue
+        c = colour
+        if fade is not None:
+            seg = (i + phase) // period
+            f = fade(seg)
+            if f <= 0:
+                continue
+            c = tuple(int(v * f) for v in colour)
+        px[x, y] = c + (255,)
+        if broken and k == 1:
+            # сломанный угол: перпендикулярный пиксель
+            nx, ny = (x, y - 1) if (i > 0 and pix[i - 1][1] == y) else (x + 1, y)
+            if 0 <= nx < 256 and 0 <= ny < 128:
+                px[nx, ny] = c + (255,)
+
+
+def carve_channel(px, points, void):
+    """Русло в базе: Пустота — траншея с призрачным ободком, Ихор —
+    русло-борозда (золото добавит glow)."""
+    pix = polyline_pixels(points)
+    for (x, y) in pix:
+        if void:
+            px[x, y] = VOID_TRENCH + (255,)
+            for (nx, ny) in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                if 0 <= nx < 256 and 0 <= ny < 128 and (nx, ny) not in pix[
+                        max(0, pix.index((x, y)) - 2):pix.index((x, y)) + 3]:
+                    cur = px[nx, ny]
+                    if cur[3] == 255 and cur[:3] != VOID_TRENCH:
+                        px[nx, ny] = VOID_RIM + (255,)
+        else:
+            px[x, y] = ICHOR_BED + (255,)
+    if not void:
+        dash_runes(px, points, ICHOR_DASH)
+
+
+def hex_node(px, x, y, void):
+    """Гекс-гнездо 2x2: тёмный металл + 2 угловых пикселя муфты (§1.1)."""
+    accent = BRASS[3] if void else STEEL[3]
+    for (dx, dy) in ((0, 0), (1, 0), (0, 1), (1, 1)):
+        px[x + dx, y + dy] = DARK_HOUSING[1] + (255,)
+    px[x, y] = accent + (255,)
+    px[x + 1, y + 1] = accent + (255,)
+
+
+# ==================== фактуры ====================
+
+def face_cellplate(px, rect, void, channels=None, entry=None, node_at=None):
+    """Ячеистый квант-композит (§1.1): решётка тёмного композита,
+    ячейки залиты металлом ТК; муфта только в точке входа канала."""
+    x0, y0, w, h = rect
+    if w <= 0 or h <= 0:
+        return
+    cell = VOID_CELL if void else ICHOR_CELL
+    comp = COMPOSITE[void]
+    for y in range(y0, y0 + h):
+        for x in range(x0, x0 + w):
+            if x in (x0, x0 + w - 1) or y in (y0, y0 + h - 1):
+                c = DARK_HOUSING[0]           # внешний кант — тёмный композит
+            elif (x - x0) % 3 == 0 or (y - y0) % 3 == 0:
+                c = comp                      # линии решётки
+            else:
+                cx, cy = (x - x0) // 3, (y - y0) // 3
+                i = (cx * 3 + cy * 5) % 3
+                c = cell[i]
+                if (cx * 7 + cy * 11) % 6 == 0:
+                    c = cell[3]               # редкий блик верхней ступенью
+            px[x, y] = c + (255,)
+    if channels is not None and entry is not None and node_at is not None:
+        ex, ey = entry
+        nx, ny = node_at
+        points = [(ex, ey), (nx, ey), (nx, ny)] if ex != nx else [(ex, ey), (nx, ny)]
+        channels.add(points)
+        carve_channel(px, points, void)
+        hex_node(px, nx, ny, void)
+        # муфта акцент-металла в точке входа
+        px[ex, ey] = (BRASS[4] if void else STEEL[4]) + (255,)
+
+
+def face_suitweave(px, rect, void):
+    x0, y0, w, h = rect
+    suit = VOID_SUIT if void else ICHOR_SUIT
+    for y in range(y0, y0 + h):
+        for x in range(x0, x0 + w):
+            i = 1
+            if (x // 2 + y // 2) % 3 == 0:
+                i = 0
+            if (x * 3 + y * 5) % 13 == 0:
+                i = 2
+            px[x, y] = suit[i] + (255,)
+
+
+def gem_face(px, rect, void, core):
+    x0, y0, w, h = rect
+    for y in range(y0, y0 + h):
+        for x in range(x0, x0 + w):
+            if x in (x0, x0 + w - 1) or y in (y0, y0 + h - 1):
+                c = DARK_HOUSING[0]           # кант композита (§1.2)
+            else:
+                cx = abs((x - x0) - w / 2 + 0.5)
+                cy = abs((y - y0) - h / 2 + 0.5)
+                c = core if cx + cy < max(w, h) / 2.5 else DARK_HOUSING[1]
+            px[x, y] = c + (255,)
+    # ровно 2 лапки акцент-металла
+    px[x0, y0] = (BRASS[3] if void else STEEL[3]) + (255,)
+    px[x0 + w - 1, y0 + h - 1] = (BRASS[3] if void else STEEL[3]) + (255,)
+
+
+# ==================== генерация базы ====================
+
+def recolour_suit(img, void):
+    """§0.3: жилы кванта СОХРАНЯЮТСЯ — верхние 25% яркости остаются
+    трассами (дэши цвета пути), остальное — тёмный композит."""
     px = img.load()
     w, h = img.size
     lo, hi = 255, 0
@@ -133,167 +288,203 @@ def tint(img, ramp):
                 l = lum(c)
                 lo, hi = min(lo, l), max(hi, l)
     span = max(1, hi - lo)
+    suit = VOID_SUIT if void else ICHOR_SUIT
+    # критик v3: порог 75% захватывал целые панели кванта → «диагональный
+    # дождь»; жилы — только верхние 12% яркости (настоящие светящиеся
+    # линии IC2), дэши длинные с пофазовым сдвигом по регионам
+    vein_cut = lo + span * 0.88
     for y in range(h):
         for x in range(w):
             c = px[x, y]
-            if c[3] > 8:
-                level = (lum(c) - lo) * (len(ramp) - 1) // span
-                px[x, y] = ramp[level] + (c[3],)
+            if c[3] <= 8:
+                continue
+            if lum(c) >= vein_cut:
+                phase = (x // 8 + y // 8) % 5
+                on = ((x + y // 2 + phase) % 6) < 4
+                if void:
+                    px[x, y] = (VOID_TRENCH if on else VOID_RIM) + (c[3],)
+                else:
+                    px[x, y] = (ICHOR_DASH if on else ICHOR_BED) + (c[3],)
+            else:
+                level = (lum(c) - lo) * (len(suit) - 1) // span
+                px[x, y] = suit[min(len(suit) - 1, level)] + (c[3],)
     return img
 
 
-def face_plate(px, rect, ramp, rivets=False):
-    """Пластина: кант, заливка, фаска сверху-слева, тень снизу-справа."""
-    x0, y0, w, h = rect
-    if w <= 0 or h <= 0:
-        return
-    for y in range(y0, y0 + h):
-        for x in range(x0, x0 + w):
-            edge_l = x == x0
-            edge_t = y == y0
-            edge_r = x == x0 + w - 1
-            edge_b = y == y0 + h - 1
-            if edge_l or edge_t or edge_r or edge_b:
-                c = ramp[0]                      # тёмный кант
-            elif x == x0 + 1 or y == y0 + 1:
-                c = ramp[min(len(ramp) - 1, 4)]  # фаска-блик
-            elif x == x0 + w - 2 or y == y0 + h - 2:
-                c = ramp[1]                      # внутренняя тень
-            else:
-                c = ramp[2] if (x + y) % 5 else ramp[3]
-            px[x, y] = c + (255,)
-    if rivets and w >= 6 and h >= 6:
-        hi = ramp[min(len(ramp) - 1, 5)]
-        for (rx, ry) in ((x0 + 1, y0 + 1), (x0 + w - 2, y0 + 1),
-                         (x0 + 1, y0 + h - 2), (x0 + w - 2, y0 + h - 2)):
-            px[rx, ry] = hi + (255,)
-
-
-def face_flat(px, rect, ramp):
-    x0, y0, w, h = rect
-    for y in range(y0, y0 + h):
-        for x in range(x0, x0 + w):
-            i = 1 if (x + y) % 3 else 2
-            if y == y0:
-                i = min(len(ramp) - 1, i + 1)
-            if y == y0 + h - 1:
-                i = 0
-            px[x, y] = ramp[min(i, len(ramp) - 1)] + (255,)
-
-
-def paint_box(px, name, u, v, w, h, d, role, void):
-    plate = VOID_PLATE if void else GOLD
+def paint_all(px, void, channels):
     accent = BRASS if void else STEEL
-    fs = faces_px(u, v, w, h, d)
-    if role == "plate":
-        for f, rect in fs.items():
-            if f in ("front", "top", "back"):
-                face_plate(px, rect, plate, rivets=True)
-            elif f == "bottom":
-                face_flat(px, rect, plate[:3])
-            else:
-                face_plate(px, rect, plate)
-    elif role == "accent":
-        for rect in fs.values():
-            face_flat(px, rect, accent[2:])
-    elif role == "steel":
-        for f, rect in fs.items():
-            face_plate(px, rect, STEEL) if f == "front" else face_flat(px, rect, STEEL[1:5])
-    elif role == "cable":
-        ramp = CABLE_RAMP_VOID if void else GOLD[1:5]
-        for rect in fs.values():
-            face_flat(px, rect, ramp)
-    elif role == "cloth":
-        ramp = CLOTH_VOID if void else CLOTH_GOLD
-        for rect in fs.values():
-            face_flat(px, rect, ramp)
-    elif role == "cape":
-        ramp = CLOTH_VOID if void else CLOTH_GOLD
-        for f, rect in fs.items():
-            x0, y0, wd, ht = rect
-            for y in range(y0, y0 + ht):
-                for x in range(x0, x0 + wd):
-                    i = 1 + ((x // 2) % 2)          # вертикальные складки
-                    if (x + y * 3) % 11 == 0:
-                        i = 0
-                    px[x, y] = ramp[i] + (255,)
-        # рваный низ — альфа-зубцы
-        x0, y0, wd, ht = fs["front"]
-        for x in range(x0, x0 + wd):
-            for k in range((x * 7 + v) % 4):
-                px[x, y0 + ht - 1 - k] = (0, 0, 0, 0)
-    elif role == "gem":
-        # фасеточный самоцвет: яркий крест, тёмные углы, оправа-кант
-        core = LILAC if void else GOLD_CORE
-        dark = VOID_PLATE[0] if void else GOLD[0]
-        for f, rect in fs.items():
-            x0, y0, wd, ht = rect
-            for y in range(y0, y0 + ht):
-                for x in range(x0, x0 + wd):
-                    if x in (x0, x0 + wd - 1) or y in (y0, y0 + ht - 1):
-                        c = (BRASS if void else STEEL)[3]
-                    else:
-                        cx = abs((x - x0) - wd / 2 + 0.5)
-                        cy = abs((y - y0) - ht / 2 + 0.5)
-                        c = core if cx + cy < max(wd, ht) / 2.5 else dark
-                    px[x, y] = c + (255,)
-    elif role == "rune":
-        for f, rect in fs.items():
-            face_plate(px, rect, plate)
-        # глифы контрастным акцентом на длинных гранях
-        for f in ("right", "left", "front", "back"):
-            x0, y0, wd, ht = fs[f]
-            for k in range(x0 + 1, x0 + wd - 1, 3):
-                px[k, y0 + ht // 2] = accent[5 if void else 4] + (255,)
-                if ht > 3:
-                    px[k, y0 + ht // 2 - 1] = accent[3] + (255,)
-    elif role == "seal":
-        for f, rect in fs.items():
-            face_flat(px, rect, accent[1:5])
-        x0, y0, wd, ht = fs["front"]
-        for k in range(y0 + 1, y0 + ht - 1, 2):
-            for xx in range(x0, x0 + wd):
-                px[xx, k] = ((0x14, 0x11, 0x1A, 255))
-    elif role == "book":
-        ramp = BOOK_VOID if void else BOOK_GOLD
-        for f, rect in fs.items():
-            face_plate(px, rect, [ramp[0], ramp[0], ramp[1], ramp[2],
-                                  ramp[2], ramp[2]])
-        # корешок и эмблема
-        x0, y0, wd, ht = fs["front"]
-        for y in range(y0, y0 + ht):
-            px[x0, y] = accent[4] + (255,)
-        if wd >= 4 and ht >= 4:
-            px[x0 + wd // 2, y0 + ht // 2] = (LILAC if void else GOLD_GLOW) + (255,)
-    elif role == "housing":
-        for rect in fs.values():
-            face_flat(px, rect, DARK_HOUSING)
+    for name, (u, v, w, h, d, role) in UV.items():
+        fs = faces(u, v, w, h, d)
+        if role == "plate":
+            # каналы: вход с кромки → колено → узел; фаза и геометрия
+            # зависят от пластины (критик: не клоны), у широких — развилка
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                entry = node_at = None
+                if f == "front" and fw >= 6 and fh >= 6:
+                    shift = (u % 3) - 1
+                    ex = x0 + fw // 2 + shift * 2
+                    ex = max(x0 + 2, min(x0 + fw - 3, ex))
+                    nx = x0 + fw // 2 - shift
+                    nx = max(x0 + 2, min(x0 + fw - 3, nx))
+                    entry = (ex, y0 + fh - 1)
+                    node_at = (nx, y0 + 2 + (v % 2) + fh // 4)
+                face_cellplate(px, rect, void, channels, entry, node_at)
+                if f == "front" and fw >= 14 and fh >= 8:
+                    # развилка: боковой отвод от середины к кромке
+                    my = y0 + fh // 2
+                    branch = [(x0 + fw // 2, my), (x0 + 1, my)]
+                    channels.add(branch, end="edge")
+                    carve_channel(px, branch, void)
+                    px[x0 + 1, my] = (BRASS[4] if void else STEEL[4]) + (255,)
+        elif role == "gem":
+            for f, rect in fs.items():
+                gem_face(px, rect, void, LILAC if void else GOLD_CORE)
+        elif role == "rune":
+            for f, rect in fs.items():
+                face_cellplate(px, rect, void)
+                x0, y0, fw, fh = rect
+                if fw >= 6:
+                    pts = [(x0 + 1, y0 + fh // 2), (x0 + fw - 2, y0 + fh // 2)]
+                    channels.add(pts, end="edge")
+                    carve_channel(px, pts, void)
+        elif role == "steel":
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        i = 2 if (x + y) % 3 else 1
+                        if y == y0:
+                            i = 3
+                        px[x, y] = STEEL[i] + (255,)
+                if name == "nozzle" and f == "front":
+                    for y in range(y0 + 1, y0 + fh - 1):
+                        for x in range(x0 + 1, x0 + fw - 1):
+                            px[x, y] = (DARK_HOUSING[0] if void
+                                        else GOLD_GLOW) + (255,)
+                    px[x0, y0] = BRASS[2] + (255,)
+                if name == "heel" and not void and fw >= 3:
+                    for x in range(x0 + 1, x0 + fw - 1):
+                        px[x, y0 + fh // 2] = ICHOR_DASH + (255,)
+                if name == "heel" and void:
+                    for x in range(x0, x0 + fw, 2):
+                        px[x, y0 + fh // 2] = BRASS[2] + (255,)
+        elif role == "cable":
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        px[x, y] = COMPOSITE[void] + (255,)
+                if fh >= fw and fh >= 3:
+                    pts = [(x0 + fw // 2, y0), (x0 + fw // 2, y0 + fh - 1)]
+                elif fw >= 3:
+                    pts = [(x0, y0 + fh // 2), (x0 + fw - 1, y0 + fh // 2)]
+                else:
+                    continue
+                channels.add(pts, end="edge")
+                carve_channel(px, pts, void)
+        elif role == "seal":
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        i = 2 if (x + y) % 4 else 3
+                        px[x, y] = accent[i] + (255,)
+                if f == "front" and fh >= 6:
+                    # §1.6: глифы сверху морфят в трассы снизу
+                    for k in range(x0 + 1, x0 + fw - 1, 2):
+                        px[k, y0 + 1] = (0x14, 0x11, 0x1A, 255)
+                        if k + 1 < x0 + fw - 1:
+                            px[k + 1, y0 + 2] = (0x14, 0x11, 0x1A, 255)
+                    for k in range(x0 + 1, x0 + fw - 1):
+                        if (k - x0) % 3 != 0:
+                            px[k, y0 + fh - 2] = (0x14, 0x11, 0x1A, 255)
+                    px[x0 + fw - 2, y0 + fh - 2] = DARK_HOUSING[0] + (255,)
+        elif role == "book":
+            for f, rect in fs.items():
+                face_cellplate(px, rect, void)
+                x0, y0, fw, fh = rect
+                if f == "front" and fw >= 2 and fh >= 2:
+                    for y in range(y0, y0 + fh):
+                        px[x0, y] = (BRASS[3] if void else STEEL[3]) + (255,)
+                    ex, ey = x0 + fw // 2, y0 + fh // 2
+                    channels.add([(x0, ey), (ex, ey)], end="emblem")
+                    px[ex, ey] = (LILAC if void else GOLD_GLOW) + (255,)
+                if f == "right":
+                    for y in range(y0 + 1, y0 + fh - 1):
+                        if (y - y0) % 2:
+                            px[x0 + fw // 2, y] = (VOID_RIM if void
+                                                   else ICHOR_DASH) + (255,)
+        elif role == "cape" and void:
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        i = 1 if (x // 2 + y // 3) % 3 else 0
+                        px[x, y] = CLOTH_VOID[i] + (255,)
+                # мёртвые нити: колонки дэшей, рваный край по их разрывам
+                for cx in range(x0 + 2, x0 + fw - 1, 4):
+                    for y in range(y0 + 1, y0 + fh - 1):
+                        if (y - y0) % 3 != 2:
+                            px[cx, y] = DEAD_THREAD + (255,)
+                    torn = 1 + (cx // 4) % 3
+                    for k in range(torn):
+                        for dx in (-1, 0, 1):
+                            if x0 <= cx + dx < x0 + fw:
+                                px[cx + dx, y0 + fh - 1 - k] = (0, 0, 0, 0)
+                if f == "front" and fw >= 6:
+                    pts = [(x0 + fw // 2, y0 + 1), (x0 + fw // 2, y0 + fh - 2)]
+                    carve_channel(px, pts, True)
+        elif role == "cape":
+            continue   # у Ихора плаща нет
+        elif role == "accent":
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        link = (y - y0) % 2 == 0
+                        px[x, y] = (accent[3] if link
+                                    else COMPOSITE[void]) + (255,)
+        elif role == "cloth":
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        i = 1 if (x + y * 2) % 5 else 0
+                        px[x, y] = CLOTH_VOID[i] + (255,)
+                if f == "top":
+                    px[x0 + fw // 2, y0] = accent[3] + (255,)
+        elif role == "housing":
+            for f, rect in fs.items():
+                x0, y0, fw, fh = rect
+                for y in range(y0, y0 + fh):
+                    for x in range(x0, x0 + fw):
+                        edge = x in (x0, x0 + fw - 1) or y in (y0, y0 + fh - 1)
+                        px[x, y] = DARK_HOUSING[0 if edge else 1] + (255,)
+                if f == "front":
+                    px[x0, y0] = (BRASS[3] if void else STEEL[3]) + (255,)
+    # §3: подтёки Ихора из выходов каналов на нижних кромках
+    if not void:
+        for name in ("chest", "pauld_low", "sabaton"):
+            u, v, w, h, d, _ = UV[name]
+            fr = faces(u, v, w, h, d)["front"]
+            x0, y0, fw, fh = fr
+            dx = x0 + fw // 2
+            length = 2 + (dx % 3)
+            for k in range(length):
+                y = y0 + fh + k
+                if y < 128:
+                    px[dx, y] = ICHOR_DASH + (255,)
+                    if dx + 1 < 256:
+                        px[dx + 1, y] = GILD + (255,)
+            channels.drips.append((dx, min(127, y0 + fh + length)))
 
 
-CABLE_RAMP_VOID = [(0x0C, 0x0C, 0x10), (0x16, 0x16, 0x1E), (0x20, 0x20, 0x2A)]
-
-
-def weave(px, ramp):
-    """Полнотелость бипед-зон: глушим прозрачное плетением."""
-    for y in range(0, 32 * S):
-        for x in range(0, 64 * S):
-            if px[x, y][3] <= 128:
-                i = 1
-                if (x // 2 * 3 + y // 2 * 5) % 11 == 0:
-                    i = 2
-                if (x // 2 + y // 2) % 3 == 0:
-                    i = 0
-                px[x, y] = ramp[i] + (255,)
-
-
-def base_texture(path_key):
+def base_texture(path_key, channels):
     void = path_key == "void"
-    suit = VOID_SUIT if void else ICHOR_SUIT
     canvas = Image.new("RGBA", (128 * S, 64 * S), (0, 0, 0, 0))
-    # бипед-зоны: quantum-слои IC2 в ТЁМНОЙ рампе поддоспешника —
-    # пластины поверх обязаны читаться светлее
-    q1 = tint(load_ic2("assets/ic2/textures/armor/quantum_1.png"), suit)
-    q2 = tint(load_ic2("assets/ic2/textures/armor/quantum_2.png"), suit)
+    q1 = recolour_suit(load_ic2("assets/ic2/textures/armor/quantum_1.png"), void)
+    q2 = recolour_suit(load_ic2("assets/ic2/textures/armor/quantum_2.png"), void)
     cp = canvas.load()
     for src in (q1, q2):
         big = src.resize((src.size[0] * 2, src.size[1] * 2), Image.NEAREST)
@@ -303,54 +494,99 @@ def base_texture(path_key):
                 c = bp[x, y]
                 if c[3] > 8:
                     cp[x, y] = c
-    weave(cp, suit[:3])
-    for name, (u, v, w, h, d, role) in UV.items():
-        paint_box(cp, name, u, v, w, h, d, role, void)
+    # полнотелость бипед-зон
+    suit = VOID_SUIT if void else ICHOR_SUIT
+    for y in range(0, 32 * S):
+        for x in range(0, 64 * S):
+            if cp[x, y][3] <= 128:
+                i = 1 if (x // 2 + y // 2) % 3 else 0
+                cp[x, y] = suit[i] + (255,)
+    paint_all(cp, void, channels)
     return canvas
 
 
-def glow_frames(path_key):
+# ==================== glow-кадры (§4) ====================
+
+def glow_frames(path_key, channels):
     void = path_key == "void"
     frames = []
     for f in range(8):
         img = Image.new("RGBA", (128 * S, 64 * S), (0, 0, 0, 0))
         px = img.load()
-        pulse = 0.7 + 0.3 * math.sin(math.pi * 2 * f / 8)
         breath = 0.55 + 0.45 * math.sin(math.pi * 2 * f / 8)
-        for name, mode in GLOW_PARTS.items():
-            if mode == "ichor" and void:
-                continue
+        if void:
+            # узлы статичны; из каждого узла 2-3 затухающих дэша-затравки
+            for (points, end) in channels.lines:
+                tail = polyline_pixels(points)[-8:]
+                tail.reverse()
+                for i, (x, y) in enumerate(tail):
+                    fade = (1.0, 0.55, 0.25)[min(2, i // 3)]
+                    if (i % 4) < 3:
+                        c = tuple(int(v * fade) for v in LILAC)
+                        px[x, y] = c + (255,)
+        else:
+            # ихор ТЕЧЁТ: бегущие дэши по всем полилиниям, фаза = кадр
+            for (points, end) in channels.lines:
+                dash_runes(px, points, GOLD_GLOW, phase=f, broken=False)
+            for (x, y) in channels.drips:
+                px[x, y] = GOLD_GLOW + (255,)
+        # узлы обоих путей
+        for name in NODE_GLOW:
             u, v, w, h, d, _ = UV[name]
-            for face, rect in faces_px(u, v, w, h, d).items():
-                if void:
-                    k = breath if name == "gem" else 1.0
-                    colour = BLUE if name == "lamp" else LILAC
-                else:
-                    k = pulse
-                    colour = GOLD_CORE if name == "gem" else GOLD_GLOW
-                alpha = 153 if name == "crystal" else 255
-                c = tuple(int(v0 * k) for v0 in colour)
-                x0, y0, wd, ht = rect
-                for y in range(y0, y0 + ht):
-                    for x in range(x0, x0 + wd):
-                        # свечение с живым центром: край чуть темнее
-                        edge = x in (x0, x0 + wd - 1) or y in (y0, y0 + ht - 1)
-                        cc = tuple(int(ci * (0.8 if edge else 1.0)) for ci in c)
-                        px[x, y] = cc + (alpha,)
+            fr = faces(u, v, w, h, d)["front"]
+            x0, y0, fw, fh = fr
+            k = breath if name == "gem" else 1.0
+            colour = (BLUE if name == "lamp" else LILAC) if void else (
+                GOLD_CORE if name == "gem" else GOLD_GLOW)
+            alpha = 153 if name == "crystal" else 255
+            c = tuple(int(vv * k) for vv in colour)
+            for y in range(y0 + 1, y0 + fh - 1):
+                for x in range(x0 + 1, x0 + fw - 1):
+                    px[x, y] = c + (alpha,)
+        # лампы: Э2 голубой у Пустоты, золото у Ихора
+        u, v, w, h, d, _ = UV["lamp"]
+        fr = faces(u, v, w, h, d)["front"]
+        x0, y0, fw, fh = fr
+        lamp_c = BLUE if void else GOLD_GLOW
+        for (dx, dy) in ((0, 0), (1, 1)):
+            if x0 + dx < 256 and y0 + dy < 128:
+                px[x0 + dx, y0 + dy] = lamp_c + (255,)
+        # виа-ядра Ихора в узлах
+        if not void:
+            for (x, y, t) in channels.nodes:
+                px[x, y] = GOLD_CORE + (255,)
         frames.append(img)
     return frames
 
 
 def icons(path_key):
     void = path_key == "void"
-    ramp = VOID_PLATE if void else GOLD
+    cell = VOID_CELL if void else ICHOR_CELL
     out = {}
     for slot in ("helmet", "chestplate", "leggings", "boots"):
-        icon = tint(load_ic2(
-            "assets/ic2/textures/items/armor/quantum_%s.png" % slot), ramp)
+        icon = load_ic2("assets/ic2/textures/items/armor/quantum_%s.png" % slot)
         px = icon.load()
-        c = (LILAC if void else GOLD_GLOW) + (255,)
-        px[8, 4 if slot == "helmet" else 7] = c
+        w, h = icon.size
+        lo, hi = 255, 0
+        for y in range(h):
+            for x in range(w):
+                c = px[x, y]
+                if c[3] > 8:
+                    l = lum(c)
+                    lo, hi = min(lo, l), max(hi, l)
+        span = max(1, hi - lo)
+        for y in range(h):
+            for x in range(w):
+                c = px[x, y]
+                if c[3] > 8:
+                    level = (lum(c) - lo) * (len(cell) - 1) // span
+                    px[x, y] = cell[level] + (c[3],)
+        # два дэша канала по диагонали корпуса + пиксель Э1
+        bed = VOID_TRENCH if void else ICHOR_BED
+        for (dx, dy) in ((6, 8), (7, 9), (9, 10), (10, 11)):
+            if px[dx, dy][3] > 8:
+                px[dx, dy] = bed + (255,)
+        px[8, 7] = (LILAC if void else GOLD_GLOW) + (255,)
         out["quant_%s_%s" % (path_key, slot)] = icon
     return out
 
@@ -364,13 +600,13 @@ def main():
     armor_dir = os.path.join(ROOT, "textures", "models", "armor")
     items_dir = os.path.join(ROOT, "textures", "items")
     models_dir = os.path.join(ROOT, "models", "item")
-    os.makedirs(armor_dir, exist_ok=True)
-    os.makedirs(items_dir, exist_ok=True)
-    os.makedirs(models_dir, exist_ok=True)
+    for d in (armor_dir, items_dir, models_dir):
+        os.makedirs(d, exist_ok=True)
     for path_key in ("void", "ichor"):
-        base_texture(path_key).save(
+        channels = Channels()
+        base_texture(path_key, channels).save(
             os.path.join(armor_dir, "quant_%s.png" % path_key))
-        for f, frame in enumerate(glow_frames(path_key)):
+        for f, frame in enumerate(glow_frames(path_key, channels)):
             frame.save(os.path.join(
                 armor_dir, "quant_%s_glow_%d.png" % (path_key, f)))
         for name, icon in icons(path_key).items():
@@ -378,7 +614,7 @@ def main():
             write_json(os.path.join(models_dir, name + ".json"),
                        {"parent": "item/generated",
                         "textures": {"layer0": "unboundtech:items/" + name}})
-    print("квант-гибрид v2: пофейсовая отрисовка, контраст, фасеточный самоцвет")
+    print("квант v3: сеть каналов, ячеистый композит, судьба сети по пути")
     return 0
 
 
