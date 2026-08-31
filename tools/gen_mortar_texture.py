@@ -47,10 +47,15 @@ UV = {
     "tsapfa":   (60, 44, 3, 9, 8, "steel"),
     "makhovik": (82, 44, 1, 5, 5, "brass"),
     "os":       (94, 44, 2, 1, 1, "brass"),
-    "truba":    (0, 64, 10, 10, 18, "iron"),
+    "truba":    (0, 64, 10, 10, 14, "iron"),
     "kazennik": (56, 64, 11, 11, 3, "iron"),
     "bandazh":  (84, 64, 11, 11, 2, "brass"),
-    "srez":     (84, 78, 11, 11, 1, "brass"),
+    "bore_v":   (0, 104, 2, 10, 4, "iron"),
+    "bore_h":   (16, 104, 6, 2, 4, "iron"),
+    "srez_v":   (40, 104, 2, 10, 1, "brass"),
+    "srez_h":   (48, 104, 6, 2, 1, "brass"),
+    "band_v":   (66, 104, 2, 11, 2, "brass"),
+    "band_h":   (76, 104, 7, 2, 2, "brass"),
     "vent":     (0, 92, 11, 6, 4, "glow"),
     "lampa":    (32, 92, 4, 1, 4, "lamp"),
 }
@@ -155,6 +160,25 @@ def glow_slits(px, rect):
             px[x, y] = (v, v, v, 255)
 
 
+def bore_pit(px, rect, rnd):
+    """Дно канала ствола (видно в открытое жерло): почти чёрная яма,
+    кольцо у кромки, редкие тлеющие точки нагара."""
+    x0, y0, w, h = rect
+    for y in range(y0, y0 + h):
+        for x in range(x0, x0 + w):
+            edge = x in (x0, x0 + w - 1) or y in (y0, y0 + h - 1)
+            if edge:
+                c = IRON[1]
+            else:
+                c = (0x0B, 0x0A, 0x0E)
+                if rnd.random() < 0.05:
+                    c = (0x8A, 0x4A, 0x18)   # тлеющий нагар
+        # тонкое кольцо нарезки на полпути к кромке
+            if not edge and (x - x0 in (2, w - 3) or y - y0 in (2, h - 3)):
+                c = IRON[0]
+            px[x, y] = c + (255,)
+
+
 def lamp(px, rect):
     x0, y0, w, h = rect
     for y in range(y0, y0 + h):
@@ -172,10 +196,15 @@ def main():
             if rect[2] <= 0 or rect[3] <= 0:
                 continue
             if mat == "iron":
-                cast_iron(px, rect, rnd,
-                          muzzle=(name == "truba" and fname == "front"),
-                          seam=(name in ("truba", "tumba_x", "tumba_z")
-                                and fname in ("right", "left")))
+                if name == "truba" and fname == "front":
+                    # передняя грань трубы = дно открытого канала
+                    bore_pit(px, rect, rnd)
+                else:
+                    cast_iron(px, rect, rnd,
+                              muzzle=(name in ("bore_v", "bore_h")
+                                      and fname == "front"),
+                              seam=(name in ("truba", "tumba_x", "tumba_z")
+                                    and fname in ("right", "left")))
             elif mat == "steel":
                 steel_panel(px, rect, rnd)
             elif mat == "brass":
@@ -186,7 +215,7 @@ def main():
                 lamp(px, rect)
     out = os.path.join(ROOT, "textures", "models", "mechanist_mortar.png")
     img.save(out)
-    print("мортира v2: чугун с раковинами, латунь с бликами, решётки вент")
+    print("мортира v3: открытое жерло — канал ствола, рамка среза, дно-яма")
     return 0
 
 

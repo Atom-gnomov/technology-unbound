@@ -84,15 +84,30 @@ public class ModelMechanistMortar extends ModelBase {
         this.pitchGroup.setRotationPoint(0.0F, -8.0F, 0.0F);
         this.yawGroup.addChild(this.pitchGroup);
         this.barrelRecoil = new ModelRenderer(this, 0, 0);
-        // труба 10x10, короткая и толстая
-        this.barrelRecoil.setTextureOffset(0, 64).addBox(-5.0F, -5.0F, -6.0F, 10, 10, 18);
+        // труба 10x10 укорочена до z 8: её передняя грань — тёмное ДНО
+        // канала ствола, жерло сверху ОТКРЫТО (замечание владельца)
+        this.barrelRecoil.setTextureOffset(0, 64).addBox(-5.0F, -5.0F, -6.0F, 10, 10, 14);
         // казённик чуть шире сзади
         this.barrelRecoil.setTextureOffset(56, 64).addBox(-5.5F, -5.5F, -9.0F, 11, 11, 3);
-        // бандажи-кольца
+        // задний бандаж — сплошное кольцо вокруг сплошной трубы
         this.barrelRecoil.setTextureOffset(84, 64).addBox(-5.5F, -5.5F, 2.0F, 11, 11, 2);
-        this.barrelRecoil.setTextureOffset(84, 64).addBox(-5.5F, -5.5F, 8.0F, 11, 11, 2);
-        // дульный срез — латунная кромка жерла
-        this.barrelRecoil.setTextureOffset(84, 78).addBox(-5.5F, -5.5F, 11.0F, 11, 11, 1);
+        // передний бандаж — РАМКА: глухой бокс затыкал жерло (скептик)
+        this.barrelRecoil.setTextureOffset(66, 104).addBox(-5.5F, -5.5F, 8.0F, 2, 11, 2);
+        this.barrelRecoil.setTextureOffset(66, 104).addBox(3.5F, -5.5F, 8.0F, 2, 11, 2);
+        this.barrelRecoil.setTextureOffset(76, 104).addBox(-3.5F, -5.5F, 8.0F, 7, 2, 2);
+        this.barrelRecoil.setTextureOffset(76, 104).addBox(-3.5F, 3.5F, 8.0F, 7, 2, 2);
+        // канал ствола: 4 стенки до z 12, внутренний просвет 6x6, дно
+        // z 8; рамка среза прилегает сзади — ни щели, ни з-файта
+        this.barrelRecoil.setTextureOffset(0, 104).addBox(-5.0F, -5.0F, 8.0F, 2, 10, 4);
+        this.barrelRecoil.setTextureOffset(0, 104).addBox(3.0F, -5.0F, 8.0F, 2, 10, 4);
+        this.barrelRecoil.setTextureOffset(16, 104).addBox(-3.0F, -5.0F, 8.0F, 6, 2, 4);
+        this.barrelRecoil.setTextureOffset(16, 104).addBox(-3.0F, 3.0F, 8.0F, 6, 2, 4);
+        // дульный срез — латунная рамка 10x10 с окном РОВНО в просвет
+        // 6x6, вынесена на z 12..13 (торцы стенок без з-файта)
+        this.barrelRecoil.setTextureOffset(40, 104).addBox(-5.0F, -5.0F, 12.0F, 2, 10, 1);
+        this.barrelRecoil.setTextureOffset(40, 104).addBox(3.0F, -5.0F, 12.0F, 2, 10, 1);
+        this.barrelRecoil.setTextureOffset(48, 104).addBox(-3.0F, -5.0F, 12.0F, 6, 2, 1);
+        this.barrelRecoil.setTextureOffset(48, 104).addBox(-3.0F, 3.0F, 12.0F, 6, 2, 1);
         this.pitchGroup.addChild(this.barrelRecoil);
         // вентщели у казённой части — флюкс-эмиссив, виден СБОКУ (ТЗ)
         this.ventGlow = new ModelRenderer(this, 0, 92);
