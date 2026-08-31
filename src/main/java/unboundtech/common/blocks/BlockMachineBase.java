@@ -143,20 +143,30 @@ public abstract class BlockMachineBase extends BlockContainer implements IWrench
     // ================= Обратная связь: строка статуса =================
 
     /**
-     * ПКМ пустой рукой — строка статуса (канон `machine_feedback.md` §4).
-     * GUI у машин нет намеренно, поэтому без этого игрок не отличит
-     * «интерференция» от «нет узла» и от «буфер полон».
+     * ПКМ пустой рукой — GUI машины (ХФ-7 канона: экран обязателен,
+     * строка статуса переехала внутрь экрана). Shift-ПКМ пустой рукой —
+     * быстрая строка статуса в hotbar, как раньше. Машина, ещё не
+     * получившая каркасный тайл (ISyncedMachine), остаётся на строке.
      */
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state,
                                     EntityPlayer player, EnumHand hand,
                                     EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (world.isRemote || !player.getHeldItem(hand).isEmpty()) {
+        if (!player.getHeldItem(hand).isEmpty()) {
             return false;
         }
         TileEntity tile = world.getTileEntity(pos);
-        if (!(tile instanceof IMachineStatus)) {
-            return false;
+        if (!player.isSneaking()
+                && tile instanceof unboundtech.common.gui.ISyncedMachine) {
+            if (!world.isRemote) {
+                player.openGui(unboundtech.UnboundTech.instance,
+                        unboundtech.common.gui.UTGuiHandler.MACHINE,
+                        world, pos.getX(), pos.getY(), pos.getZ());
+            }
+            return true;
+        }
+        if (world.isRemote || !(tile instanceof IMachineStatus)) {
+            return tile instanceof IMachineStatus;
         }
         // Строка в hotbar, а не в чат: статус смотрят часто, засорять чат нельзя.
         player.sendStatusMessage(

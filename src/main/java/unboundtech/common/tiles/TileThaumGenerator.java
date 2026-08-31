@@ -29,7 +29,51 @@ import unboundtech.energy.EnergyCanon;
  * обоснование — LORE_RESONANCE_LIMITS), иначе узел обставлялся бы кольцом
  * машин и превращался в ферму.
  */
-public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMachineStatus {
+public class TileThaumGenerator extends TileThaumcraft implements ITickable,
+        IMachineStatus, unboundtech.common.gui.ISyncedMachine,
+        unboundtech.common.gui.IEnergyGauge {
+
+    /** Клиентские копии полей GUI — живут от контейнера (ХФ-7).
+     *  Ревью каркаса №2/№3: статус-строка обязана строиться ТОЛЬКО из
+     *  них — прочие поля клиентского тайла обновляются редко, а
+     *  NodeCache на клиенте заморожен и трогать его нельзя. */
+    private int guiEnergy;
+    private boolean guiInterfered;
+    private boolean guiWorking;
+    private boolean guiNodeFound;
+
+    @Override
+    public int[] syncFields() {
+        return new int[]{
+                (int) this.getEnergyStored(),
+                this.interfered ? 1 : 0,
+                this.activeHold > 0 ? 1 : 0,
+                this.nodeCache.nodes(this.world, this.pos, this.counter)
+                        .isEmpty() ? 0 : 1,
+        };
+    }
+
+    @Override
+    public void applySyncField(int index, int value) {
+        switch (index) {
+            case 0: this.guiEnergy = value; break;
+            case 1: this.guiInterfered = value != 0; break;
+            case 2: this.guiWorking = value != 0; break;
+            case 3: this.guiNodeFound = value != 0; break;
+            default: break;
+        }
+    }
+
+    @Override
+    public double gaugeEnergy() {
+        return this.world != null && this.world.isRemote
+                ? this.guiEnergy : this.getEnergyStored();
+    }
+
+    @Override
+    public double gaugeCapacity() {
+        return CAPACITY;
+    }
 
     /** Буфер: 10 «порций» ауры, tier 1 (LV, 32 EU/t на выход). */
     public static final double CAPACITY = 20_000.0;
@@ -284,6 +328,9 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMa
 
     @Override
     public String getStatusLine() {
+        if (this.world != null && this.world.isRemote) {
+            return this.clientStatusLine();
+        }
         int eu = (int) this.source.getEnergyStored();
         if (this.interfered) {
             return "\u00a7cРезонансная интерференция: рядом второй генератор";
@@ -295,6 +342,22 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable, IMa
             return "\u00a7cНет узла в радиусе 8 блоков";
         }
         return (this.activeHold > 0 ? "\u00a7aРаботает: " : "\u00a7eЖдёт регенерации узла: ")
+                + eu + " / " + (int) CAPACITY + " EU";
+    }
+
+    /** Клиентская строка — только из полей, синкнутых контейнером. */
+    private String clientStatusLine() {
+        int eu = this.guiEnergy;
+        if (this.guiInterfered) {
+            return "§cРезонансная интерференция: рядом второй генератор";
+        }
+        if (eu >= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
+            return "§bБуфер полон: " + eu + " / " + (int) CAPACITY + " EU";
+        }
+        if (!this.guiNodeFound) {
+            return "§cНет узла в радиусе 8 блоков";
+        }
+        return (this.guiWorking ? "§aРаботает: " : "§eЖдёт регенерации узла: ")
                 + eu + " / " + (int) CAPACITY + " EU";
     }
 

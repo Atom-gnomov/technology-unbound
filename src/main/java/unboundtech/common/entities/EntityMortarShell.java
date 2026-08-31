@@ -113,9 +113,29 @@ public class EntityMortarShell extends EntityThrowable {
                 }
             }
         }
-        // громкий низкий выстрел-разрыв + кольцо дыма (§8); блоки целы
-        this.world.playEvent(2001, at, net.minecraft.block.Block
-                .getStateId(net.minecraft.init.Blocks.STONE.getDefaultState()));
+        // сплеш прилёта (§8 + просьба владельца): взрыв, кольцо дыма по
+        // радиусу поражения, цветные искры патрона; блоки целы
+        if (this.world instanceof net.minecraft.world.WorldServer) {
+            net.minecraft.world.WorldServer ws =
+                    (net.minecraft.world.WorldServer) this.world;
+            ws.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE,
+                    this.posX, this.posY + 0.3, this.posZ, 1,
+                    0.0, 0.0, 0.0, 0.0);
+            for (int i = 0; i < 14; i++) {
+                double a = Math.PI * 2 * i / 14;
+                ws.spawnParticle(EnumParticleTypes.SMOKE_LARGE,
+                        this.posX + Math.cos(a) * 2.2, this.posY + 0.2,
+                        this.posZ + Math.sin(a) * 2.2, 1,
+                        Math.cos(a) * 0.1, 0.05, Math.sin(a) * 0.1, 0.02);
+            }
+            EnumParticleTypes accent = this.type == EntityFluxBullet.TYPE_INCENDIARY
+                    ? EnumParticleTypes.LAVA
+                    : this.type == EntityFluxBullet.TYPE_ILLUMINATING
+                            ? EnumParticleTypes.END_ROD
+                            : EnumParticleTypes.SPELL_MOB;
+            ws.spawnParticle(accent, this.posX, this.posY + 0.5, this.posZ,
+                    12, 1.2, 0.4, 1.2, 0.05);
+        }
         this.world.playSound(null, this.posX, this.posY, this.posZ,
                 net.minecraft.init.SoundEvents.ENTITY_GENERIC_EXPLODE,
                 net.minecraft.util.SoundCategory.BLOCKS, 1.2f, 0.6f);

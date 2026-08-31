@@ -51,6 +51,8 @@ public class UnboundTech {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        net.minecraftforge.fml.common.network.NetworkRegistry.INSTANCE
+                .registerGuiHandler(this, new unboundtech.common.gui.UTGuiHandler());
         ModuleManager.init();
     }
 

@@ -131,6 +131,20 @@ public class TileMechanistMortar extends TileThaumcraft
         this.sink.useEnergy(EU_PER_SHOT);
         this.markDirty();
         this.syncAim();
+        // анимация выстрела: вспышка и дымовое кольцо из жерла
+        if (this.world instanceof net.minecraft.world.WorldServer) {
+            net.minecraft.world.WorldServer ws =
+                    (net.minecraft.world.WorldServer) this.world;
+            double mx = this.pos.getX() + 0.5;
+            double my = this.pos.getY() + 1.8;
+            double mz = this.pos.getZ() + 0.5;
+            ws.spawnParticle(net.minecraft.util.EnumParticleTypes.FLAME,
+                    mx, my, mz, 5, 0.15, 0.1, 0.15, 0.02);
+            ws.spawnParticle(net.minecraft.util.EnumParticleTypes.SMOKE_LARGE,
+                    mx, my, mz, 8, 0.25, 0.15, 0.25, 0.01);
+            ws.spawnParticle(net.minecraft.util.EnumParticleTypes.EXPLOSION_NORMAL,
+                    mx, my + 0.2, mz, 1, 0.0, 0.0, 0.0, 0.0);
+        }
         this.world.playSound(null, this.pos.getX() + 0.5, this.pos.getY() + 1,
                 this.pos.getZ() + 0.5,
                 net.minecraft.init.SoundEvents.ENTITY_GENERIC_EXPLODE,
@@ -146,10 +160,16 @@ public class TileMechanistMortar extends TileThaumcraft
         shell.setPosition(this.pos.getX() + 0.5, muzzleY, this.pos.getZ() + 0.5);
         if (target != null) {
             // авто: дуга на цель — горизонтальная скорость из дистанции,
-            // вертикальная фиксированно высокая (падение сверху, §4.2)
-            double dx = target.posX - shell.posX;
-            double dz = target.posZ - shell.posZ;
-            double dist = Math.sqrt(dx * dx + dz * dz);
+            // вертикальная фиксированно высокая (падение сверху, §4.2).
+            // ИИ-упреждение (просьба владельца): бьём в точку, где цель
+            // БУДЕТ через ~61 тик полёта, по её текущей скорости; вынос
+            // ограничен радиусом дозора.
+            double lead = 61.0 * 0.6;   // мобы петляют — берём 60% выноса
+            double px = target.posX + target.motionX * lead;
+            double pz = target.posZ + target.motionZ * lead;
+            double dx = px - shell.posX;
+            double dz = pz - shell.posZ;
+            double dist = Math.min(AUTO_RANGE, Math.sqrt(dx * dx + dz * dz));
             double vy = 1.6;
             // время полёта из vy и силы тяжести снаряда (0.05/тик)
             double flight = 2.0 * vy / 0.05;
