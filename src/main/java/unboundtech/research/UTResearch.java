@@ -481,6 +481,7 @@ public final class UTResearch {
                                 : new ResearchPage(
                                         unboundtech.common.UTRecipesT3.fluxRevolver),
                         recipePage(unboundtech.common.UTCrafting.casingRecipe),
+                        recipePage(unboundtech.common.UTCrafting.cartridgeBall),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIncendiary),
                         recipePage(unboundtech.common.UTCrafting.cartridgeIlluminating)))
                 .registerResearchItem();

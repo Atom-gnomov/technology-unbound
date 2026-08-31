@@ -186,6 +186,9 @@ def main():
     items = os.path.join(ROOT, "textures", "items")
     casing().save(os.path.join(items, "casing.png"))
     cartridge(FIRE).save(os.path.join(items, "cartridge_incendiary.png"))
+    # обычный патрон: свинцово-серый шарик
+    cartridge([(0x53, 0x57, 0x61), (0xA8, 0xAD, 0xB8), (0x7C, 0x81, 0x8D)]).save(
+        os.path.join(items, "cartridge_ball.png"))
     cartridge([(0xC9, 0xC2, 0xA8), (0xFF, 0xFC, 0xEE), (0xF2, 0xEC, 0xD5)]).save(
         os.path.join(items, "cartridge_illuminating.png"))
     revolver().save(os.path.join(items, "flux_revolver.png"))
@@ -193,7 +196,8 @@ def main():
     os.makedirs(models_dir, exist_ok=True)
     revolver_map().save(os.path.join(models_dir, "flux_revolver.png"))
 
-    for name in ("casing", "cartridge_incendiary", "cartridge_illuminating"):
+    for name in ("casing", "cartridge_incendiary", "cartridge_illuminating",
+                 "cartridge_ball"):
         write_json(os.path.join(ROOT, "models", "item", name + ".json"),
                    {"parent": "item/generated",
                     "textures": {"layer0": "unboundtech:items/" + name}})

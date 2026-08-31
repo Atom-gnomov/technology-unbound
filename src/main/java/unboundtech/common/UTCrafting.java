@@ -57,6 +57,7 @@ public final class UTCrafting {
     public static IRecipe cartridgeIlluminating;
     public static IRecipe cartridgeVis;
     public static IRecipe cartridgeFlux;
+    public static IRecipe cartridgeBall;
 
     private UTCrafting() {
     }
@@ -113,6 +114,12 @@ public final class UTCrafting {
                 new ItemStack(UTItems.cartridgeIlluminating),
                 new ItemStack(UTItems.casing),
                 new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1, 1));
+        // обычный патрон (указание владельца): железный шарик в гильзе —
+        // самый дешёвый выстрел, полный урон ствола, без эффектов
+        cartridgeBall = shapelessStack(event, "cartridge_ball",
+                new ItemStack(UTItems.cartridgeBall),
+                new ItemStack(UTItems.casing),
+                new ItemStack(net.minecraft.init.Items.IRON_NUGGET));
         // T4 (cartridges.md 4.2): вис-патрон — полный фиал любого
         // примала; флюкс-патрон — Флюкс-Заряд конденсатора.
         cartridgeVis = shapelessStack(event, "cartridge_vis",

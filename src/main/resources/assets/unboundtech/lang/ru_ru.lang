@@ -195,11 +195,13 @@ unboundtech.research_page.ESSENTIA_VAULT.3=Замечания по обраще�
 
 # --- Флюкс-Револьвер и боеприпас (T3) ---
 item.unboundtech.casing.name=Гильза
+item.unboundtech.cartridge_ball.name=Обычный патрон
 item.unboundtech.cartridge_incendiary.name=Зажигательный патрон
 item.unboundtech.cartridge_illuminating.name=Осветительный патрон
 item.unboundtech.flux_revolver.name=Флюкс-Револьвер
 tile.unboundtech.photon_light.name=Свет
 unboundtech.tooltip.casing=Пустая. Решает, когда именно случится вспышка
+unboundtech.tooltip.cartridge_ball=Железный шарик в гильзе: полный удар ствола — ни больше, ни меньше
 unboundtech.tooltip.cartridge_incendiary=Алюментум в гильзе: поджигает цель на пять секунд
 unboundtech.tooltip.cartridge_illuminating=Нитор в гильзе: свет на минуту в точке попадания, урон вполсилы
 unboundtech.tooltip.revolver_empty=Барабан пуст — Shift-ПКМ, чтобы зарядить

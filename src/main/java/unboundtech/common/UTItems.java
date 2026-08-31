@@ -61,6 +61,7 @@ public final class UTItems {
     public static final String FLUX_ARQUEBUS = "flux_arquebus";
     public static final String CARTRIDGE_VIS = "cartridge_vis";
     public static final String CARTRIDGE_FLUX = "cartridge_flux";
+    public static final String CARTRIDGE_BALL = "cartridge_ball";
     public static final String FOCUS_CHARGE = "focus_charge";
     public static final String CHARGED_SPARK = "charged_spark";
     public static final String RING_FRAME = "ring_frame";
@@ -138,6 +139,7 @@ public final class UTItems {
     public static Item fluxArquebus;
     public static Item cartridgeVis;
     public static Item cartridgeFlux;
+    public static Item cartridgeBall;
     public static Item focusCharge;
     public static Item chargedSpark;
     public static Item ringFrame;
@@ -213,6 +215,9 @@ public final class UTItems {
         cartridgeIlluminating = make(new ItemCartridge(
                 unboundtech.common.entities.EntityFluxBullet.TYPE_ILLUMINATING,
                 "unboundtech.tooltip.cartridge_illuminating"), CARTRIDGE_ILLUMINATING);
+        cartridgeBall = make(new ItemCartridge(
+                unboundtech.common.entities.EntityFluxBullet.TYPE_BALL,
+                "unboundtech.tooltip.cartridge_ball"), CARTRIDGE_BALL);
         fluxRevolver = make(new ItemFluxRevolver(), FLUX_REVOLVER);
         fluxArquebus = make(new ItemFluxArquebus(), FLUX_ARQUEBUS);
         cartridgeVis = make(new ItemCartridge(
@@ -270,6 +275,17 @@ public final class UTItems {
                         .add(thaumcraft.api.aspects.Aspect.MAGIC, 3));
     }
 
+    /** Предмет-патрон по типу пули — для разрядки стволов. */
+    public static Item cartridgeFor(int bulletType) {
+        switch (bulletType) {
+            case 1: return cartridgeIlluminating;
+            case 2: return cartridgeVis;
+            case 3: return cartridgeFlux;
+            case 4: return cartridgeBall;
+            default: return cartridgeIncendiary;
+        }
+    }
+
     private static Item make(Item item, String name) {
         return item
                 .setRegistryName(UnboundTech.MODID, name)
@@ -288,7 +304,7 @@ public final class UTItems {
                 quantVoidHelmet, quantVoidChestplate, quantVoidLeggings, quantVoidBoots,
                 quantIchorHelmet, quantIchorChestplate, quantIchorLeggings, quantIchorBoots,
                 casing, cartridgeIncendiary, cartridgeIlluminating, fluxRevolver,
-                fluxArquebus, cartridgeVis, cartridgeFlux,
+                fluxArquebus, cartridgeVis, cartridgeFlux, cartridgeBall,
                 focusCharge, chargedSpark, ringFrame, ringDrive, ringStride, ringBrace,
         };
     }

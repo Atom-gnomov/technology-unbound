@@ -132,7 +132,9 @@ public class EntityMortarShell extends EntityThrowable {
                     ? EnumParticleTypes.LAVA
                     : this.type == EntityFluxBullet.TYPE_ILLUMINATING
                             ? EnumParticleTypes.END_ROD
-                            : EnumParticleTypes.SPELL_MOB;
+                            : this.type == EntityFluxBullet.TYPE_BALL
+                                    ? EnumParticleTypes.CRIT
+                                    : EnumParticleTypes.SPELL_MOB;
             ws.spawnParticle(accent, this.posX, this.posY + 0.5, this.posZ,
                     12, 1.2, 0.4, 1.2, 0.05);
         }

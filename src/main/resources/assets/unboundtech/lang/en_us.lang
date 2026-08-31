@@ -195,11 +195,13 @@ unboundtech.research_page.ESSENTIA_VAULT.3=Notes on handling.<BR><BR>Every occup
 
 # --- Flux Revolver and ammunition (T3) ---
 item.unboundtech.casing.name=Casing
+item.unboundtech.cartridge_ball.name=Ball Cartridge
 item.unboundtech.cartridge_incendiary.name=Incendiary Cartridge
 item.unboundtech.cartridge_illuminating.name=Illuminating Cartridge
 item.unboundtech.flux_revolver.name=Flux Revolver
 tile.unboundtech.photon_light.name=Light
 unboundtech.tooltip.casing=Empty. Decides exactly when the flash happens
+unboundtech.tooltip.cartridge_ball=An iron ball in a casing: the barrel's full blow, nothing more and nothing less
 unboundtech.tooltip.cartridge_incendiary=Alumentum in a casing: sets the target alight for five seconds
 unboundtech.tooltip.cartridge_illuminating=Nitor in a casing: a minute of light at the point of impact, half damage
 unboundtech.tooltip.revolver_empty=Drum empty — Sneak-use to reload

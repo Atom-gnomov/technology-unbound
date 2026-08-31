@@ -25,6 +25,8 @@ public class EntityFluxBullet extends EntityThrowable {
     public static final int TYPE_ILLUMINATING = 1;
     public static final int TYPE_VIS = 2;
     public static final int TYPE_FLUX = 3;
+    /** Обычный патрон: полный урон ствола, без эффектов. */
+    public static final int TYPE_BALL = 4;
 
     /** §5 револьвера: базовый урон задаёт ствол, патрон умножает. */
     public static final float BASE_DAMAGE = 6.0F;
@@ -64,7 +66,9 @@ public class EntityFluxBullet extends EntityThrowable {
                             ? EnumParticleTypes.FLAME
                             : this.type == TYPE_FLUX
                                     ? EnumParticleTypes.SPELL_MOB
-                                    : EnumParticleTypes.END_ROD,
+                                    : this.type == TYPE_BALL
+                                            ? EnumParticleTypes.CRIT
+                                            : EnumParticleTypes.END_ROD,
                     this.posX, this.posY, this.posZ, 0, 0, 0);
         }
     }

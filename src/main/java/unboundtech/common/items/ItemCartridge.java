@@ -25,6 +25,7 @@ public class ItemCartridge extends Item {
             case 1: return "illuminating";
             case 2: return "vis";
             case 3: return "flux";
+            case 4: return "ball";
             default: return "incendiary";
         }
     }

@@ -191,8 +191,7 @@ public class ItemFluxRevolver extends Item {
 
     /** Разрядка барабана обратно в патроны (§12.2 — пока разрешена). */
     private void unload(ItemStack stack, EntityPlayer player, int type, int have) {
-        Item cartridge = type == EntityFluxBullet.TYPE_ILLUMINATING
-                ? UTItems.cartridgeIlluminating : UTItems.cartridgeIncendiary;
+        Item cartridge = UTItems.cartridgeFor(type);
         ItemStack back = new ItemStack(cartridge, have);
         if (!player.inventory.addItemStackToInventory(back)) {
             player.dropItem(back, false);
@@ -258,9 +257,8 @@ public class ItemFluxRevolver extends Item {
         if (count <= 0) {
             lines.add("§7" + I18n.translateToLocal("unboundtech.tooltip.revolver_empty"));
         } else {
-            String name = ammoType(stack) == EntityFluxBullet.TYPE_ILLUMINATING
-                    ? I18n.translateToLocal("item.unboundtech.cartridge_illuminating.name")
-                    : I18n.translateToLocal("item.unboundtech.cartridge_incendiary.name");
+            String name = I18n.translateToLocal("item.unboundtech.cartridge_"
+                    + ItemCartridge.key(ammoType(stack)) + ".name");
             lines.add("§7" + name + ": " + count + " / " + DRUM_SIZE);
         }
         lines.add("§7" + I18n.translateToLocal("unboundtech.tooltip.revolver_damage")
