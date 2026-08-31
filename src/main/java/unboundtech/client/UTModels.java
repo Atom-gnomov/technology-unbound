@@ -55,6 +55,14 @@ public final class UTModels {
                 .registerEntityRenderingHandler(
                         unboundtech.common.entities.EntityTechnoSpirit.class,
                         RenderTechnoSpirit::new);
+        net.minecraftforge.fml.client.registry.RenderingRegistry
+                .registerEntityRenderingHandler(
+                        unboundtech.common.entities.EntityMortarShell.class,
+                        manager -> new net.minecraft.client.renderer.entity.RenderSnowball<>(
+                                manager, net.minecraft.init.Items.FIRE_CHARGE,
+                                net.minecraft.client.Minecraft.getMinecraft()
+                                        .getRenderItem()));
+        RenderMechanistMortar.register();
         // Револьвер: Java-модель через TEISR (школа Flan's Mod) — json
         // builtin/entity даёт только display-повороты.
         UTItems.fluxRevolver.setTileEntityItemStackRenderer(

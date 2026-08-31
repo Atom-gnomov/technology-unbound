@@ -192,6 +192,23 @@ public class ConverterCanonStaticGuardTest {
         // легитимно поминают spill() родного тигля, объясняя отличие.
         assertTrue("главное обещание: никакого spill() — флюкса нет",
                 !crucible.contains(".spill("));
+
+        // Мортира Механистов (`mechanist_mortar.md` §5)
+        String mortar = read(
+                "src/main/java/unboundtech/common/tiles/TileMechanistMortar.java");
+        assertTrue("мортира: 500 EU за выстрел", mortar.contains("EU_PER_SHOT = 500;"));
+        assertTrue("мортира: ручной темп 60", mortar.contains("MANUAL_COOLDOWN = 60;"));
+        assertTrue("мортира: авто темп 120", mortar.contains("AUTO_COOLDOWN = 120;"));
+        assertTrue("мортира: радиус авто 32", mortar.contains("AUTO_RANGE = 32;"));
+        assertTrue("мортира: авто тратит 2 патрона",
+                mortar.contains("this.ammoCount -= 2;"));
+        String shell = read(
+                "src/main/java/unboundtech/common/entities/EntityMortarShell.java");
+        assertTrue("снаряд: 24 в эпицентре", shell.contains("CORE_DAMAGE = 24.0F;"));
+        assertTrue("снаряд: спад до 8", shell.contains("EDGE_DAMAGE = 8.0F;"));
+        assertTrue("снаряд: радиус 4", shell.contains("BLAST_RADIUS = 4.0;"));
+        assertTrue("блоки не ломает — нет createExplosion",
+                !shell.contains("createExplosion"));
     }
 
     /**

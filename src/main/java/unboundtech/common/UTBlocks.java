@@ -16,6 +16,7 @@ import unboundtech.common.blocks.BlockFluxCondenser;
 import unboundtech.common.blocks.BlockBusNode;
 import unboundtech.common.blocks.BlockEssentiaConduit;
 import unboundtech.common.blocks.BlockInductionCrucible;
+import unboundtech.common.blocks.BlockMechanistMortar;
 import unboundtech.common.blocks.BlockPhotonLight;
 import unboundtech.common.blocks.BlockVaultCasing;
 import unboundtech.common.blocks.BlockVaultController;
@@ -27,6 +28,7 @@ import unboundtech.common.tiles.TileFluxCondenser;
 import unboundtech.common.tiles.TileBusNode;
 import unboundtech.common.tiles.TileEssentiaVaultController;
 import unboundtech.common.tiles.TileInductionCrucible;
+import unboundtech.common.tiles.TileMechanistMortar;
 import unboundtech.common.tiles.TileVaultGolemPort;
 import unboundtech.common.tiles.TileResonantSplitter;
 import unboundtech.common.tiles.TileThaumGenerator;
@@ -54,6 +56,7 @@ public final class UTBlocks {
     public static final String VAULT_CASING = "essentia_vault_casing";
     public static final String VAULT_CONTROLLER = "essentia_vault_controller";
     public static final String VAULT_GOLEM_PORT = "essentia_vault_golem_port";
+    public static final String MECHANIST_MORTAR = "mechanist_mortar";
 
     public static Block thaumGenerator;
     public static Block aethericEngine;
@@ -67,6 +70,7 @@ public final class UTBlocks {
     public static Block vaultCasing;
     public static Block vaultController;
     public static Block vaultGolemPort;
+    public static Block mechanistMortar;
     /** Свет осветительного патрона: без предмета, ставится только снарядом. */
     public static Block photonLight;
 
@@ -97,6 +101,7 @@ public final class UTBlocks {
         vaultCasing = make(new BlockVaultCasing(), VAULT_CASING);
         vaultController = make(new BlockVaultController(), VAULT_CONTROLLER);
         vaultGolemPort = make(new BlockVaultGolemPort(), VAULT_GOLEM_PORT);
+        mechanistMortar = make(new BlockMechanistMortar(), MECHANIST_MORTAR);
         photonLight = new BlockPhotonLight()
                 .setRegistryName(UnboundTech.MODID, "photon_light")
                 .setTranslationKey(UnboundTech.MODID + ".photon_light");
@@ -119,6 +124,8 @@ public final class UTBlocks {
                 new ResourceLocation(UnboundTech.MODID, VAULT_CONTROLLER));
         GameRegistry.registerTileEntity(TileVaultGolemPort.class,
                 new ResourceLocation(UnboundTech.MODID, VAULT_GOLEM_PORT));
+        GameRegistry.registerTileEntity(TileMechanistMortar.class,
+                new ResourceLocation(UnboundTech.MODID, MECHANIST_MORTAR));
     }
 
     @SubscribeEvent
@@ -145,6 +152,7 @@ public final class UTBlocks {
     public static Block[] all() {
         return new Block[]{thaumGenerator, aethericEngine, fluxCondenser,
                 resonantSplitter, inductionCrucible, busNode, conduitI, conduitII,
-                conduitIII, vaultCasing, vaultController, vaultGolemPort};
+                conduitIII, vaultCasing, vaultController, vaultGolemPort,
+                mechanistMortar};
     }
 }

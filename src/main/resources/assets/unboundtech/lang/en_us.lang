@@ -275,3 +275,11 @@ item.unboundtech.quant_ichor_leggings.name=Quantum-Ichor Leggings
 item.unboundtech.quant_ichor_boots.name=Quantum-Ichor Boots
 unboundtech.tooltip.quant_void=Darkness that glows only when breached
 unboundtech.tooltip.quant_ichor=Gold whose pulse never fades
+
+# --- Mechanist Mortar (T5) ---
+tile.unboundtech.mechanist_mortar.name=Mechanist Mortar
+tc.research_name.MECHANIST_MORTAR=Mechanist Mortar
+tc.research_text.MECHANIST_MORTAR=Walls will not save you. A roof will
+unboundtech.research_page.MECHANIST_MORTAR.1=Every weapon strikes where the shooter looks. The mortar strikes where the shooter does not: the shell climbs into the sky and falls from above, and the wall a target hides behind means nothing. A roof means everything.<BR><BR>A cast-iron drum on three legs, a barrel cocked at the sky, and a boom that shakes the yard. Seen from afar on any base, it reads as one word: defence.
+unboundtech.research_page.MECHANIST_MORTAR.2=Two tempers, cycled with a wrench.<BR><BR>Manual: walk up and touch it — it spits a shell where you are looking, a hundred and twenty-eight blocks in an arc. One cartridge, a three-heartbeat breath between shots.<BR><BR>Sentry: it watches thirty-two blocks around and strikes monsters on its own — half as often and two cartridges a shot: the rammer hurries and drops one. Livestock it will never touch; people — only if the third turn of the wrench removes the safety.
+unboundtech.research_page.MECHANIST_MORTAR.3=Notes on handling.<BR><BR>Each shot drinks five hundred units of middle-vein power — laying and ramming. Three blocks of sky must stand over the barrel, or there is nowhere to cock the muzzle.<BR><BR>The burst strikes a four-block circle, full force at the heart and half at the rim — but spoils no ground: mechanists war on monsters, not landscape.<BR><BR>Creatures born beside a spawner cage it despises, and spends not one cartridge on them. And remember: one mortar to a yard — a second will not stand.

@@ -35,6 +35,7 @@ public final class UTRecipesT3 {
     public static ShapedArcaneRecipe fluxRevolver;
     public static thaumcraft.api.crafting.InfusionRecipe focusCharge;
     public static thaumcraft.api.crafting.InfusionRecipe fluxArquebus;
+    public static thaumcraft.api.crafting.InfusionRecipe mechanistMortar;
     public static ShapedArcaneRecipe ringFrame;
     public static ShapedArcaneRecipe ringDrive;
     public static ShapedArcaneRecipe ringStride;
@@ -53,6 +54,7 @@ public final class UTRecipesT3 {
         registerRings();
         focusCharge = UTRecipesInfusion.registerFocusCharge();
         fluxArquebus = UTRecipesInfusion.registerFluxArquebus();
+        mechanistMortar = UTRecipesInfusion.registerMechanistMortar();
     }
 
     /**

@@ -287,7 +287,7 @@ public class ModelQuantumHybridArmour extends ModelBiped {
 
     // --- фабрики повторяющихся деталей ботинок ---
     private ModelRenderer sab(boolean mirror) {
-        ModelRenderer m = part(0, 40);
+        ModelRenderer m = part(72, 52);   // переезд UV: коллизия с pauld_low (ревью №16)
         m.mirror = mirror;
         m.addBox(-2.5F, 8.6F, -2.6F, 5, 3, 5, 0.85F);
         return m;
@@ -421,6 +421,14 @@ public class ModelQuantumHybridArmour extends ModelBiped {
     }
 
     private void renderGlow(Entity entity, float scale) {
+        // Глинт-проход LayerArmorBase зовёт render() повторно с
+        // depthFunc(EQUAL) и своей текстурой — туда соваться нельзя
+        // (ревью №13: перебинд и disableBlend ломали зачарованную броню)
+        if (org.lwjgl.opengl.GL11.glGetInteger(
+                org.lwjgl.opengl.GL11.GL_DEPTH_FUNC)
+                == org.lwjgl.opengl.GL11.GL_EQUAL) {
+            return;
+        }
         long time = entity != null && entity.world != null
                 ? entity.world.getTotalWorldTime() : 0L;
         int frame = this.path == PATH_ICHOR
@@ -434,6 +442,13 @@ public class ModelQuantumHybridArmour extends ModelBiped {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA,
                 GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.disableLighting();
+        // повторяем пролог ванильного ModelBiped.render: без сдвига
+        // 0.2 присед разносил glow и броню (ревью №14)
+        GlStateManager.pushMatrix();
+        if (entity != null && entity.isSneaking()) {
+            GlStateManager.translate(0.0F, 0.2F, 0.0F);
+        }
 
         // Приём прохода: glow-файл ПРОЗРАЧЕН везде, кроме развёрток
         // светящихся деталей — перерисовка всех частей теми же
@@ -456,6 +471,8 @@ public class ModelQuantumHybridArmour extends ModelBiped {
             this.lamps[i].showModel = lampState[i];
         }
 
+        GlStateManager.popMatrix();
+        GlStateManager.enableLighting();
         GlStateManager.disableBlend();
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,

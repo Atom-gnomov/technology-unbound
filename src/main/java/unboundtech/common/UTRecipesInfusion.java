@@ -49,6 +49,35 @@ public final class UTRecipesInfusion {
     }
 
     /**
+     * Мортира Механистов (`mechanist_mortar.md` §6): нестабильность 9 —
+     * нижняя граница T5, чуть тяжелее крафта Ихора, как положено
+     * вершине оружейной ветки. Центр — продвинутый корпус машины IC2,
+     * аркебуза расходуется.
+     */
+    public static InfusionRecipe registerMechanistMortar() {
+        ItemStack casing = IC2Handles.item("resource", "advanced_machine");
+        ItemStack iridium = IC2Handles.item("crafting", "iridium");
+        if (casing.isEmpty() || iridium.isEmpty()) {
+            UTLog.warn("Mechanist Mortar recipe skipped: IC2 parts not found");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.MECHANIST_MORTAR,
+                new ItemStack(unboundtech.common.UTBlocks.mechanistMortar),
+                9,
+                new AspectList().add(Aspect.WEAPON, 56).add(Aspect.MECHANISM, 40)
+                        .add(Aspect.EARTH, 32).add(Aspect.MAGIC, 24),
+                casing,
+                new ItemStack[]{
+                        new ItemStack(UTItems.temperedIngot),
+                        new ItemStack(UTItems.fluxArquebus),
+                        new ItemStack(UTItems.temperedIngot),
+                        iridium,
+                        new ItemStack(ConfigItems.itemShard, 1, 3),
+                });
+    }
+
+    /**
      * Фокус Заряда (`techno_foci.md` §6): матрица инфузии, нестабильность
      * 3. Центр по карточке — «пустой фокус ТК», которого в TC4 не
      * существует (второй такой случай после «флюкса конденсатора») —

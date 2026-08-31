@@ -158,16 +158,16 @@ def revolver_3d():
         "textures": {"particle": "unboundtech:items/flux_revolver"},
         "display": {
             "thirdperson_righthand": {
-                "rotation": [0, 90, 0], "translation": [0, 2.5, 1],
-                "scale": [0.55, 0.55, 0.55]},
-            "thirdperson_lefthand": {
                 "rotation": [0, -90, 0], "translation": [0, 2.5, 1],
                 "scale": [0.55, 0.55, 0.55]},
+            "thirdperson_lefthand": {
+                "rotation": [0, 90, 0], "translation": [0, 2.5, 1],
+                "scale": [0.55, 0.55, 0.55]},
             "firstperson_righthand": {
-                "rotation": [0, 100, 3], "translation": [1.5, 1, 0],
+                "rotation": [0, -80, 3], "translation": [1.5, 1, 0],
                 "scale": [0.38, 0.38, 0.38]},
             "firstperson_lefthand": {
-                "rotation": [0, -100, -3], "translation": [1.5, 1, 0],
+                "rotation": [0, 80, -3], "translation": [1.5, 1, 0],
                 "scale": [0.38, 0.38, 0.38]},
             "gui": {
                 "rotation": [0, 0, 0], "translation": [1, 0.5, 0],

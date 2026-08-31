@@ -73,6 +73,11 @@ public final class UTResearch {
     /** Флюкс-Аркебуза: T4-ствол, открывает вис- и флюкс-патроны. */
     public static final String FLUX_ARQUEBUS = "FLUX_ARQUEBUS";
 
+    /** Мортира Механистов: вершина оружейной ветки (T5).
+     *  ⚠️ Родитель по канону — FLUX_MACHINEGUN, которого ещё нет;
+     *  временно висит на аркебузе (приём А-7), перевесить с пулемётом. */
+    public static final String MECHANIST_MORTAR = "MECHANIST_MORTAR";
+
     /** Техномаг: лорная запись об изгнаннике двух школ (§3.1). */
     public static final String TECHNOMANCER = "TECHNOMANCER";
 
@@ -498,6 +503,23 @@ public final class UTResearch {
                                         unboundtech.common.UTRecipesT3.fluxArquebus),
                         recipePage(unboundtech.common.UTCrafting.cartridgeVis),
                         recipePage(unboundtech.common.UTCrafting.cartridgeFlux)))
+                .registerResearchItem();
+
+        // Мортира: Telum 18, Machina 14, Terra 12, Praecantatio 10 = 54.
+        new ResearchItem(
+                MECHANIST_MORTAR, CATEGORY,
+                new AspectList().add(Aspect.WEAPON, 18).add(Aspect.MECHANISM, 14)
+                        .add(Aspect.EARTH, 12).add(Aspect.MAGIC, 10),
+                12, -6, 3,
+                new ItemStack(unboundtech.common.UTBlocks.mechanistMortar))
+                .setParents(FLUX_ARQUEBUS)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.MECHANIST_MORTAR.1"),
+                        new ResearchPage("unboundtech.research_page.MECHANIST_MORTAR.2"),
+                        new ResearchPage("unboundtech.research_page.MECHANIST_MORTAR.3"),
+                        unboundtech.common.UTRecipesT3.mechanistMortar == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.mechanistMortar)))
                 .registerResearchItem();
 
         // Техномаг: лорная запись, объясняющая, почему мод существует
