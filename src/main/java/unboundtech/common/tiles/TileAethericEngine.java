@@ -25,7 +25,45 @@ import unboundtech.energy.EnergyCanon;
  * угасающих узлов — отдельное исследование поздних фаз, здесь узел лишь
  * заполняется до своего собственного потолка.
  */
-public class TileAethericEngine extends TileThaumcraft implements ITickable, IMachineStatus {
+public class TileAethericEngine extends TileThaumcraft implements ITickable,
+        IMachineStatus, unboundtech.common.gui.ISyncedMachine,
+        unboundtech.common.gui.IEnergyGauge {
+
+    /** Клиентские копии полей GUI (уроки ревью каркаса №1-№3). */
+    private int guiEnergy;
+    private boolean guiActive;
+    private boolean guiNodeFound;
+
+    @Override
+    public int[] syncFields() {
+        return new int[]{
+                (int) this.getEnergyStored(),
+                this.active ? 1 : 0,
+                this.nodeCache.nodes(this.world, this.pos, this.counter)
+                        .isEmpty() ? 0 : 1,
+        };
+    }
+
+    @Override
+    public void applySyncField(int index, int value) {
+        switch (index) {
+            case 0: this.guiEnergy = value; break;
+            case 1: this.guiActive = value != 0; break;
+            case 2: this.guiNodeFound = value != 0; break;
+            default: break;
+        }
+    }
+
+    @Override
+    public double gaugeEnergy() {
+        return this.world != null && this.world.isRemote
+                ? this.guiEnergy : this.getEnergyStored();
+    }
+
+    @Override
+    public double gaugeCapacity() {
+        return CAPACITY;
+    }
 
     /** Буфер: 5 «порций» ауры, tier 2 (MV, приём до 128 EU/t). */
     public static final double CAPACITY = 40_000.0;
@@ -157,6 +195,9 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable, IMa
 
     @Override
     public String getStatusLine() {
+        if (this.world != null && this.world.isRemote) {
+            return this.clientStatusLine();
+        }
         int eu = (int) this.sink.getEnergyStored();
         if (eu < EnergyCanon.EU_PER_NODE_ASPECT_BUY) {
             return "\u00a7eНакапливает заряд: " + eu + " / "
@@ -166,6 +207,20 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable, IMa
             return "\u00a7cНет узла в радиусе 8 блоков";
         }
         return (this.active ? "\u00a7aЗаряжает узел: " : "\u00a7bВсе узлы полны: ")
+                + eu + " EU в буфере";
+    }
+
+    /** Клиентская строка — только из синкнутых контейнером полей. */
+    private String clientStatusLine() {
+        int eu = this.guiEnergy;
+        if (eu < EnergyCanon.EU_PER_NODE_ASPECT_BUY) {
+            return "§eНакапливает заряд: " + eu + " / "
+                    + EnergyCanon.EU_PER_NODE_ASPECT_BUY + " EU на аспект";
+        }
+        if (!this.guiNodeFound) {
+            return "§cНет узла в радиусе 8 блоков";
+        }
+        return (this.guiActive ? "§aЗаряжает узел: " : "§bВсе узлы полны: ")
                 + eu + " EU в буфере";
     }
 
