@@ -18,11 +18,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * ПРОТОТИП Квант-Гибридной брони (`quantum_hybrid_armour.md`) — внешний
  * вид двух эндгейм-путей для примерки, тот же приём, что у Нано-Таума.
  *
- * Путь А (Пустотный): тьма, поглощающая свет, холодный лиловый на оси,
- * рваный плащ. Путь Б (Ихорный): живое золото, пульс, который никогда
- * не гаснет. Геометрия одна ({@code ModelQuantumHybridArmour}), путь
- * ставится модели КАЖДЫЙ кадр (ТЗ п.6-7: никакого кэша) — смешанный
- * комплект из двух путей рендерится честно.
+ * Редизайн по директиве владельца (ХФ-8): пути РАЗОШЛИСЬ базой и
+ * силуэтом. Путь А (Пустотный) — база ModelRobe (балахон, капюшон,
+ * юбка) + квантовые части сверху, максимально тяжёлый вид
+ * ({@code ModelQuantVoidArmour}). Путь Б (Ихорный) — квант-подкладка
+ * + 3D робы/шаровары/шапка с короной-антенной, ихор течёт по кванту
+ * ({@code ModelQuantIchorArmour}). Разница читается по силуэту.
  *
  * ⚠️ Механики T4 здесь НЕТ: ни ISpecialArmor 92 %, ни заряда, ни
  * полёта пути Б — придут с настоящей реализацией. Характеристики —
@@ -54,19 +55,30 @@ public class ItemQuantumHybridArmor extends ItemArmor {
     @SideOnly(Side.CLIENT)
     public ModelBiped getArmorModel(EntityLivingBase entityLiving, ItemStack itemStack,
                                     EntityEquipmentSlot armorSlot, ModelBiped fallback) {
+        boolean isVoid = this.path == 0;
         if (this.modelThick == null) {
-            this.modelThick = new unboundtech.client.model.ModelQuantumHybridArmour(1.0f);
+            this.modelThick = isVoid
+                    ? new unboundtech.client.model.ModelQuantVoidArmour(1.0f)
+                    : new unboundtech.client.model.ModelQuantIchorArmour(1.0f);
         }
         if (this.modelThin == null) {
-            this.modelThin = new unboundtech.client.model.ModelQuantumHybridArmour(0.5f);
+            this.modelThin = isVoid
+                    ? new unboundtech.client.model.ModelQuantVoidArmour(0.5f)
+                    : new unboundtech.client.model.ModelQuantIchorArmour(0.5f);
         }
-        // тонкая — только поножи (ТЗ п.5)
-        ModelBiped model = this.armorType == EntityEquipmentSlot.LEGS
-                ? this.modelThin : this.modelThick;
+        // Пустота — конвенция ItemVoidRobeArmor: толстая для груди и
+        // ботинок, тонкая для капюшона и ног (юбка живёт в тонкой);
+        // Ихор — как нано: тонкая только для поножей
+        boolean thin = isVoid
+                ? armorSlot == EntityEquipmentSlot.HEAD
+                        || armorSlot == EntityEquipmentSlot.LEGS
+                : armorSlot == EntityEquipmentSlot.LEGS;
+        ModelBiped model = thin ? this.modelThin : this.modelThick;
         model.bipedHead.showModel = armorSlot == EntityEquipmentSlot.HEAD;
         model.bipedHeadwear.showModel = false;
+        // у Пустоты юбка робы висит на body — телу быть и для поножей
         model.bipedBody.showModel = armorSlot == EntityEquipmentSlot.CHEST
-                || armorSlot == EntityEquipmentSlot.LEGS;
+                || (isVoid && armorSlot == EntityEquipmentSlot.LEGS);
         model.bipedRightArm.showModel = armorSlot == EntityEquipmentSlot.CHEST;
         model.bipedLeftArm.showModel = armorSlot == EntityEquipmentSlot.CHEST;
         model.bipedRightLeg.showModel = armorSlot == EntityEquipmentSlot.LEGS
@@ -76,11 +88,13 @@ public class ItemQuantumHybridArmor extends ItemArmor {
         model.isSneak = entityLiving.isSneaking();
         model.isRiding = entityLiving.isRiding();
         model.isChild = entityLiving.isChild();
-        unboundtech.client.model.ModelQuantumHybridArmour quantum =
-                (unboundtech.client.model.ModelQuantumHybridArmour) model;
-        quantum.path = this.path;   // каждый кадр, без кэша (ТЗ п.7)
-        quantum.litLamps = 4;       // прототип: полный заряд
-        quantum.prepareSlot(armorSlot);
+        if (isVoid) {
+            ((unboundtech.client.model.ModelQuantVoidArmour) model)
+                    .prepareSlot(armorSlot);
+        } else {
+            ((unboundtech.client.model.ModelQuantIchorArmour) model)
+                    .prepareSlot(armorSlot);
+        }
         return model;
     }
 

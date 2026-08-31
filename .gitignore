@@ -26,3 +26,4 @@ Thumbs.db
 # и в публичный репозиторий не попадают.
 src/main/resources/assets/unboundtech/textures/models/armor/nano_thaum_armor*.png
 src/main/resources/assets/unboundtech/textures/items/nano_thaum_*.png
+tools/__pycache__/
