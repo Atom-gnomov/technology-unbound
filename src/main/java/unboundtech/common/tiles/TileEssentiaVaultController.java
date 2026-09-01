@@ -30,7 +30,114 @@ import unboundtech.common.blocks.BlockVaultGolemPort;
  * провод». Порядок выдачи — алфавитный (§4.3).
  */
 public class TileEssentiaVaultController extends TileThaumcraft
-        implements ITickable, IMachineStatus, IAspectContainer, IEssentiaTransport {
+        implements ITickable, IMachineStatus, IAspectContainer, IEssentiaTransport,
+        unboundtech.common.gui.ISyncedMachine, unboundtech.common.gui.IEnergyGauge {
+
+    /** Клиентские копии полей GUI (ХФ-7). */
+    private int guiEnergy;
+    private int guiState;
+    private int guiTotal;
+    private final int[] guiAspects = new int[10];
+
+    private int stateCode() {
+        if (!this.formed) {
+            return 1;
+        }
+        if (!this.powered) {
+            return 2;
+        }
+        return 0;
+    }
+
+    /** Топ-5 по ЗАПАСУ (вердикт скептика #16): крупнейшие — в плашки. */
+    private Aspect[] topByAmount() {
+        Aspect[] sorted = this.sortedAspects().clone();
+        java.util.Arrays.sort(sorted, (a, b) ->
+                Integer.compare(this.aspects.getAmount(b),
+                        this.aspects.getAmount(a)));
+        return sorted;
+    }
+
+    @Override
+    public int[] syncFields() {
+        Aspect[] sorted = this.topByAmount();
+        int[] fields = new int[13];
+        fields[0] = (int) this.sink.getEnergyStored();
+        fields[1] = this.stateCode();
+        fields[2] = this.tagAmount();
+        for (int i = 0; i < 5; i++) {
+            boolean has = i < sorted.length;
+            fields[3 + 2 * i] = has ? sorted[i].getColor() : -1;
+            fields[4 + 2 * i] = has ? this.aspects.getAmount(sorted[i]) : 0;
+        }
+        return fields;
+    }
+
+    @Override
+    public void applySyncField(int index, int value) {
+        switch (index) {
+            case 0: this.guiEnergy = value; break;
+            case 1: this.guiState = value; break;
+            case 2: this.guiTotal = value; break;
+            default:
+                if (index >= 3 && index < 13) {
+                    this.guiAspects[index - 3] = value;
+                }
+                break;
+        }
+    }
+
+    @Override
+    public double gaugeEnergy() {
+        return this.world != null && this.world.isRemote
+                ? this.guiEnergy : this.sink.getEnergyStored();
+    }
+
+    @Override
+    public double gaugeCapacity() {
+        return CAPACITY;
+    }
+
+    public int guiTotal() {
+        return this.guiTotal;
+    }
+
+    public int guiAspectColor(int i) {
+        return this.guiAspects[2 * i];
+    }
+
+    public int guiAspectAmount(int i) {
+        return this.guiAspects[2 * i + 1];
+    }
+
+    /** Клиентская строка — только из синкнутых полей (ХФ-7). */
+    private String clientStatusLine() {
+        String tail = ". Буфер " + this.guiEnergy + " / " + (int) CAPACITY + " EU";
+        if (this.guiState == 1) {
+            return "§cНакопитель: структура не собрана — 3x3x3, 25 корпусов,"
+                    + " один голем-порт, контроллер в центре грани" + tail;
+        }
+        if (this.guiState == 2) {
+            return "§cНакопитель: нет энергии — библиотека погашена" + tail;
+        }
+        StringBuilder top = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            if (this.guiAspects[2 * i + 1] <= 0) {
+                continue;
+            }
+            if (top.length() > 0) {
+                top.append(", ");
+            }
+            String name = TileInductionCrucible
+                    .aspectNameByColor(this.guiAspects[2 * i]);
+            top.append(name == null ? "?" : name).append(" ")
+                    .append(this.guiAspects[2 * i + 1]);
+        }
+        String state = this.guiTotal >= TOTAL_CAP ? "§cНакопитель: забит — "
+                : "§aНакопитель: занято ";
+        return state + this.guiTotal + " / " + TOTAL_CAP
+                + (top.length() == 0 ? ", пуст" : " — " + top) + tail;
+    }
 
     /** §5. */
     public static final double CAPACITY = 20_000.0;
@@ -336,6 +443,9 @@ public class TileEssentiaVaultController extends TileThaumcraft
 
     @Override
     public String getStatusLine() {
+        if (this.world != null && this.world.isRemote) {
+            return this.clientStatusLine();
+        }
         int eu = (int) this.sink.getEnergyStored();
         String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (!this.formed) {
@@ -348,7 +458,7 @@ public class TileEssentiaVaultController extends TileThaumcraft
         int total = this.tagAmount();
         StringBuilder top = new StringBuilder();
         int shown = 0;
-        for (Aspect aspect : this.sortedAspects()) {
+        for (Aspect aspect : this.topByAmount()) {
             if (shown >= 5) {
                 break;
             }

@@ -32,7 +32,96 @@ import unboundtech.common.blocks.BlockEssentiaConduit;
  *  - порядок обслуживания строго алфавитный по тегу аспекта (§4.2).
  */
 public class TileBusNode extends TileThaumcraft
-        implements ITickable, IMachineStatus, IEssentiaTransport {
+        implements ITickable, IMachineStatus, IEssentiaTransport,
+        unboundtech.common.gui.ISyncedMachine, unboundtech.common.gui.IEnergyGauge {
+
+    /** Клиентские копии полей GUI (ХФ-7). */
+    private int guiEnergy;
+    private int guiState;
+    private int guiPipes;
+    private int guiChannels;
+    private final int[] guiBuffers = new int[12];
+
+    private int stateCode() {
+        if (this.lineChannels <= 0) {
+            return 1;
+        }
+        if (this.pipeCount > Math.min(MAX_PIPE_SIDES, this.lineChannels)) {
+            return 2;
+        }
+        if (!this.sink.canUseEnergy(EU_PER_UNIT)) {
+            return 3;
+        }
+        return 0;
+    }
+
+    @Override
+    public int[] syncFields() {
+        int[] fields = new int[16];
+        fields[0] = (int) this.sink.getEnergyStored();
+        fields[1] = this.stateCode();
+        fields[2] = this.pipeCount;
+        fields[3] = Math.min(MAX_PIPE_SIDES, this.lineChannels);
+        // 6 боковых буферов: цвет аспекта (или -1) + количество
+        for (int i = 0; i < 6; i++) {
+            fields[4 + 2 * i] = this.bufAspect[i] == null
+                    ? -1 : this.bufAspect[i].getColor();
+            fields[5 + 2 * i] = this.bufAmount[i];
+        }
+        return fields;
+    }
+
+    @Override
+    public void applySyncField(int index, int value) {
+        switch (index) {
+            case 0: this.guiEnergy = value; break;
+            case 1: this.guiState = value; break;
+            case 2: this.guiPipes = value; break;
+            case 3: this.guiChannels = value; break;
+            default:
+                if (index >= 4 && index < 16) {
+                    this.guiBuffers[index - 4] = value;
+                }
+                break;
+        }
+    }
+
+    @Override
+    public double gaugeEnergy() {
+        return this.world != null && this.world.isRemote
+                ? this.guiEnergy : this.sink.getEnergyStored();
+    }
+
+    @Override
+    public double gaugeCapacity() {
+        return CAPACITY;
+    }
+
+    public int guiBufferColor(int side) {
+        return this.guiBuffers[2 * side];
+    }
+
+    public int guiBufferAmount(int side) {
+        return this.guiBuffers[2 * side + 1];
+    }
+
+    /** Клиентская строка — только из синкнутых полей (ХФ-7). */
+    private String clientStatusLine() {
+        String tail = ". Буфер " + this.guiEnergy + " / " + (int) CAPACITY + " EU";
+        switch (this.guiState) {
+            case 1: return "§cУзел: нет кабеля линии" + tail;
+            case 2: return "§cУзел: каналов не хватает — " + this.guiPipes
+                    + " труб, " + this.guiChannels + " каналов" + tail;
+            case 3: return "§cУзел: нет энергии" + tail;
+            default: break;
+        }
+        int held = 0;
+        for (int i = 0; i < 6; i++) {
+            held += this.guiBuffers[2 * i + 1];
+        }
+        return "§aУзел: " + this.guiPipes + " труб, линия на " + this.guiChannels
+                + " каналов, в буферах " + held + tail;
+    }
 
     /** §5: буфер 4 000 EU, вход LV. */
     public static final double CAPACITY = 4_000.0;
@@ -434,6 +523,9 @@ public class TileBusNode extends TileThaumcraft
 
     @Override
     public String getStatusLine() {
+        if (this.world != null && this.world.isRemote) {
+            return this.clientStatusLine();
+        }
         int eu = (int) this.sink.getEnergyStored();
         String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (this.lineChannels <= 0) {

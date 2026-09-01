@@ -16,6 +16,22 @@ public final class UTGuiFactory {
     }
 
     public static GuiMachine create(ContainerMachine container) {
+        net.minecraft.tileentity.TileEntity tile = container.getTile();
+        if (tile instanceof unboundtech.common.tiles.TileInductionCrucible) {
+            return new GuiInductionCrucible(container);
+        }
+        if (tile instanceof unboundtech.common.tiles.TileFluxCondenser) {
+            return new GuiFluxCondenser(container);
+        }
+        if (tile instanceof unboundtech.common.tiles.TileResonantSplitter) {
+            return new GuiResonantSplitter(container);
+        }
+        if (tile instanceof unboundtech.common.tiles.TileBusNode) {
+            return new GuiBusNode(container);
+        }
+        if (tile instanceof unboundtech.common.tiles.TileEssentiaVaultController) {
+            return new GuiVaultController(container);
+        }
         return new GuiMachine(container);
     }
 }
