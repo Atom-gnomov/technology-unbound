@@ -14,6 +14,7 @@ import unboundtech.UnboundTech;
 import unboundtech.common.blocks.BlockAethericEngine;
 import unboundtech.common.blocks.BlockFluxCondenser;
 import unboundtech.common.blocks.BlockBusNode;
+import unboundtech.common.blocks.BlockSingulator;
 import unboundtech.common.blocks.BlockEssentiaConduit;
 import unboundtech.common.blocks.BlockInductionCrucible;
 import unboundtech.common.blocks.BlockMechanistMortar;
@@ -57,6 +58,7 @@ public final class UTBlocks {
     public static final String VAULT_CONTROLLER = "essentia_vault_controller";
     public static final String VAULT_GOLEM_PORT = "essentia_vault_golem_port";
     public static final String MECHANIST_MORTAR = "mechanist_mortar";
+    public static final String SINGULATOR = "singulator";
 
     public static Block thaumGenerator;
     public static Block aethericEngine;
@@ -64,6 +66,7 @@ public final class UTBlocks {
     public static Block resonantSplitter;
     public static Block inductionCrucible;
     public static Block busNode;
+    public static Block singulator;
     public static Block conduitI;
     public static Block conduitII;
     public static Block conduitIII;
@@ -95,6 +98,7 @@ public final class UTBlocks {
         resonantSplitter = make(new BlockResonantSplitter(), RESONANT_SPLITTER);
         inductionCrucible = make(new BlockInductionCrucible(), INDUCTION_CRUCIBLE);
         busNode = make(new BlockBusNode(), BUS_NODE);
+        singulator = make(new BlockSingulator(), SINGULATOR);
         conduitI = make(new BlockEssentiaConduit(2), CONDUIT_I);
         conduitII = make(new BlockEssentiaConduit(4), CONDUIT_II);
         conduitIII = make(new BlockEssentiaConduit(8), CONDUIT_III);
@@ -114,6 +118,9 @@ public final class UTBlocks {
                 new ResourceLocation(UnboundTech.MODID, AETHERIC_ENGINE));
         GameRegistry.registerTileEntity(TileFluxCondenser.class,
                 new ResourceLocation(UnboundTech.MODID, FLUX_CONDENSER));
+        GameRegistry.registerTileEntity(
+                unboundtech.common.tiles.TileSingulator.class,
+                new ResourceLocation(UnboundTech.MODID, SINGULATOR));
         GameRegistry.registerTileEntity(TileResonantSplitter.class,
                 new ResourceLocation(UnboundTech.MODID, RESONANT_SPLITTER));
         GameRegistry.registerTileEntity(TileInductionCrucible.class,

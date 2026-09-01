@@ -44,6 +44,10 @@ public final class UTRecipesT3 {
     private UTRecipesT3() {
     }
 
+    public static thaumcraft.api.crafting.InfusionRecipe voidIridium;
+    public static thaumcraft.api.crafting.InfusionRecipe iridiumWandCap;
+    public static thaumcraft.api.crafting.InfusionRecipe singulator;
+
     public static void register() {
         fluxCondenser = registerFluxCondenser();
         thaumicOverclocker = registerThaumicOverclocker();
@@ -55,6 +59,10 @@ public final class UTRecipesT3 {
         focusCharge = UTRecipesInfusion.registerFocusCharge();
         fluxArquebus = UTRecipesInfusion.registerFluxArquebus();
         mechanistMortar = UTRecipesInfusion.registerMechanistMortar();
+        // T4 (#23): порядок В-10 — иридий -> наконечник -> Сингулятор
+        voidIridium = UTRecipesInfusion.registerVoidIridium();
+        iridiumWandCap = UTRecipesInfusion.registerIridiumWandCap();
+        singulator = UTRecipesInfusion.registerSingulator();
     }
 
     /**

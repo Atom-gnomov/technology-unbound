@@ -44,6 +44,17 @@ public class ContainerMachine extends Container {
         return super.slotClick(slotId, dragType, type, player);
     }
 
+    /**
+     * Кнопки экранов машин без своего пакета: клиент шлёт ванильный
+     * CPacketEnchantItem, тайл-{@link IMachineButtons} валидирует id.
+     */
+    @Override
+    public boolean enchantItem(EntityPlayer player, int id) {
+        return this.tile instanceof unboundtech.common.tiles.IMachineStatus
+                && this.tile instanceof IMachineButtons
+                && ((IMachineButtons) this.tile).onButton(player, id);
+    }
+
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         // до ЦЕНТРА блока: BlockPos.add(0.5,...) флорит в no-op (ревью №6)

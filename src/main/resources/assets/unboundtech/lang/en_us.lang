@@ -196,6 +196,16 @@ unboundtech.research_page.ESSENTIA_VAULT.3=Notes on handling.<BR><BR>Every occup
 # --- Flux Revolver and ammunition (T3) ---
 item.unboundtech.casing.name=Casing
 item.unboundtech.cartridge_ball.name=Ball Cartridge
+item.unboundtech.void_iridium.name=Void Iridium
+item.unboundtech.iridium_wand_cap.name=Iridium Wand Cap
+tile.unboundtech.singulator.name=Singulator
+unboundtech.tooltip.void_iridium=Keeps its charge in the Void
+tc.research_name.VOID_IRIDIUM=Void Iridium
+tc.research_text.VOID_IRIDIUM=The metal that decided it had won
+tc.research_name.CAP_iridium=Iridium Wand Cap
+tc.research_text.CAP_iridium=A metal where magic feels at home
+tc.research_name.SINGULATOR=Singulator
+tc.research_text.SINGULATOR=A wand from the wall socket
 item.unboundtech.cartridge_incendiary.name=Incendiary Cartridge
 item.unboundtech.cartridge_illuminating.name=Illuminating Cartridge
 item.unboundtech.flux_revolver.name=Flux Revolver

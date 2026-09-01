@@ -87,6 +87,15 @@ public final class UTResearch {
     /** Фокус Заряда: жезл как переносная розетка. */
     public static final String FOCUS_CHARGE = "FOCUS_CHARGE";
 
+    /** Пустотный Иридий: гейт вкладки «Синтез» (T4). */
+    public static final String VOID_IRIDIUM = "VOID_IRIDIUM";
+
+    /** Иридиевый наконечник жезла (T4; стержень — T5, отдельно). */
+    public static final String IRIDIUM_WAND_CAP = "CAP_iridium";
+
+    /** Сингулятор: жезл от розетки (T4). */
+    public static final String SINGULATOR = "SINGULATOR";
+
     /** Кольца Схемы: атрибуты игрока за 2 EU/t на кольцо. */
     public static final String SCHEMA_RINGS = "SCHEMA_RINGS";
 
@@ -523,6 +532,60 @@ public final class UTResearch {
                                         unboundtech.common.UTRecipesT3.mechanistMortar)))
                 .registerResearchItem();
 
+        // ===== T4: порядок В-10 — иридий -> наконечник -> Сингулятор =====
+
+        // Пустотный Иридий: Vacuos 14, Metallum 12, Praecantatio 10,
+        // Permutatio 8 = 44 (T4); родители — оба конвертера-материала.
+        new ResearchItem(
+                VOID_IRIDIUM, CATEGORY,
+                new AspectList().add(Aspect.VOID, 14).add(Aspect.METAL, 12)
+                        .add(Aspect.MAGIC, 10).add(Aspect.EXCHANGE, 8),
+                10, -1, 2,
+                new ItemStack(unboundtech.common.UTItems.voidIridium))
+                .setParents(EU_TO_VIS_ENGINE, TEMPERED_THAUMIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.VOID_IRIDIUM.1"),
+                        new ResearchPage("unboundtech.research_page.VOID_IRIDIUM.2"),
+                        unboundtech.common.UTRecipesT3.voidIridium == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.voidIridium)))
+                .registerResearchItem();
+
+        // Иридиевый наконечник: Praecantatio 16, Ordo 12, Machina 12,
+        // Perditio 10 = 50 (T4).
+        new ResearchItem(
+                IRIDIUM_WAND_CAP, CATEGORY,
+                new AspectList().add(Aspect.MAGIC, 16).add(Aspect.ORDER, 12)
+                        .add(Aspect.MECHANISM, 12).add(Aspect.ENTROPY, 10),
+                12, -2, 2,
+                new ItemStack(unboundtech.common.UTItems.iridiumWandCap))
+                .setParents(VOID_IRIDIUM)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.IRIDIUM_WAND_CAP.1"),
+                        new ResearchPage("unboundtech.research_page.IRIDIUM_WAND_CAP.2"),
+                        unboundtech.common.UTRecipesT3.iridiumWandCap == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.iridiumWandCap)))
+                .registerResearchItem();
+
+        // Сингулятор: Praecantatio 14, Potentia 12, Machina 10, Ordo 10
+        // = 46 (T4), complexity 3.
+        new ResearchItem(
+                SINGULATOR, CATEGORY,
+                new AspectList().add(Aspect.MAGIC, 14).add(Aspect.ENERGY, 12)
+                        .add(Aspect.MECHANISM, 10).add(Aspect.ORDER, 10),
+                12, -4, 3,
+                new ItemStack(unboundtech.common.UTBlocks.singulator))
+                .setParents(IRIDIUM_WAND_CAP)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.SINGULATOR.1"),
+                        new ResearchPage("unboundtech.research_page.SINGULATOR.2"),
+                        new ResearchPage("unboundtech.research_page.SINGULATOR.3"),
+                        unboundtech.common.UTRecipesT3.singulator == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.singulator)))
+                .registerResearchItem();
+
         // Техномаг: лорная запись, объясняющая, почему мод существует
         // (§3.1: если бы школы разговаривали, мост построили бы без игрока).
         new ResearchItem(
@@ -544,7 +607,7 @@ public final class UTResearch {
                 TECHNO_SPIRITS, CATEGORY,
                 new AspectList().add(Aspect.BEAST, 8).add(Aspect.ENERGY, 8)
                         .add(Aspect.MAGIC, 6),
-                6, -3, 1,
+                4, -8, 1,
                 new ItemStack(unboundtech.common.UTItems.chargedSpark))
                 .setParents(VIS_TO_EU_GENERATOR)
                 .setPages(pages(

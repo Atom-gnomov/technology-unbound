@@ -84,6 +84,89 @@ public final class UTRecipesInfusion {
      * адаптация: центр — медная катушка IC2, сердце любой машины;
      * пьедесталы карточки сохранены.
      */
+    /**
+     * Пустотный Иридий (`void_iridium.md` §6): центр — иридиевая руда
+     * IC2, нестабильность 8. ⚠️ Реализационная замена пьедесталов: в
+     * ТК4 нет кристаллов Vacuos/Metallum (шарды только прималов) —
+     * вместо них шард Perditio (дух Пустоты) и слиток таумия (Metallum);
+     * зафиксировано канон-заметкой при коммите.
+     */
+    public static InfusionRecipe registerVoidIridium() {
+        ItemStack ore = IC2Handles.item("misc_resource", "iridium_ore");
+        if (ore.isEmpty()) {
+            ore = IC2Handles.item("resource", "iridium_ore");
+        }
+        if (ore.isEmpty()) {
+            UTLog.warn("Void Iridium recipe skipped: IC2 iridium ore not found");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.VOID_IRIDIUM,
+                new ItemStack(UTItems.voidIridium),
+                8,
+                new AspectList().add(Aspect.VOID, 28).add(Aspect.METAL, 28)
+                        .add(Aspect.MAGIC, 18).add(Aspect.EXCHANGE, 12),
+                ore,
+                new ItemStack[]{
+                        new ItemStack(ConfigItems.itemResource, 1, 16),
+                        new ItemStack(UTItems.temperedIngot),
+                        new ItemStack(ConfigItems.itemShard, 1, 5),
+                        new ItemStack(ConfigItems.itemResource, 1, 16),
+                        new ItemStack(UTItems.temperedIngot),
+                        new ItemStack(ConfigItems.itemResource, 1, 2),
+                });
+    }
+
+    /**
+     * Иридиевый наконечник (`iridium_wand_components.md` §6): x2 за
+     * крафт — их всегда нужно два; центр — иридиевая пластина IC2.
+     */
+    public static InfusionRecipe registerIridiumWandCap() {
+        ItemStack plate = IC2Handles.item("crafting", "iridium");
+        if (plate.isEmpty()) {
+            UTLog.warn("Iridium Wand Cap recipe skipped: IC2 iridium plate not found");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.IRIDIUM_WAND_CAP,
+                new ItemStack(UTItems.iridiumWandCap, 2),
+                5,
+                new AspectList().add(Aspect.MAGIC, 24).add(Aspect.ORDER, 16)
+                        .add(Aspect.ENTROPY, 16).add(Aspect.METAL, 12),
+                IC2Handles.withCount(plate, 2),
+                new ItemStack[]{
+                        new ItemStack(UTItems.voidIridium),
+                        new ItemStack(ConfigItems.itemShard, 1, 4),
+                        new ItemStack(ConfigItems.itemShard, 1, 5),
+                });
+    }
+
+    /**
+     * Сингулятор (`singulator.md` §6): центр — МФЭ IC2, нестабильность 6.
+     */
+    public static InfusionRecipe registerSingulator() {
+        ItemStack mfe = IC2Handles.item("te", "mfe");
+        if (mfe.isEmpty()) {
+            UTLog.warn("Singulator recipe skipped: IC2 MFE not found");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.SINGULATOR,
+                new ItemStack(unboundtech.common.UTBlocks.singulator),
+                6,
+                new AspectList().add(Aspect.MAGIC, 32).add(Aspect.ENERGY, 24)
+                        .add(Aspect.ORDER, 16).add(Aspect.MECHANISM, 16),
+                mfe,
+                new ItemStack[]{
+                        new ItemStack(UTItems.voidIridium),
+                        new ItemStack(UTItems.iridiumWandCap),
+                        new ItemStack(ConfigItems.itemShard, 1, 4),
+                        new ItemStack(UTItems.voidIridium),
+                        new ItemStack(UTItems.temperedIngot),
+                        new ItemStack(UTItems.temperedIngot),
+                });
+    }
+
     public static InfusionRecipe registerFocusCharge() {
         ItemStack coil = IC2Handles.item("crafting", "coil");
         if (coil.isEmpty()) {

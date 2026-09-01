@@ -63,6 +63,7 @@ public final class UTModels {
                                 net.minecraft.client.Minecraft.getMinecraft()
                                         .getRenderItem()));
         RenderMechanistMortar.register();
+        TESRSingulator.register();
         // Револьвер: Java-модель через TEISR (школа Flan's Mod) — json
         // builtin/entity даёт только display-повороты.
         UTItems.fluxRevolver.setTileEntityItemStackRenderer(

@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import unboundtech.UnboundTech;
 import unboundtech.common.items.ItemCartridge;
+import unboundtech.common.items.ItemVoidIridium;
 import unboundtech.common.items.ItemElectricScribingTools;
 import unboundtech.common.items.ItemFluxArquebus;
 import unboundtech.common.items.ItemFluxRevolver;
@@ -62,6 +63,8 @@ public final class UTItems {
     public static final String CARTRIDGE_VIS = "cartridge_vis";
     public static final String CARTRIDGE_FLUX = "cartridge_flux";
     public static final String CARTRIDGE_BALL = "cartridge_ball";
+    public static final String VOID_IRIDIUM = "void_iridium";
+    public static final String IRIDIUM_WAND_CAP = "iridium_wand_cap";
     public static final String FOCUS_CHARGE = "focus_charge";
     public static final String CHARGED_SPARK = "charged_spark";
     public static final String RING_FRAME = "ring_frame";
@@ -140,6 +143,8 @@ public final class UTItems {
     public static Item cartridgeVis;
     public static Item cartridgeFlux;
     public static Item cartridgeBall;
+    public static Item voidIridium;
+    public static Item iridiumWandCap;
     public static Item focusCharge;
     public static Item chargedSpark;
     public static Item ringFrame;
@@ -218,6 +223,9 @@ public final class UTItems {
         cartridgeBall = make(new ItemCartridge(
                 unboundtech.common.entities.EntityFluxBullet.TYPE_BALL,
                 "unboundtech.tooltip.cartridge_ball"), CARTRIDGE_BALL);
+        // T4 (`void_iridium.md`, `iridium_wand_components.md`)
+        voidIridium = make(new ItemVoidIridium(), VOID_IRIDIUM);
+        iridiumWandCap = make(new Item().setMaxStackSize(16), IRIDIUM_WAND_CAP);
         fluxRevolver = make(new ItemFluxRevolver(), FLUX_REVOLVER);
         fluxArquebus = make(new ItemFluxArquebus(), FLUX_ARQUEBUS);
         cartridgeVis = make(new ItemCartridge(
@@ -243,6 +251,18 @@ public final class UTItems {
      */
     public static void init() {
         OreDictionary.registerOre(ORE_INGOT, new ItemStack(temperedIngot));
+        // Иридиевый наконечник жезла (`iridium_wand_components.md` §4.1):
+        // база 0.75 — лучше пустотного и ихорного (0.8), особая скидка
+        // 0.65 на Ordo и Perditio; craftCost 12. WandCap кладёт себя в
+        // реестр сам, хук порту не нужен (§2.1 карточки).
+        new thaumcraft.api.wands.WandCap("iridium", 0.75f,
+                java.util.Arrays.asList(
+                        thaumcraft.api.aspects.Aspect.ORDER,
+                        thaumcraft.api.aspects.Aspect.ENTROPY),
+                0.65f, new ItemStack(iridiumWandCap), 12)
+                .setTexture(new net.minecraft.util.ResourceLocation(
+                        unboundtech.UnboundTech.MODID,
+                        "textures/models/wand_cap_iridium.png"));
         ItemStack ingot = new ItemStack(temperedIngot);
         TOOL_MATERIAL.setRepairItem(ingot);
         ARMOR_MATERIAL.setRepairItem(ingot);
@@ -305,6 +325,7 @@ public final class UTItems {
                 quantIchorHelmet, quantIchorChestplate, quantIchorLeggings, quantIchorBoots,
                 casing, cartridgeIncendiary, cartridgeIlluminating, fluxRevolver,
                 fluxArquebus, cartridgeVis, cartridgeFlux, cartridgeBall,
+                voidIridium, iridiumWandCap,
                 focusCharge, chargedSpark, ringFrame, ringDrive, ringStride, ringBrace,
         };
     }

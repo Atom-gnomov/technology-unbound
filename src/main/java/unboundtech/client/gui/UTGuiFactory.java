@@ -32,6 +32,9 @@ public final class UTGuiFactory {
         if (tile instanceof unboundtech.common.tiles.TileEssentiaVaultController) {
             return new GuiVaultController(container);
         }
+        if (tile instanceof unboundtech.common.tiles.TileSingulator) {
+            return new GuiSingulator(container);
+        }
         return new GuiMachine(container);
     }
 }

@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "unboundtech:blocks/singulator_side_active",
+    "down": "unboundtech:blocks/machine_bottom",
+    "up": "unboundtech:blocks/singulator_top",
+    "north": "unboundtech:blocks/singulator_front_active",
+    "south": "unboundtech:blocks/singulator_side_active",
+    "east": "unboundtech:blocks/singulator_side_active",
+    "west": "unboundtech:blocks/singulator_side_active"
+  }
+}
