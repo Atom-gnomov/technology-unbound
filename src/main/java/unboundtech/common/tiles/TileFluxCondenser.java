@@ -94,11 +94,11 @@ public class TileFluxCondenser extends TileThaumcraft
     }
 
     private String clientStatusLine() {
-        String head = "Флюкс-Конденсатор ["
+        String head = "Конденсатор ["
                 + (this.guiMode == Mode.CONDENSE.ordinal()
                         ? "конденсация" : "сгущение") + "]";
         String tail = ". Мути: " + this.guiEssentia + " / " + ESSENTIA_BUFFER
-                + ", буфер " + this.guiEnergy + " / " + (int) CAPACITY + " EU";
+                + ". Буфер " + this.guiEnergy + " / " + (int) CAPACITY + " EU";
         switch (this.guiState) {
             case 1: return "§b" + head + ": буфер полон" + tail;
             case 2: return "§b" + head + ": ждёт эссенцию со скруббера" + tail;
@@ -360,10 +360,10 @@ public class TileFluxCondenser extends TileThaumcraft
             return this.clientStatusLine();
         }
         int eu = (int) this.source.getEnergyStored();
-        String head = "Флюкс-Конденсатор ["
+        String head = "Конденсатор ["
                 + (this.mode == Mode.CONDENSE ? "конденсация" : "сгущение") + "]";
         String tail = ". Мути: " + this.essentia + " / " + ESSENTIA_BUFFER
-                + ", буфер " + eu + " / " + (int) CAPACITY + " EU";
+                + ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (this.mode == Mode.CONDENSE
                 && this.source.getEnergyStored() > CAPACITY - EnergyCanon.EU_PER_FLUX_ESSENTIA) {
             return "§b" + head + ": буфер полон" + tail;

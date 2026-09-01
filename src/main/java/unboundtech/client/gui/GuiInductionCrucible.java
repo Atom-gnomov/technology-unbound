@@ -36,7 +36,7 @@ public class GuiInductionCrucible extends GuiMachine {
                 continue;
             }
             int x = this.guiLeft + 76 + i * 22;
-            int y = this.guiTop + GAUGE_Y + 4;
+            int y = this.guiTop + GAUGE_Y + 8;
             drawRect(x - 1, y - 1, x + 13, y + 13, 0xFF2A2136);
             drawRect(x, y, x + 12, y + 12, 0xFF000000 | colour);
         }
@@ -55,7 +55,7 @@ public class GuiInductionCrucible extends GuiMachine {
             String text = String.valueOf(amount);
             this.fontRenderer.drawString(text,
                     76 + i * 22 + (12 - this.fontRenderer.getStringWidth(text)) / 2,
-                    GAUGE_Y + 18, 0xE8E0F5);
+                    GAUGE_Y + 24, 0xE8E0F5);
         }
     }
 }

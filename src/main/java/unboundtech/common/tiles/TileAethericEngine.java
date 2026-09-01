@@ -199,29 +199,31 @@ public class TileAethericEngine extends TileThaumcraft implements ITickable,
             return this.clientStatusLine();
         }
         int eu = (int) this.sink.getEnergyStored();
+        String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (eu < EnergyCanon.EU_PER_NODE_ASPECT_BUY) {
-            return "\u00a7eНакапливает заряд: " + eu + " / "
-                    + EnergyCanon.EU_PER_NODE_ASPECT_BUY + " EU на аспект";
+            return "§eДвигатель: накапливает " + eu + " из "
+                    + EnergyCanon.EU_PER_NODE_ASPECT_BUY + " EU на аспект" + tail;
         }
         if (this.nodeCache.nodes(this.world, this.pos, this.counter).isEmpty()) {
-            return "\u00a7cНет узла в радиусе 8 блоков";
+            return "§cДвигатель: нет узла в радиусе 8 блоков" + tail;
         }
-        return (this.active ? "\u00a7aЗаряжает узел: " : "\u00a7bВсе узлы полны: ")
-                + eu + " EU в буфере";
+        return (this.active ? "§aДвигатель: заряжает узел"
+                : "§bДвигатель: все узлы полны") + tail;
     }
 
     /** Клиентская строка — только из синкнутых контейнером полей. */
     private String clientStatusLine() {
         int eu = this.guiEnergy;
+        String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (eu < EnergyCanon.EU_PER_NODE_ASPECT_BUY) {
-            return "§eНакапливает заряд: " + eu + " / "
-                    + EnergyCanon.EU_PER_NODE_ASPECT_BUY + " EU на аспект";
+            return "§eДвигатель: накапливает " + eu + " из "
+                    + EnergyCanon.EU_PER_NODE_ASPECT_BUY + " EU на аспект" + tail;
         }
         if (!this.guiNodeFound) {
-            return "§cНет узла в радиусе 8 блоков";
+            return "§cДвигатель: нет узла в радиусе 8 блоков" + tail;
         }
-        return (this.guiActive ? "§aЗаряжает узел: " : "§bВсе узлы полны: ")
-                + eu + " EU в буфере";
+        return (this.guiActive ? "§aДвигатель: заряжает узел"
+                : "§bДвигатель: все узлы полны") + tail;
     }
 
     @Override

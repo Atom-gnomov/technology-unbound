@@ -25,7 +25,7 @@ public class GuiResonantSplitter extends GuiMachine {
     protected void drawWidgets(int mouseX, int mouseY) {
         TileResonantSplitter splitter = (TileResonantSplitter) this.tile;
         double buffer = TileResonantSplitter.BUFFER;
-        this.drawFramedBar(30, GAUGE_Y, 8, GAUGE_H,
+        this.drawFramedBar(28, GAUGE_Y, 8, GAUGE_H,
                 splitter.guiInAmount() / buffer,
                 colourOr(splitter.guiInColor(), 0x555566));
         this.drawFramedBarH(48, GAUGE_Y + GAUGE_H / 2 - 3, 56, 6,

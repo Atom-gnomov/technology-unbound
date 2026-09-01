@@ -29,6 +29,21 @@ public class ContainerMachine extends Container {
         return this.tile;
     }
 
+    /**
+     * Слотов нет — ванильный slotClick на пустом списке кидает
+     * IndexOutOfBoundsException от враждебного пакета (ревью #17):
+     * клики по слотам глушим, наружный клик (-999) остаётся ванили.
+     */
+    @Override
+    public ItemStack slotClick(int slotId, int dragType,
+                               net.minecraft.inventory.ClickType type,
+                               EntityPlayer player) {
+        if (slotId >= 0) {
+            return ItemStack.EMPTY;
+        }
+        return super.slotClick(slotId, dragType, type, player);
+    }
+
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         // до ЦЕНТРА блока: BlockPos.add(0.5,...) флорит в no-op (ревью №6)

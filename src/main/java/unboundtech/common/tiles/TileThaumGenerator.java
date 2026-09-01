@@ -332,33 +332,35 @@ public class TileThaumGenerator extends TileThaumcraft implements ITickable,
             return this.clientStatusLine();
         }
         int eu = (int) this.source.getEnergyStored();
+        String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (this.interfered) {
-            return "\u00a7cРезонансная интерференция: рядом второй генератор";
+            return "§cГенератор: резонансная интерференция — рядом второй" + tail;
         }
         if (eu >= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
-            return "\u00a7bБуфер полон: " + eu + " / " + (int) CAPACITY + " EU";
+            return "§bГенератор: буфер полон" + tail;
         }
         if (this.nodeCache.nodes(this.world, this.pos, this.counter).isEmpty()) {
-            return "\u00a7cНет узла в радиусе 8 блоков";
+            return "§cГенератор: нет узла в радиусе 8 блоков" + tail;
         }
-        return (this.activeHold > 0 ? "\u00a7aРаботает: " : "\u00a7eЖдёт регенерации узла: ")
-                + eu + " / " + (int) CAPACITY + " EU";
+        return (this.activeHold > 0 ? "§aГенератор: работает"
+                : "§eГенератор: ждёт регенерации узла") + tail;
     }
 
     /** Клиентская строка — только из полей, синкнутых контейнером. */
     private String clientStatusLine() {
         int eu = this.guiEnergy;
+        String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (this.guiInterfered) {
-            return "§cРезонансная интерференция: рядом второй генератор";
+            return "§cГенератор: резонансная интерференция — рядом второй" + tail;
         }
         if (eu >= CAPACITY - EnergyCanon.EU_PER_NODE_ASPECT_SELL) {
-            return "§bБуфер полон: " + eu + " / " + (int) CAPACITY + " EU";
+            return "§bГенератор: буфер полон" + tail;
         }
         if (!this.guiNodeFound) {
-            return "§cНет узла в радиусе 8 блоков";
+            return "§cГенератор: нет узла в радиусе 8 блоков" + tail;
         }
-        return (this.guiWorking ? "§aРаботает: " : "§eЖдёт регенерации узла: ")
-                + eu + " / " + (int) CAPACITY + " EU";
+        return (this.guiWorking ? "§aГенератор: работает"
+                : "§eГенератор: ждёт регенерации узла") + tail;
     }
 
     @Override

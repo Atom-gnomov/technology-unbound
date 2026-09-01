@@ -112,7 +112,7 @@ public class TileBusNode extends TileThaumcraft
             case 1: return "§cУзел: нет кабеля линии" + tail;
             case 2: return "§cУзел: каналов не хватает — " + this.guiPipes
                     + " труб, " + this.guiChannels + " каналов" + tail;
-            case 3: return "§cУзел: нет энергии" + tail;
+            case 3: return "§eУзел: копит EU" + tail;
             default: break;
         }
         int held = 0;
@@ -536,7 +536,7 @@ public class TileBusNode extends TileThaumcraft
                     + Math.min(MAX_PIPE_SIDES, this.lineChannels) + " каналов" + tail;
         }
         if (!this.sink.canUseEnergy(EU_PER_UNIT)) {
-            return "§cУзел: нет энергии" + tail;
+            return "§eУзел: копит EU" + tail;
         }
         int held = 0;
         for (int amount : this.bufAmount) {

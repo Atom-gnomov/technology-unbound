@@ -146,7 +146,7 @@ public class TileInductionCrucible extends TileThaumcraft
         switch (this.guiState) {
             case 1: return "§cТигель: заглушен редстоуном" + tail;
             case 2: return "§cТигель: нет воды" + tail;
-            case 3: return "§cТигель: нет энергии" + tail;
+            case 3: return "§eТигель: копит EU" + tail;
             case 4: return "§eТигель: нагрев " + this.guiHeat + " / " + HEAT_MAX + tail;
             case 5: return "§cТигель: полон — " + this.guiTags + " / " + MAX_TAGS
                     + ", слейте остатки" + tail;
@@ -626,7 +626,7 @@ public class TileInductionCrucible extends TileThaumcraft
             return "§cТигель: нет воды" + tail;
         }
         if (!this.sink.canUseEnergy(EU_PER_TICK)) {
-            return "§cТигель: нет энергии" + tail;
+            return "§eТигель: копит EU" + tail;
         }
         if (!this.isHot()) {
             return "§eТигель: нагрев " + this.heat + " / " + HEAT_MAX + tail;
