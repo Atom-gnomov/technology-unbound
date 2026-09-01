@@ -36,7 +36,76 @@ import unboundtech.energy.EnergyCanon;
  * {@code null} и не разыменовывается.
  */
 public class TileFluxCondenser extends TileThaumcraft
-        implements ITickable, IMachineStatus, IEssentiaTransport {
+        implements ITickable, IMachineStatus, IEssentiaTransport,
+        unboundtech.common.gui.ISyncedMachine, unboundtech.common.gui.IEnergyGauge {
+
+    /** Клиентские копии полей GUI (ХФ-7). */
+    private int guiEnergy;
+    private int guiEssentia;
+    private int guiMode;
+    private int guiState;
+
+    private int stateCode() {
+        if (this.mode == Mode.CONDENSE
+                && this.source.getEnergyStored()
+                        > CAPACITY - EnergyCanon.EU_PER_FLUX_ESSENTIA) {
+            return 1;
+        }
+        if (this.essentia < (this.mode == Mode.THICKEN ? THICKEN_ESSENTIA : 1)) {
+            return 2;
+        }
+        if (this.mode == Mode.THICKEN
+                && !this.source.canUseEnergy(EnergyCanon.EU_PER_FLUX_ESSENTIA)) {
+            return 3;
+        }
+        return 0;
+    }
+
+    @Override
+    public int[] syncFields() {
+        return new int[]{(int) this.source.getEnergyStored(), this.essentia,
+                this.mode.ordinal(), this.stateCode()};
+    }
+
+    @Override
+    public void applySyncField(int index, int value) {
+        switch (index) {
+            case 0: this.guiEnergy = value; break;
+            case 1: this.guiEssentia = value; break;
+            case 2: this.guiMode = value; break;
+            case 3: this.guiState = value; break;
+            default: break;
+        }
+    }
+
+    @Override
+    public double gaugeEnergy() {
+        return this.world != null && this.world.isRemote
+                ? this.guiEnergy : this.source.getEnergyStored();
+    }
+
+    @Override
+    public double gaugeCapacity() {
+        return CAPACITY;
+    }
+
+    public int guiEssentia() {
+        return this.guiEssentia;
+    }
+
+    private String clientStatusLine() {
+        String head = "Флюкс-Конденсатор ["
+                + (this.guiMode == Mode.CONDENSE.ordinal()
+                        ? "конденсация" : "сгущение") + "]";
+        String tail = ". Мути: " + this.guiEssentia + " / " + ESSENTIA_BUFFER
+                + ", буфер " + this.guiEnergy + " / " + (int) CAPACITY + " EU";
+        switch (this.guiState) {
+            case 1: return "§b" + head + ": буфер полон" + tail;
+            case 2: return "§b" + head + ": ждёт эссенцию со скруббера" + tail;
+            case 3: return "§e" + head + ": не хватает EU на сгущение" + tail;
+            default: return "§a" + head + ": работает" + tail;
+        }
+    }
 
     /** §5: буфер 10 000 EU, выход LV (до 32 EU/t). */
     public static final double CAPACITY = 10_000.0;
@@ -287,6 +356,9 @@ public class TileFluxCondenser extends TileThaumcraft
 
     @Override
     public String getStatusLine() {
+        if (this.world != null && this.world.isRemote) {
+            return this.clientStatusLine();
+        }
         int eu = (int) this.source.getEnergyStored();
         String head = "Флюкс-Конденсатор ["
                 + (this.mode == Mode.CONDENSE ? "конденсация" : "сгущение") + "]";

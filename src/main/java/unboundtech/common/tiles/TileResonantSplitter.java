@@ -30,7 +30,138 @@ import unboundtech.energy.EnergyCanon;
  * принял-вернул. Редстоун глушит, как родную центрифугу.
  */
 public class TileResonantSplitter extends TileThaumcraft
-        implements ITickable, IMachineStatus, IEssentiaTransport, IAspectContainer {
+        implements ITickable, IMachineStatus, IEssentiaTransport, IAspectContainer,
+        unboundtech.common.gui.ISyncedMachine, unboundtech.common.gui.IEnergyGauge {
+
+    /** Клиентские копии полей GUI (ХФ-7). */
+    private int guiEnergy;
+    private int guiState;
+    private int guiInColor = -1;
+    private int guiInAmount;
+    private int guiColA = -1;
+    private int guiAmtA;
+    private int guiColB = -1;
+    private int guiAmtB;
+    private int guiProgress;
+
+    private int stateCode() {
+        if (this.world.isBlockPowered(this.pos)) {
+            return 1;
+        }
+        if (this.input == null) {
+            return 2;
+        }
+        if (!this.canOperate()) {
+            return 3;
+        }
+        if (!this.sink.canUseEnergy(EnergyCanon.EU_PER_SPLIT)) {
+            return 4;
+        }
+        return 0;
+    }
+
+    @Override
+    public int[] syncFields() {
+        return new int[]{(int) this.sink.getEnergyStored(), this.stateCode(),
+                this.input == null ? -1 : this.input.getColor(), this.inputAmount,
+                this.outA == null ? -1 : this.outA.getColor(), this.outAmountA,
+                this.outB == null ? -1 : this.outB.getColor(), this.outAmountB,
+                this.progress};
+    }
+
+    @Override
+    public void applySyncField(int index, int value) {
+        switch (index) {
+            case 0: this.guiEnergy = value; break;
+            case 1: this.guiState = value; break;
+            case 2: this.guiInColor = value; break;
+            case 3: this.guiInAmount = value; break;
+            case 4: this.guiColA = value; break;
+            case 5: this.guiAmtA = value; break;
+            case 6: this.guiColB = value; break;
+            case 7: this.guiAmtB = value; break;
+            case 8: this.guiProgress = value; break;
+            default: break;
+        }
+    }
+
+    @Override
+    public double gaugeEnergy() {
+        return this.world != null && this.world.isRemote
+                ? this.guiEnergy : this.sink.getEnergyStored();
+    }
+
+    @Override
+    public double gaugeCapacity() {
+        return CAPACITY;
+    }
+
+    public int guiInColor() {
+        return this.guiInColor;
+    }
+
+    public int guiInAmount() {
+        return this.guiInAmount;
+    }
+
+    public int guiColA() {
+        return this.guiColA;
+    }
+
+    public int guiAmtA() {
+        return this.guiAmtA;
+    }
+
+    public int guiColB() {
+        return this.guiColB;
+    }
+
+    public int guiAmtB() {
+        return this.guiAmtB;
+    }
+
+    public int guiProgress() {
+        return this.guiProgress;
+    }
+
+    private String clientStatusLine() {
+        String tail = ". Буфер " + this.guiEnergy + " / " + (int) CAPACITY + " EU";
+        if (this.guiState == 1) {
+            return "§cРасщепитель: заглушен редстоуном" + tail;
+        }
+        if (this.guiState == 2) {
+            return "§bРасщепитель: ждёт составной аспект (примордиал не расщепляется)" + tail;
+        }
+        // компоненты честнее брать из ВХОДНОГО аспекта (вердикт
+        // скептика #15): выходные буферы могут держать остатки прежнего
+        // входа или быть пусты до первого сплита
+        Aspect inAspect = TileInductionCrucible.aspectByColor(this.guiInColor);
+        String what;
+        if (inAspect != null && inAspect.getComponents() != null
+                && inAspect.getComponents().length == 2) {
+            what = inAspect.getName() + " → "
+                    + inAspect.getComponents()[0].getName() + " + "
+                    + inAspect.getComponents()[1].getName();
+        } else {
+            what = name(this.guiInColor) + " → " + name(this.guiColA)
+                    + " + " + name(this.guiColB);
+        }
+        if (this.guiState == 3) {
+            return "§cРасщепитель: слейте выход — некуда класть компоненты ("
+                    + what + ")" + tail;
+        }
+        if (this.guiState == 4) {
+            return "§eРасщепитель: копит " + EnergyCanon.EU_PER_SPLIT
+                    + " EU на операцию (" + what + ")" + tail;
+        }
+        return "§aРасщепитель: " + what + ", вход " + this.guiInAmount
+                + ", выход " + this.guiAmtA + "+" + this.guiAmtB + tail;
+    }
+
+    private static String name(int colour) {
+        String found = TileInductionCrucible.aspectNameByColor(colour);
+        return found == null ? "?" : found;
+    }
 
     /** §5: буфер 20 000 EU, вход LV. */
     public static final double CAPACITY = 20_000.0;
@@ -420,6 +551,9 @@ public class TileResonantSplitter extends TileThaumcraft
 
     @Override
     public String getStatusLine() {
+        if (this.world != null && this.world.isRemote) {
+            return this.clientStatusLine();
+        }
         int eu = (int) this.sink.getEnergyStored();
         String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU";
         if (this.world.isBlockPowered(this.pos)) {

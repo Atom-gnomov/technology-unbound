@@ -92,6 +92,37 @@ public class GuiMachine extends GuiContainer {
     protected void drawWidgets(int mouseX, int mouseY) {
     }
 
+    /** Вертикальный бар с рамкой: заливка снизу вверх цветом машины. */
+    protected void drawFramedBar(int x, int y, int w, int h,
+                                 double frac, int rgb) {
+        int left = this.guiLeft + x;
+        int top = this.guiTop + y;
+        drawRect(left - 1, top - 1, left + w + 1, top + h + 1, 0xFF2A2136);
+        drawRect(left, top, left + w, top + h, 0xFF120E1C);
+        int filled = (int) Math.round(
+                h * Math.max(0.0, Math.min(1.0, frac)));
+        if (filled > 0) {
+            drawRect(left, top + h - filled, left + w, top + h,
+                    0xFF000000 | rgb);
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    /** Горизонтальный бар прогресса: заливка слева направо. */
+    protected void drawFramedBarH(int x, int y, int w, int h,
+                                  double frac, int rgb) {
+        int left = this.guiLeft + x;
+        int top = this.guiTop + y;
+        drawRect(left - 1, top - 1, left + w + 1, top + h + 1, 0xFF2A2136);
+        drawRect(left, top, left + w, top + h, 0xFF120E1C);
+        int filled = (int) Math.round(
+                w * Math.max(0.0, Math.min(1.0, frac)));
+        if (filled > 0) {
+            drawRect(left, top, left + filled, top + h, 0xFF000000 | rgb);
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         // заголовок — локализованное имя блока

@@ -46,7 +46,145 @@ import unboundtech.common.blocks.BlockMachineBase;
  * (attemptSmelt), а не по памяти.
  */
 public class TileInductionCrucible extends TileThaumcraft
-        implements ITickable, IMachineStatus, IAspectContainer, IEssentiaTransport {
+        implements ITickable, IMachineStatus, IAspectContainer, IEssentiaTransport,
+        unboundtech.common.gui.ISyncedMachine, unboundtech.common.gui.IEnergyGauge {
+
+    /** Клиентские копии полей GUI — живут от контейнера (ХФ-7). */
+    private int guiEnergy;
+    private int guiHeat;
+    private int guiWater;
+    private int guiTags;
+    private int guiState;
+    private final int[] guiAspects = new int[6];
+
+    /** Код причины простоя для клиентской строки (ХФ-7). */
+    private int stateCode() {
+        if (this.world.isBlockPowered(this.pos)) {
+            return 1;
+        }
+        if (this.tank.getFluidAmount() <= 0) {
+            return 2;
+        }
+        if (!this.sink.canUseEnergy(EU_PER_TICK)) {
+            return 3;
+        }
+        if (!this.isHot()) {
+            return 4;
+        }
+        if (this.tagAmount() >= MAX_TAGS) {
+            return 5;
+        }
+        return 0;
+    }
+
+    @Override
+    public int[] syncFields() {
+        // аспекты едут ЦВЕТОМ: клиент восстанавливает имя поиском по
+        // цвету в реестре (одинаков на обеих сторонах)
+        Aspect[] sorted = this.sortedAspects();
+        int[] fields = new int[]{(int) this.sink.getEnergyStored(), this.heat,
+                this.tank.getFluidAmount(), this.tagAmount(), this.stateCode(),
+                -1, 0, -1, 0, -1, 0};
+        for (int i = 0; i < 3 && i < sorted.length; i++) {
+            fields[5 + 2 * i] = sorted[i].getColor();
+            fields[6 + 2 * i] = this.aspects.getAmount(sorted[i]);
+        }
+        return fields;
+    }
+
+    @Override
+    public void applySyncField(int index, int value) {
+        switch (index) {
+            case 0: this.guiEnergy = value; break;
+            case 1: this.guiHeat = value; break;
+            case 2: this.guiWater = value; break;
+            case 3: this.guiTags = value; break;
+            case 4: this.guiState = value; break;
+            default:
+                if (index >= 5 && index < 11) {
+                    this.guiAspects[index - 5] = value;
+                }
+                break;
+        }
+    }
+
+    @Override
+    public double gaugeEnergy() {
+        return this.world != null && this.world.isRemote
+                ? this.guiEnergy : this.sink.getEnergyStored();
+    }
+
+    @Override
+    public double gaugeCapacity() {
+        return CAPACITY;
+    }
+
+    public int guiHeat() {
+        return this.guiHeat;
+    }
+
+    public int guiWater() {
+        return this.guiWater;
+    }
+
+    public int guiTags() {
+        return this.guiTags;
+    }
+
+    public int guiAspectColor(int i) {
+        return this.guiAspects[2 * i];
+    }
+
+    public int guiAspectAmount(int i) {
+        return this.guiAspects[2 * i + 1];
+    }
+
+    /** Клиентская строка — ТОЛЬКО из синкнутых полей (урок №2/№3). */
+    private String clientStatusLine() {
+        String tail = ". Буфер " + this.guiEnergy + " / " + (int) CAPACITY
+                + " EU, вода " + this.guiWater + " / " + TANK_CAPACITY + " мБ";
+        switch (this.guiState) {
+            case 1: return "§cТигель: заглушен редстоуном" + tail;
+            case 2: return "§cТигель: нет воды" + tail;
+            case 3: return "§cТигель: нет энергии" + tail;
+            case 4: return "§eТигель: нагрев " + this.guiHeat + " / " + HEAT_MAX + tail;
+            case 5: return "§cТигель: полон — " + this.guiTags + " / " + MAX_TAGS
+                    + ", слейте остатки" + tail;
+            default: break;
+        }
+        StringBuilder held = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            if (this.guiAspects[2 * i + 1] <= 0) {
+                continue;
+            }
+            if (held.length() > 0) {
+                held.append(", ");
+            }
+            String name = aspectNameByColor(this.guiAspects[2 * i]);
+            held.append(name == null ? "?" : name).append(" ")
+                    .append(this.guiAspects[2 * i + 1]);
+        }
+        return "§aТигель: кипит, " + this.guiTags + " / " + MAX_TAGS
+                + (held.length() == 0 ? ", пуст" : " — " + held) + tail;
+    }
+
+    /** Аспект по цвету — реестр одинаков на клиенте и сервере. */
+    static Aspect aspectByColor(int colour) {
+        if (colour < 0) {
+            return null;
+        }
+        for (Aspect aspect : Aspect.aspects.values()) {
+            if (aspect.getColor() == colour) {
+                return aspect;
+            }
+        }
+        return null;
+    }
+
+    static String aspectNameByColor(int colour) {
+        Aspect aspect = aspectByColor(colour);
+        return aspect == null ? null : aspect.getName();
+    }
 
     /** §5: буфер 10 000 EU, вход LV. */
     public static final double CAPACITY = 10_000.0;
@@ -475,6 +613,9 @@ public class TileInductionCrucible extends TileThaumcraft
 
     @Override
     public String getStatusLine() {
+        if (this.world != null && this.world.isRemote) {
+            return this.clientStatusLine();
+        }
         int eu = (int) this.sink.getEnergyStored();
         String tail = ". Буфер " + eu + " / " + (int) CAPACITY + " EU, вода "
                 + this.tank.getFluidAmount() + " / " + TANK_CAPACITY + " мБ";
