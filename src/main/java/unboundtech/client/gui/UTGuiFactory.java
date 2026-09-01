@@ -35,6 +35,9 @@ public final class UTGuiFactory {
         if (tile instanceof unboundtech.common.tiles.TileSingulator) {
             return new GuiSingulator(container);
         }
+        if (tile instanceof unboundtech.common.tiles.TileCartridgeLine) {
+            return new GuiCartridgeLine(container);
+        }
         return new GuiMachine(container);
     }
 }

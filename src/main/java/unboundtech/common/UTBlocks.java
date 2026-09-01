@@ -15,6 +15,7 @@ import unboundtech.common.blocks.BlockAethericEngine;
 import unboundtech.common.blocks.BlockFluxCondenser;
 import unboundtech.common.blocks.BlockBusNode;
 import unboundtech.common.blocks.BlockSingulator;
+import unboundtech.common.blocks.BlockCartridgeLine;
 import unboundtech.common.blocks.BlockEssentiaConduit;
 import unboundtech.common.blocks.BlockInductionCrucible;
 import unboundtech.common.blocks.BlockMechanistMortar;
@@ -59,6 +60,7 @@ public final class UTBlocks {
     public static final String VAULT_GOLEM_PORT = "essentia_vault_golem_port";
     public static final String MECHANIST_MORTAR = "mechanist_mortar";
     public static final String SINGULATOR = "singulator";
+    public static final String CARTRIDGE_LINE = "cartridge_line";
 
     public static Block thaumGenerator;
     public static Block aethericEngine;
@@ -67,6 +69,7 @@ public final class UTBlocks {
     public static Block inductionCrucible;
     public static Block busNode;
     public static Block singulator;
+    public static Block cartridgeLine;
     public static Block conduitI;
     public static Block conduitII;
     public static Block conduitIII;
@@ -99,6 +102,7 @@ public final class UTBlocks {
         inductionCrucible = make(new BlockInductionCrucible(), INDUCTION_CRUCIBLE);
         busNode = make(new BlockBusNode(), BUS_NODE);
         singulator = make(new BlockSingulator(), SINGULATOR);
+        cartridgeLine = make(new BlockCartridgeLine(), CARTRIDGE_LINE);
         conduitI = make(new BlockEssentiaConduit(2), CONDUIT_I);
         conduitII = make(new BlockEssentiaConduit(4), CONDUIT_II);
         conduitIII = make(new BlockEssentiaConduit(8), CONDUIT_III);
@@ -121,6 +125,9 @@ public final class UTBlocks {
         GameRegistry.registerTileEntity(
                 unboundtech.common.tiles.TileSingulator.class,
                 new ResourceLocation(UnboundTech.MODID, SINGULATOR));
+        GameRegistry.registerTileEntity(
+                unboundtech.common.tiles.TileCartridgeLine.class,
+                new ResourceLocation(UnboundTech.MODID, CARTRIDGE_LINE));
         GameRegistry.registerTileEntity(TileResonantSplitter.class,
                 new ResourceLocation(UnboundTech.MODID, RESONANT_SPLITTER));
         GameRegistry.registerTileEntity(TileInductionCrucible.class,

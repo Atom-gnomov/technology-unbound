@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "unboundtech:blocks/cartridge_line_side",
+    "down": "unboundtech:blocks/machine_bottom",
+    "up": "unboundtech:blocks/cartridge_line_top_active",
+    "north": "unboundtech:blocks/cartridge_line_front_active",
+    "south": "unboundtech:blocks/cartridge_line_side",
+    "east": "unboundtech:blocks/cartridge_line_side",
+    "west": "unboundtech:blocks/cartridge_line_side"
+  }
+}

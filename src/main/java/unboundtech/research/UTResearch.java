@@ -96,6 +96,12 @@ public final class UTResearch {
     /** Сингулятор: жезл от розетки (T4). */
     public static final String SINGULATOR = "SINGULATOR";
 
+    /** Патронная Линия: боеприпас пачками (T4). */
+    public static final String CARTRIDGE_PRESS = "CARTRIDGE_PRESS";
+
+    /** Вис-Кромка: отложенный урон на чужих энергоклинках (T4). */
+    public static final String VIS_EDGE = "VIS_EDGE";
+
     /** Кольца Схемы: атрибуты игрока за 2 EU/t на кольцо. */
     public static final String SCHEMA_RINGS = "SCHEMA_RINGS";
 
@@ -530,6 +536,40 @@ public final class UTResearch {
                         unboundtech.common.UTRecipesT3.mechanistMortar == null ? null
                                 : new ResearchPage(
                                         unboundtech.common.UTRecipesT3.mechanistMortar)))
+                .registerResearchItem();
+
+        // Патронная Линия: Machina 14, Telum 12, Praecantatio 12,
+        // Fabrico 10 = 48 (T4), родитель — аркебуза.
+        new ResearchItem(
+                CARTRIDGE_PRESS, CATEGORY,
+                new AspectList().add(Aspect.MECHANISM, 14).add(Aspect.WEAPON, 12)
+                        .add(Aspect.MAGIC, 12).add(Aspect.CRAFT, 10),
+                12, -8, 3,
+                new ItemStack(unboundtech.common.UTBlocks.cartridgeLine))
+                .setParents(FLUX_ARQUEBUS)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.CARTRIDGE_PRESS.1"),
+                        new ResearchPage("unboundtech.research_page.CARTRIDGE_PRESS.2"),
+                        unboundtech.common.UTRecipesT3.cartridgeLine == null
+                                ? null : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.cartridgeLine)))
+                .registerResearchItem();
+
+        // Вис-Кромка: Telum 14, Perditio 12, Praecantatio 12, Ignis 8
+        // = 46 (T4), родитель — аркебуза.
+        new ResearchItem(
+                VIS_EDGE, CATEGORY,
+                new AspectList().add(Aspect.WEAPON, 14).add(Aspect.ENTROPY, 12)
+                        .add(Aspect.MAGIC, 12).add(Aspect.FIRE, 8),
+                14, -7, 3,
+                new ItemStack(unboundtech.common.UTItems.visEdge))
+                .setParents(FLUX_ARQUEBUS)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.VIS_EDGE.1"),
+                        new ResearchPage("unboundtech.research_page.VIS_EDGE.2"),
+                        unboundtech.common.UTRecipesT3.visEdge == null ? null
+                                : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.visEdge)))
                 .registerResearchItem();
 
         // ===== T4: порядок В-10 — иридий -> наконечник -> Сингулятор =====

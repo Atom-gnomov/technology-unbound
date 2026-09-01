@@ -116,6 +116,12 @@ public final class UTCrafting {
                 new ItemStack(thaumcraft.common.config.ConfigItems.itemResource, 1, 1));
         // обычный патрон (указание владельца): железный шарик в гильзе —
         // самый дешёвый выстрел, полный урон ствола, без эффектов
+        // Вис-Кромка (`vis_edge.md` §4.1): установка/снятие обычным
+        // верстаком — динамический рецепт (клинок сохраняет свой NBT)
+        event.getRegistry().register(
+                new unboundtech.common.crafting.RecipeVisEdge()
+                        .setRegistryName(unboundtech.UnboundTech.MODID,
+                                "vis_edge_apply"));
         cartridgeBall = shapelessStack(event, "cartridge_ball",
                 new ItemStack(UTItems.cartridgeBall),
                 new ItemStack(UTItems.casing),

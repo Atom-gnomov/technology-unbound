@@ -167,6 +167,36 @@ public final class UTRecipesInfusion {
                 });
     }
 
+    /**
+     * Вис-Кромка (`vis_edge.md` §6): центр — углеволоконная пластина
+     * IC2; регистрируется только при наличии нано-сабли (§6: без
+     * энергоклинков объекта в игре не появляется).
+     */
+    public static InfusionRecipe registerVisEdge() {
+        if (IC2Handles.item("nano_saber").isEmpty()) {
+            UTLog.warn("Vis Edge skipped: no IC2 nano saber — no energy blades");
+            return null;
+        }
+        ItemStack plate = IC2Handles.item("crafting", "carbon_plate");
+        if (plate.isEmpty()) {
+            UTLog.warn("Vis Edge recipe skipped: IC2 carbon plate not found");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.VIS_EDGE,
+                new ItemStack(UTItems.visEdge),
+                5,
+                new AspectList().add(Aspect.WEAPON, 28).add(Aspect.ENTROPY, 24)
+                        .add(Aspect.MAGIC, 18).add(Aspect.FIRE, 12),
+                plate,
+                new ItemStack[]{
+                        new ItemStack(ConfigItems.itemShard, 1, 5),
+                        new ItemStack(ConfigItems.itemShard, 1, 1),
+                        new ItemStack(UTItems.temperedIngot),
+                        new ItemStack(ConfigItems.itemShard, 1, 0),
+                });
+    }
+
     public static InfusionRecipe registerFocusCharge() {
         ItemStack coil = IC2Handles.item("crafting", "coil");
         if (coil.isEmpty()) {

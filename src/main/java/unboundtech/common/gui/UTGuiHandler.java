@@ -22,6 +22,10 @@ public class UTGuiHandler implements IGuiHandler {
             return null;
         }
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
+        if (tile instanceof unboundtech.common.tiles.TileCartridgeLine) {
+            return new ContainerCartridgeLine(
+                    (unboundtech.common.tiles.TileCartridgeLine) tile, player);
+        }
         return tile instanceof ISyncedMachine ? new ContainerMachine(tile) : null;
     }
 
@@ -34,6 +38,12 @@ public class UTGuiHandler implements IGuiHandler {
         TileEntity tile = world.getTileEntity(new BlockPos(x, y, z));
         if (!(tile instanceof ISyncedMachine)) {
             return null;
+        }
+        if (tile instanceof unboundtech.common.tiles.TileCartridgeLine) {
+            return unboundtech.client.gui.UTGuiFactory.create(
+                    new ContainerCartridgeLine(
+                            (unboundtech.common.tiles.TileCartridgeLine) tile,
+                            player));
         }
         return unboundtech.client.gui.UTGuiFactory.create(new ContainerMachine(tile));
     }

@@ -44,6 +44,8 @@ public final class UTRecipesT3 {
     private UTRecipesT3() {
     }
 
+    public static thaumcraft.api.crafting.ShapedArcaneRecipe cartridgeLine;
+    public static thaumcraft.api.crafting.InfusionRecipe visEdge;
     public static thaumcraft.api.crafting.InfusionRecipe voidIridium;
     public static thaumcraft.api.crafting.InfusionRecipe iridiumWandCap;
     public static thaumcraft.api.crafting.InfusionRecipe singulator;
@@ -63,6 +65,42 @@ public final class UTRecipesT3 {
         voidIridium = UTRecipesInfusion.registerVoidIridium();
         iridiumWandCap = UTRecipesInfusion.registerIridiumWandCap();
         singulator = UTRecipesInfusion.registerSingulator();
+        // T4 (#24): оружейная ветка — Линия и Вис-Кромка
+        cartridgeLine = registerCartridgeLine();
+        visEdge = UTRecipesInfusion.registerVisEdge();
+    }
+
+    /**
+     * Патронная Линия (`cartridge_line.md` §6): арканный верстак —
+     * симметрия закона 1 живёт в материалах, не в розетке. Только
+     * примордиалы (§6.8 канона).
+     */
+    private static thaumcraft.api.crafting.ShapedArcaneRecipe registerCartridgeLine() {
+        net.minecraft.item.ItemStack casing = unboundtech.compat.ic2.IC2Handles
+                .item("resource", "machine");
+        net.minecraft.item.ItemStack coil = unboundtech.compat.ic2.IC2Handles
+                .item("crafting", "coil");
+        if (casing.isEmpty() || coil.isEmpty()) {
+            unboundtech.UTLog.warn(
+                    "Cartridge Line recipe skipped: IC2 parts not found");
+            return null;
+        }
+        return thaumcraft.api.ThaumcraftApi.addArcaneCraftingRecipe(
+                unboundtech.research.UTResearch.CARTRIDGE_PRESS,
+                new net.minecraft.item.ItemStack(
+                        unboundtech.common.UTBlocks.cartridgeLine),
+                new thaumcraft.api.aspects.AspectList()
+                        .add(thaumcraft.api.aspects.Aspect.ORDER, 16)
+                        .add(thaumcraft.api.aspects.Aspect.FIRE, 14)
+                        .add(thaumcraft.api.aspects.Aspect.EARTH, 8),
+                "TMT",
+                "CFC",
+                "TCT",
+                'T', new net.minecraft.item.ItemStack(UTItems.temperedIngot),
+                'M', new net.minecraft.item.ItemStack(
+                        net.minecraft.init.Blocks.PISTON),
+                'C', coil,
+                'F', casing);
     }
 
     /**

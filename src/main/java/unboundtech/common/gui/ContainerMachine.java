@@ -38,7 +38,9 @@ public class ContainerMachine extends Container {
     public ItemStack slotClick(int slotId, int dragType,
                                net.minecraft.inventory.ClickType type,
                                EntityPlayer player) {
-        if (slotId >= 0) {
+        // В-2 ревью #24: ваниль не проверяет границы — глушим и клики
+        // мимо списка слотов (у безслотовых это любые slotId >= 0)
+        if (slotId >= 0 && slotId >= this.inventorySlots.size()) {
             return ItemStack.EMPTY;
         }
         return super.slotClick(slotId, dragType, type, player);

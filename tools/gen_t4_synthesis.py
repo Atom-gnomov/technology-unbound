@@ -202,22 +202,120 @@ def singulator():
             os.path.join(blocks, "singulator_%s.png" % kind))
 
 
+def line_face(kind):
+    """Грани Патронной Линии: низкий станок, каретка на верхней грани."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+    for y in range(16):
+        for x in range(16):
+            if x in (0, 15) or y in (0, 15):
+                c = STEEL[1]
+            elif y == 1:
+                c = STEEL[5]
+            elif x == 1:
+                c = STEEL[4]
+            else:
+                c = STEEL[3] if (x * 3 + y * 7) % 5 else STEEL[2]
+            px[x, y] = c + (255,)
+    active = kind.endswith("_active")
+    if kind.startswith("top"):
+        # направляющие каретки + сама каретка (в active сдвинута)
+        for x in range(2, 14):
+            px[x, 5] = BRASS[2] + (255,)
+            px[x, 10] = BRASS[2] + (255,)
+        cx = 10 if active else 4
+        for y in range(4, 12):
+            for x in range(cx, cx + 3):
+                px[x, y] = STEEL[5] + (255,)
+        px[cx + 1, 7] = (0xE0, 0x64, 0x1F, 255)
+    elif kind.startswith("front"):
+        # лоток выдачи и щель пресса
+        for x in range(3, 13):
+            px[x, 6] = VOIDP[1] + (255,)
+            px[x, 7] = VOIDP[0] + (255,)
+        for x in range(3, 13, 2):
+            px[x, 11] = BRASS[3] + (255,)
+        if active:
+            px[7, 6] = (0xE0, 0x64, 0x1F, 255)
+            px[8, 7] = (0xE0, 0x64, 0x1F, 255)
+    else:
+        # боковина: заклёпки и патронная лента-барельеф
+        for (rx, ry) in ((2, 2), (13, 2), (2, 13), (13, 13)):
+            px[rx, ry] = STEEL[5] + (255,)
+        for x in range(4, 12, 2):
+            px[x, 8] = BRASS[4] + (255,)
+            px[x, 9] = BRASS[1] + (255,)
+    return img
+
+
+def cartridge_line():
+    blocks = os.path.join(ROOT, "textures", "blocks")
+    for kind in ("front", "side", "top", "front_active", "top_active"):
+        line_face(kind).save(
+            os.path.join(blocks, "cartridge_line_%s.png" % kind))
+
+
+def vis_edge_icon():
+    """Тонкая полоса металла с фиолетовой кромкой (§8 карточки)."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+    for i in range(11):
+        x = 2 + i
+        y = 12 - i
+        px[x, y] = SILVER[3] + (255,)
+        px[x + 1, y] = SILVER[2] + (255,)
+        # кромка — лиловое свечение сверху
+        px[x, y - 1] = LILAC + (255,)
+        if i % 3 == 0:
+            px[x, y - 2] = (0x8A, 0x64, 0xB4, 255)
+    px[2, 13] = SILVER[1] + (255,)
+    px[3, 13] = SILVER[1] + (255,)
+    items = os.path.join(ROOT, "textures", "items")
+    img.save(os.path.join(items, "vis_edge.png"))
+
+
+def belt_icon():
+    """Лента: дуга патронов в латунных звеньях."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+    for i in range(6):
+        x = 2 + i * 2
+        y = 5 + (i % 2)
+        # гильза
+        px[x, y] = BRASS[4] + (255,)
+        px[x, y + 1] = BRASS[3] + (255,)
+        px[x, y + 2] = BRASS[2] + (255,)
+        px[x + 1, y + 1] = BRASS[1] + (255,)
+        # звено
+        px[x, y + 3] = STEEL[3] + (255,)
+        px[x + 1, y + 3] = STEEL[4] + (255,)
+    for x in range(2, 14):
+        px[x, 10] = STEEL[2] + (255,)
+        px[x, 11] = STEEL[1] + (255,)
+    items = os.path.join(ROOT, "textures", "items")
+    img.save(os.path.join(items, "cartridge_belt.png"))
+
+
 def write_json(path, data):
     with open(path, "w") as fh:
         json.dump(data, fh, indent=2)
 
 
-def models():
+def machine_blockstate(name):
     bs = {"variants": {}}
     for active in ("false", "true"):
         suffix = "_active" if active == "true" else ""
         for facing, rot in (("north", 0), ("east", 90),
                             ("south", 180), ("west", 270)):
-            entry = {"model": "unboundtech:singulator" + suffix}
+            entry = {"model": "unboundtech:" + name + suffix}
             if rot:
                 entry["y"] = rot
             bs["variants"]["active=%s,facing=%s" % (active, facing)] = entry
-    write_json(os.path.join(ROOT, "blockstates", "singulator.json"), bs)
+    write_json(os.path.join(ROOT, "blockstates", name + ".json"), bs)
+
+
+def models():
+    machine_blockstate("singulator")
     for suffix in ("", "_active"):
         write_json(os.path.join(ROOT, "models", "block",
                                 "singulator%s.json" % suffix),
@@ -233,7 +331,26 @@ def models():
                     }})
     write_json(os.path.join(ROOT, "models", "item", "singulator.json"),
                {"parent": "unboundtech:block/singulator"})
-    for name in ("void_iridium", "iridium_wand_cap"):
+    machine_blockstate("cartridge_line")
+    for suffix in ("", "_active"):
+        top = "unboundtech:blocks/cartridge_line_top" + suffix
+        front = "unboundtech:blocks/cartridge_line_front" + suffix
+        write_json(os.path.join(ROOT, "models", "block",
+                                "cartridge_line%s.json" % suffix),
+                   {"parent": "block/cube",
+                    "textures": {
+                        "particle": "unboundtech:blocks/cartridge_line_side",
+                        "down": "unboundtech:blocks/machine_bottom",
+                        "up": top,
+                        "north": front,
+                        "south": "unboundtech:blocks/cartridge_line_side",
+                        "east": "unboundtech:blocks/cartridge_line_side",
+                        "west": "unboundtech:blocks/cartridge_line_side",
+                    }})
+    write_json(os.path.join(ROOT, "models", "item", "cartridge_line.json"),
+               {"parent": "unboundtech:block/cartridge_line"})
+    for name in ("void_iridium", "iridium_wand_cap", "vis_edge",
+                 "cartridge_belt"):
         write_json(os.path.join(ROOT, "models", "item", name + ".json"),
                    {"parent": "item/generated",
                     "textures": {"layer0": "unboundtech:items/" + name}})
@@ -244,6 +361,9 @@ def main():
     cap_icon()
     cap_model()
     singulator()
+    cartridge_line()
+    vis_edge_icon()
+    belt_icon()
     models()
     print("T4: iridium strip x8, cap icon+model, singulator faces, jsons")
     return 0

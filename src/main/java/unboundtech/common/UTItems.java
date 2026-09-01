@@ -65,6 +65,8 @@ public final class UTItems {
     public static final String CARTRIDGE_BALL = "cartridge_ball";
     public static final String VOID_IRIDIUM = "void_iridium";
     public static final String IRIDIUM_WAND_CAP = "iridium_wand_cap";
+    public static final String VIS_EDGE = "vis_edge";
+    public static final String CARTRIDGE_BELT = "cartridge_belt";
     public static final String FOCUS_CHARGE = "focus_charge";
     public static final String CHARGED_SPARK = "charged_spark";
     public static final String RING_FRAME = "ring_frame";
@@ -145,6 +147,8 @@ public final class UTItems {
     public static Item cartridgeBall;
     public static Item voidIridium;
     public static Item iridiumWandCap;
+    public static Item visEdge;
+    public static Item cartridgeBelt;
     public static Item focusCharge;
     public static Item chargedSpark;
     public static Item ringFrame;
@@ -226,6 +230,9 @@ public final class UTItems {
         // T4 (`void_iridium.md`, `iridium_wand_components.md`)
         voidIridium = make(new ItemVoidIridium(), VOID_IRIDIUM);
         iridiumWandCap = make(new Item().setMaxStackSize(16), IRIDIUM_WAND_CAP);
+        visEdge = make(new unboundtech.common.items.ItemVisEdge(), VIS_EDGE);
+        cartridgeBelt = make(new unboundtech.common.items.ItemCartridgeBelt(),
+                CARTRIDGE_BELT);
         fluxRevolver = make(new ItemFluxRevolver(), FLUX_REVOLVER);
         fluxArquebus = make(new ItemFluxArquebus(), FLUX_ARQUEBUS);
         cartridgeVis = make(new ItemCartridge(
@@ -325,7 +332,7 @@ public final class UTItems {
                 quantIchorHelmet, quantIchorChestplate, quantIchorLeggings, quantIchorBoots,
                 casing, cartridgeIncendiary, cartridgeIlluminating, fluxRevolver,
                 fluxArquebus, cartridgeVis, cartridgeFlux, cartridgeBall,
-                voidIridium, iridiumWandCap,
+                voidIridium, iridiumWandCap, visEdge, cartridgeBelt,
                 focusCharge, chargedSpark, ringFrame, ringDrive, ringStride, ringBrace,
         };
     }
