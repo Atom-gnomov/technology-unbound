@@ -189,6 +189,11 @@ def lamp(px, rect):
 
 def main():
     rnd = random.Random(20260831)   # детерминизм: одна текстура на все прогоны
+    atlas = None
+    try:
+        import material_atlas as atlas      # фактура из настоящих материалов
+    except Exception:                        # noqa: BLE001
+        pass
     img = Image.new("RGBA", (128, 128), (0, 0, 0, 0))
     px = img.load()
     for name, (u, v, w, h, d, mat) in UV.items():
@@ -199,6 +204,9 @@ def main():
                 if name == "truba" and fname == "front":
                     # передняя грань трубы = дно открытого канала
                     bore_pit(px, rect, rnd)
+                elif atlas is not None:
+                    atlas.paint(px, rect, "cast_iron", name + fname, fname)
+                    atlas.rim(px, rect)
                 else:
                     cast_iron(px, rect, rnd,
                               muzzle=(name in ("bore_v", "bore_h")
@@ -206,9 +214,18 @@ def main():
                               seam=(name in ("truba", "tumba_x", "tumba_z")
                                     and fname in ("right", "left")))
             elif mat == "steel":
-                steel_panel(px, rect, rnd)
+                if atlas is not None:
+                    atlas.paint(px, rect, "dark_steel", name + fname, fname)
+                    atlas.rim(px, rect)
+                    atlas.highlight(px, rect)
+                else:
+                    steel_panel(px, rect, rnd)
             elif mat == "brass":
-                brass_part(px, rect, rnd)
+                if atlas is not None:
+                    atlas.paint(px, rect, "brass", name + fname, fname)
+                    atlas.rim(px, rect)
+                else:
+                    brass_part(px, rect, rnd)
             elif mat == "glow":
                 glow_slits(px, rect)
             elif mat == "lamp":

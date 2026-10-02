@@ -225,7 +225,7 @@ public final class UTRunicBillingHandler {
                     10, 0.3, 0.4, 0.3, 0.1);
         }
         target.world.playSound(null, target.posX, target.posY, target.posZ,
-                net.minecraft.init.SoundEvents.ENTITY_LIGHTNING_THUNDER,
+                unboundtech.common.UTSounds.teslaDischarge,
                 net.minecraft.util.SoundCategory.PLAYERS, 0.35F, 1.8F);
     }
 

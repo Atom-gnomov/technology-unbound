@@ -147,7 +147,7 @@ public class TileMechanistMortar extends TileThaumcraft
         }
         this.world.playSound(null, this.pos.getX() + 0.5, this.pos.getY() + 1,
                 this.pos.getZ() + 0.5,
-                net.minecraft.init.SoundEvents.ENTITY_GENERIC_EXPLODE,
+                unboundtech.common.UTSounds.mortarFire,
                 net.minecraft.util.SoundCategory.BLOCKS, 1.5f, 0.5f);
     }
 

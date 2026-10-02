@@ -139,7 +139,7 @@ public class EntityMortarShell extends EntityThrowable {
                     12, 1.2, 0.4, 1.2, 0.05);
         }
         this.world.playSound(null, this.posX, this.posY, this.posZ,
-                net.minecraft.init.SoundEvents.ENTITY_GENERIC_EXPLODE,
+                unboundtech.common.UTSounds.mortarImpact,
                 net.minecraft.util.SoundCategory.BLOCKS, 1.2f, 0.6f);
         this.setDead();
     }

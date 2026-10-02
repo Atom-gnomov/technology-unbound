@@ -1,0 +1,65 @@
+{
+  "revolver_shot": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "unboundtech:revolver_shot",
+        "stream": false
+      }
+    ]
+  },
+  "revolver_reload": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "unboundtech:revolver_reload",
+        "stream": false
+      }
+    ]
+  },
+  "arquebus_shot": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "unboundtech:arquebus_shot",
+        "stream": false
+      }
+    ]
+  },
+  "mortar_fire": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "unboundtech:mortar_fire",
+        "stream": false
+      }
+    ]
+  },
+  "mortar_impact": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "unboundtech:mortar_impact",
+        "stream": false
+      }
+    ]
+  },
+  "tesla_discharge": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "unboundtech:tesla_discharge",
+        "stream": false
+      }
+    ]
+  },
+  "singulator_charge": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "unboundtech:singulator_charge",
+        "stream": false
+      }
+    ]
+  }
+}

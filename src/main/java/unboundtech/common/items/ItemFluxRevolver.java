@@ -123,7 +123,8 @@ public class ItemFluxRevolver extends Item {
                 0.0f, 2.4f, 2.0f);
         world.spawnEntity(bullet);
         world.playSound(null, player.posX, player.posY, player.posZ,
-                SoundEvents.ENTITY_BLAZE_HURT, SoundCategory.PLAYERS, 0.5f, 1.5f);
+                unboundtech.common.UTSounds.revolverShot,
+                SoundCategory.PLAYERS, 0.9f, 1.0f);
         // §4.1: с шансом 50 % гильза выпадает под ноги
         if (world.rand.nextBoolean()) {
             world.spawnEntity(new EntityItem(world,
@@ -183,8 +184,8 @@ public class ItemFluxRevolver extends Item {
                     RELOAD_TICKS_PER_ROUND * loaded);
             if (server) {
                 player.world.playSound(null, player.posX, player.posY, player.posZ,
-                        SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE,
-                        SoundCategory.PLAYERS, 0.5f, 1.4f);
+                        unboundtech.common.UTSounds.revolverReload,
+                        SoundCategory.PLAYERS, 0.8f, 1.0f);
             }
         }
     }

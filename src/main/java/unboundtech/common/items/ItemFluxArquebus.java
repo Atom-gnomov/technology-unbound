@@ -118,7 +118,7 @@ public class ItemFluxArquebus extends Item {
                 0.0f, VELOCITY, INACCURACY);
         world.spawnEntity(bullet);
         world.playSound(null, player.posX, player.posY, player.posZ,
-                SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.PLAYERS, 0.6f, 1.7f);
+                unboundtech.common.UTSounds.arquebusShot, SoundCategory.PLAYERS, 0.6f, 1.7f);
         if (world.rand.nextBoolean()) {
             world.spawnEntity(new EntityItem(world,
                     player.posX, player.posY, player.posZ,
@@ -141,7 +141,7 @@ public class ItemFluxArquebus extends Item {
                     unboundtech.client.RenderFluxArquebus.noteReload(player);
                 } else {
                     player.world.playSound(null, player.posX, player.posY,
-                            player.posZ, SoundEvents.ITEM_ARMOR_EQUIP_IRON,
+                            player.posZ, unboundtech.common.UTSounds.revolverReload,
                             SoundCategory.PLAYERS, 0.5f, 0.8f);
                 }
                 return;
