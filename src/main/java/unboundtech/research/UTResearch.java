@@ -102,6 +102,9 @@ public final class UTResearch {
     /** Вис-Кромка: отложенный урон на чужих энергоклинках (T4). */
     public static final String VIS_EDGE = "VIS_EDGE";
 
+    /** Защитная бижутерия: рунный щит за электричество (T4). */
+    public static final String PROTECTIVE_BAUBLES = "PROTECTIVE_BAUBLES";
+
     /** Кольца Схемы: атрибуты игрока за 2 EU/t на кольцо. */
     public static final String SCHEMA_RINGS = "SCHEMA_RINGS";
 
@@ -570,6 +573,26 @@ public final class UTResearch {
                         unboundtech.common.UTRecipesT3.visEdge == null ? null
                                 : new ResearchPage(
                                         unboundtech.common.UTRecipesT3.visEdge)))
+                .registerResearchItem();
+
+        // Защитная бижутерия: Tutamen 16, Praecantatio 12, Potentia 12,
+        // Machina 10 = 50 (потолок T4), родитель — Сингулятор.
+        new ResearchItem(
+                PROTECTIVE_BAUBLES, CATEGORY,
+                new AspectList().add(Aspect.ARMOR, 16).add(Aspect.MAGIC, 12)
+                        .add(Aspect.ENERGY, 12).add(Aspect.MECHANISM, 10),
+                14, -4, 3,
+                new ItemStack(unboundtech.common.UTItems.resonanceAmulet))
+                .setParents(SINGULATOR)
+                .setPages(pages(
+                        new ResearchPage("unboundtech.research_page.PROTECTIVE_BAUBLES.1"),
+                        new ResearchPage("unboundtech.research_page.PROTECTIVE_BAUBLES.2"),
+                        unboundtech.common.UTRecipesT3.resonanceAmulet == null
+                                ? null : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.resonanceAmulet),
+                        unboundtech.common.UTRecipesT3.teslaGirdle == null
+                                ? null : new ResearchPage(
+                                        unboundtech.common.UTRecipesT3.teslaGirdle)))
                 .registerResearchItem();
 
         // ===== T4: порядок В-10 — иридий -> наконечник -> Сингулятор =====

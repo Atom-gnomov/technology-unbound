@@ -296,6 +296,58 @@ def belt_icon():
     img.save(os.path.join(items, "cartridge_belt.png"))
 
 
+def amulet_icon():
+    """Таумиевая оправа вокруг вис-кристалла (§8)."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+    # цепочка
+    for i in range(5):
+        px[5 - i + 3, 2 + i] = BRASS[3] + (255,)
+        px[10 + i - 3, 2 + i] = BRASS[3] + (255,)
+    # оправа-кольцо
+    for y in range(6, 13):
+        for x in range(4, 12):
+            d = abs(x - 7.5) + abs(y - 9.5)
+            if 2.6 < d <= 4.0:
+                px[x, y] = BRASS[2] + (255,) if (x + y) % 3 else BRASS[4] + (255,)
+    # кристалл внутри
+    for y in range(8, 12):
+        for x in range(6, 10):
+            d = abs(x - 7.5) + abs(y - 9.5)
+            if d <= 2.2:
+                px[x, y] = LILAC + (255,)
+    px[7, 9] = (0xFF, 0xFF, 0xF0, 255)
+    items = os.path.join(ROOT, "textures", "items")
+    img.save(os.path.join(items, "resonance_amulet.png"))
+
+
+def girdle_icon():
+    """Кожа с медными катушками и стеклянной колбой (§8)."""
+    img = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = img.load()
+    leather = [(0x3A, 0x26, 0x18), (0x53, 0x38, 0x22), (0x6B, 0x49, 0x2D)]
+    for y in range(6, 11):
+        for x in range(1, 15):
+            i = 1
+            if y in (6, 10):
+                i = 0
+            elif (x * 3 + y * 5) % 7 == 0:
+                i = 2
+            px[x, y] = leather[i] + (255,)
+    # катушки
+    for cx in (4, 11):
+        for y in range(6, 11):
+            px[cx, y] = BRASS[3] + (255,) if y % 2 else BRASS[1] + (255,)
+    # пряжка-колба по центру
+    for y in range(6, 11):
+        for x in range(7, 10):
+            px[x, y] = (0x1A, 0x16, 0x24, 255)
+    px[8, 8] = LILAC + (255,)
+    px[8, 7] = (0x8A, 0x64, 0xB4, 255)
+    items = os.path.join(ROOT, "textures", "items")
+    img.save(os.path.join(items, "tesla_girdle.png"))
+
+
 def write_json(path, data):
     with open(path, "w") as fh:
         json.dump(data, fh, indent=2)
@@ -350,7 +402,7 @@ def models():
     write_json(os.path.join(ROOT, "models", "item", "cartridge_line.json"),
                {"parent": "unboundtech:block/cartridge_line"})
     for name in ("void_iridium", "iridium_wand_cap", "vis_edge",
-                 "cartridge_belt"):
+                 "cartridge_belt", "resonance_amulet", "tesla_girdle"):
         write_json(os.path.join(ROOT, "models", "item", name + ".json"),
                    {"parent": "item/generated",
                     "textures": {"layer0": "unboundtech:items/" + name}})
@@ -364,6 +416,8 @@ def main():
     cartridge_line()
     vis_edge_icon()
     belt_icon()
+    amulet_icon()
+    girdle_icon()
     models()
     print("T4: iridium strip x8, cap icon+model, singulator faces, jsons")
     return 0

@@ -106,11 +106,13 @@ public class ItemSchemaRing extends Item implements IBauble, IElectricItem {
         }
         // §4.3: списание пачкой раз в 20 тиков — дешевле, чем каждый тик
         int bill = EU_PER_TICK * BILL_TICKS;
+        // ⚠️ externally = FALSE: при canProvideEnergy()==false внешний
+        // разряд IC2 всегда отдаёт 0 — кольца не включались вовсе
+        // (прод-баг, найден скептиком бижутерии)
         boolean powered = ElectricItem.manager != null
-                && ElectricItem.manager.discharge(stack, bill, TIER,
-                        true, true, true) >= bill;
+                && ElectricItem.manager.getCharge(stack) >= bill;
         if (powered) {
-            ElectricItem.manager.discharge(stack, bill, TIER, true, true, false);
+            ElectricItem.manager.discharge(stack, bill, TIER, true, false, false);
             this.apply(wearer);
         } else {
             this.remove(wearer);

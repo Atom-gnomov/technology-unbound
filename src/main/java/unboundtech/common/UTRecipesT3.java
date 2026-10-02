@@ -46,6 +46,8 @@ public final class UTRecipesT3 {
 
     public static thaumcraft.api.crafting.ShapedArcaneRecipe cartridgeLine;
     public static thaumcraft.api.crafting.InfusionRecipe visEdge;
+    public static thaumcraft.api.crafting.InfusionRecipe resonanceAmulet;
+    public static thaumcraft.api.crafting.InfusionRecipe teslaGirdle;
     public static thaumcraft.api.crafting.InfusionRecipe voidIridium;
     public static thaumcraft.api.crafting.InfusionRecipe iridiumWandCap;
     public static thaumcraft.api.crafting.InfusionRecipe singulator;
@@ -68,6 +70,8 @@ public final class UTRecipesT3 {
         // T4 (#24): оружейная ветка — Линия и Вис-Кромка
         cartridgeLine = registerCartridgeLine();
         visEdge = UTRecipesInfusion.registerVisEdge();
+        resonanceAmulet = UTRecipesInfusion.registerResonanceAmulet();
+        teslaGirdle = UTRecipesInfusion.registerTeslaGirdle();
     }
 
     /**

@@ -36,7 +36,10 @@ public final class ModuleManager {
         // по событию реестра, до init), а Thaumcraft свой ingotThaumium к
         // этому моменту тоже объявил.
         UTItems.init();
-        unboundtech.common.UTVisEdgeHandler.register();
+        if (UTModule.CORE.isEnabled()) {
+            unboundtech.common.UTVisEdgeHandler.register();
+            unboundtech.common.UTRunicBillingHandler.register();
+        }
     }
 
     /**

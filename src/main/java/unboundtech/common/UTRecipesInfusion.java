@@ -197,6 +197,78 @@ public final class UTRecipesInfusion {
                 });
     }
 
+    /**
+     * Резонансный Амулет (`protective_baubles.md` §6): центр — ОБЫЧНЫЙ
+     * амулет ТК (ItemBaubleBlanks мета 0), нестабильность 5.
+     */
+    public static InfusionRecipe registerResonanceAmulet() {
+        // energy_crystal — самостоятельный ItemName, НЕ вариант crafting
+        ItemStack crystal = anyCharge(IC2Handles.item("energy_crystal"));
+        if (crystal.isEmpty()) {
+            UTLog.warn("Resonance Amulet recipe skipped: IC2 energy crystal not found");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.PROTECTIVE_BAUBLES,
+                new ItemStack(UTItems.resonanceAmulet),
+                5,
+                new AspectList().add(Aspect.MAGIC, 32).add(Aspect.ORDER, 24)
+                        .add(Aspect.ARMOR, 24).add(Aspect.MECHANISM, 16),
+                new ItemStack(ConfigItems.itemBaubleBlanks, 1, 0),
+                new ItemStack[]{
+                        new ItemStack(ConfigItems.itemShard, 1, 4),
+                        new ItemStack(ConfigItems.itemShard, 1, 3),
+                        new ItemStack(UTItems.temperedIngot),
+                        crystal,
+                });
+    }
+
+    /**
+     * Тесла-Пояс (`protective_baubles.md` §6): центр — ОБЫЧНЫЙ пояс ТК
+     * (ItemBaubleBlanks мета 2), нестабильность 5.
+     */
+    public static InfusionRecipe registerTeslaGirdle() {
+        ItemStack coil = IC2Handles.item("crafting", "coil");
+        if (coil.isEmpty()) {
+            UTLog.warn("Tesla Girdle recipe skipped: IC2 coil not found");
+            return null;
+        }
+        // §6: ЛапПак или энергокристалл — подменять их инготом нельзя,
+        // иначе рецепт теряет смысл (вердикт скептика)
+        ItemStack battery = anyCharge(IC2Handles.item("lappack"));
+        if (battery.isEmpty()) {
+            battery = anyCharge(IC2Handles.item("energy_crystal"));
+        }
+        if (battery.isEmpty()) {
+            UTLog.warn("Tesla Girdle recipe skipped: no IC2 lappack/energy crystal");
+            return null;
+        }
+        return ThaumcraftApi.addInfusionCraftingRecipe(
+                UTResearch.PROTECTIVE_BAUBLES,
+                new ItemStack(UTItems.teslaGirdle),
+                5,
+                new AspectList().add(Aspect.ENERGY, 32).add(Aspect.ARMOR, 24)
+                        .add(Aspect.MECHANISM, 20).add(Aspect.AIR, 16),
+                new ItemStack(ConfigItems.itemBaubleBlanks, 1, 2),
+                new ItemStack[]{
+                        coil,
+                        new ItemStack(ConfigItems.itemShard, 1, 0),
+                        IC2Handles.withCount(coil, 1),
+                        new ItemStack(UTItems.temperedIngot),
+                        battery,
+                });
+    }
+
+    /**
+     * Батарейки IC2 кодируют заряд МЕТАДАННЫМИ (IPseudoDamageItem), а
+     * InfusionRecipe сверяет мету точно — иначе матрица приняла бы
+     * только разряженный кристалл (вердикт решателя).
+     */
+    private static ItemStack anyCharge(ItemStack stack) {
+        return stack.isEmpty() ? stack : new ItemStack(stack.getItem(), 1,
+                net.minecraftforge.oredict.OreDictionary.WILDCARD_VALUE);
+    }
+
     public static InfusionRecipe registerFocusCharge() {
         ItemStack coil = IC2Handles.item("crafting", "coil");
         if (coil.isEmpty()) {
