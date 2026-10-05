@@ -1,0 +1,91 @@
+To honour the JVM settings for this build a new JVM will be forked. Please consider using the daemon: https://docs.gradle.org/4.10.3/userguide/gradle_daemon.html.
+Daemon will be stopped at the end of the build stopping after processing
+Parallel execution is an incubating feature.
+
+> Configure project :
+This mapping 'stable_39' was designed for MC 1.12! Use at your own peril.
+WARNING: You are using an unsupported version of ForgeGradle.
+Please consider upgrading to ForgeGradle 5 and helping in the efforts to get old versions working on the modern toolchain.
+See https://gist.github.com/TheCurle/fe7ad3ede188cbdd15c235cc75d52d4a for more info on contributing.
+#################################################
+         ForgeGradle 2.3.4-gfc67182        
+  https://github.com/MinecraftForge/ForgeGradle  
+#################################################
+                 Powered by MCP                  
+             http://modcoderpack.com             
+     by: Searge, ProfMobius, R4wk, ZeuX          
+     Fesh0r, IngisKahn, bspkrs, LexManos         
+#################################################
+
+> Task :extractMcpMappings SKIPPED
+> Task :deobfCompileDeobfDepTask0 SKIPPED
+> Task :deobfCompileDummyTask
+> Task :deobfProvidedDummyTask
+> Task :getVersionJson
+> Task :extractUserdev UP-TO-DATE
+> Task :downloadClient SKIPPED
+> Task :downloadServer SKIPPED
+> Task :splitServerJar SKIPPED
+> Task :mergeJars SKIPPED
+> Task :applyBinaryPatches SKIPPED
+> Task :extractDependencyATs SKIPPED
+> Task :extractMcpData SKIPPED
+> Task :genSrgs SKIPPED
+> Task :deobfMcMCP SKIPPED
+> Task :sourceApiJava UP-TO-DATE
+> Task :compileApiJava NO-SOURCE
+> Task :processApiResources NO-SOURCE
+> Task :apiClasses UP-TO-DATE
+> Task :sourceMainJava UP-TO-DATE
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :jar UP-TO-DATE
+> Task :extractNatives SKIPPED
+> Task :getAssetIndex UP-TO-DATE
+> Task :getAssets
+> Task :makeStart
+
+> Task :runClient
+[13:24:06] [main/INFO]: Extra: []
+[13:24:06] [main/INFO]: Running with arguments: [--userProperties, {}, --assetsDir, C:/Users/Game-On-Dp/.gradle/caches/minecraft/assets, --assetIndex, 1.12, --accessToken{REDACTED}, --version, 1.12.2, --tweakClass, net.minecraftforge.fml.common.launcher.FMLTweaker, --tweakClass, net.minecraftforge.gradle.tweakers.CoremodTweaker]
+[13:24:06] [main/INFO]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
+[13:24:06] [main/INFO]: Using primary tweak class name net.minecraftforge.fml.common.launcher.FMLTweaker
+[13:24:06] [main/INFO]: Loading tweak class name net.minecraftforge.gradle.tweakers.CoremodTweaker
+[13:24:06] [main/INFO]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLTweaker
+[13:24:06] [main/INFO]: Forge Mod Loader version 14.23.5.2847 for Minecraft 1.12.2 loading
+[13:24:06] [main/INFO]: Java is OpenJDK 64-Bit Server VM, version 1.8.0_492, running on Windows 11:amd64:10.0, installed at C:\Users\Game-On-Dp\tc4-port\tools\jdk\jdk8u492-b09\jre
+[13:24:06] [main/ERROR]: Apache Maven library folder was not in the format expected. Using default libraries directory.
+[13:24:06] [main/ERROR]: Full: C:\Users\Game-On-Dp\.gradle\caches\modules-2\files-2.1\org.apache.maven\maven-artifact\3.5.3\7dc72b6d6d8a6dced3d294ed54c2cc3515ade9f4\maven-artifact-3.5.3.jar
+[13:24:06] [main/ERROR]: Trimmed: c:/users/game-on-dp/.gradle/caches/modules-2/files-2.1/org.apache.maven/maven-artifact/3.5.3/
+[13:24:06] [main/INFO]: Managed to load a deobfuscated Minecraft name- we are in a deobfuscated environment. Skipping runtime deobfuscation
+[13:24:06] [main/INFO]: Detected deobfuscated environment, loading log configs for colored console logs.
+2026-10-05 13:24:06,652 main ERROR Error processing element LoggerNamePatternSelector ([PatternLayout: null]): CLASS_NOT_FOUND
+2026-10-05 13:24:06,653 main ERROR Error processing element TerminalConsole ([Appenders: null]): CLASS_NOT_FOUND
+2026-10-05 13:24:06,653 main ERROR Error processing element LoggerNamePatternSelector ([PatternLayout: null]): CLASS_NOT_FOUND
+2026-10-05 13:24:06,658 main ERROR Unable to locate appender "Console" for logger config "root"
+2026-10-05 13:24:06,750 main ERROR Error processing element LoggerNamePatternSelector ([PatternLayout: null]): CLASS_NOT_FOUND
+2026-10-05 13:24:06,751 main ERROR Error processing element TerminalConsole ([Appenders: null]): CLASS_NOT_FOUND
+2026-10-05 13:24:06,751 main ERROR Error processing element LoggerNamePatternSelector ([PatternLayout: null]): CLASS_NOT_FOUND
+2026-10-05 13:24:06,754 main ERROR Unable to locate appender "Console" for logger config "root"
+AL lib: (EE) alc_cleanup: 1 device not closed
+
+> Task :runClient FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':runClient'.
+> Process 'command 'C:\Users\Game-On-Dp\tc4-port\tools\jdk\jdk8u492-b09\bin\java.exe'' finished with non-zero exit value -1
+
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+
+* Get more help at https://help.gradle.org
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 5.0.
+Use '--warning-mode all' to show the individual deprecation warnings.
+See https://docs.gradle.org/4.10.3/userguide/command_line_interface.html#sec:command_line_warnings
+
+BUILD FAILED in 29s
+13 actionable tasks: 6 executed, 7 up-to-date
